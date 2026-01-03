@@ -1,0 +1,15 @@
+{
+	"name": "@interview-lab/typescript-config",
+	"type": "module",
+	"author": {
+		"name": "BHyeonKim",
+		"email": "rlaqhguse@gmail.com",
+		"url": "https://github.com/BHyeonKim"
+	},
+	"exports": {
+		"./base.json": "./tsconfig.base.json"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.11"
+	}
+}

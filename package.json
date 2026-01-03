@@ -1,0 +1,31 @@
+{
+	"name": "interview-lab",
+	"private": true,
+	"author": {
+		"name": "BHyeonKim",
+		"email": "rlaqhguse@gmail.com",
+		"url": "https://github.com/BHyeonKim"
+	},
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev",
+		"lint": "biome check",
+		"format": "biome format --write",
+		"check-types": "turbo run check-types"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.6",
+		"turbo": "^2.7.2",
+		"typescript": "5.9.3"
+	},
+	"packageManager": "pnpm@9.0.0",
+	"engines": {
+		"node": ">=22",
+		"pnpm": ">=9"
+	},
+	"pnpm": {
+		"overrides": {
+			"esbuild": "0.25.12"
+		}
+	}
+}

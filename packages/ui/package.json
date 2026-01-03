@@ -1,0 +1,66 @@
+{
+	"name": "@interview-lab/ui",
+	"type": "module",
+	"author": {
+		"name": "BHyeonKim",
+		"email": "rlaqhguse@gmail.com",
+		"url": "https://github.com/BHyeonKim"
+	},
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/src/main.d.ts",
+			"import": "./dist/main.mjs",
+			"require": "./dist/main.umd.js"
+		},
+		"./styles": "./dist/ui-style.css"
+	},
+	"publishConfig": {
+		"@runzipper:registry": "https://npm.pkg.github.com"
+	},
+	"scripts": {
+		"dev": "vite build --watch",
+		"build": "vite build",
+		"preview": "vite preview",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build",
+		"lint": "biome check",
+		"format": "biome format --write"
+	},
+	"dependencies": {
+		"@vanilla-extract/css": "^1.17.4",
+		"clsx": "^2.1.1"
+	},
+	"peerDependencies": {
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0"
+	},
+	"devDependencies": {
+		"@interview-lab/typescript-config": "workspace:*",
+		"@chromatic-com/storybook": "^4.1.1",
+		"@storybook/addon-a11y": "^9.1.13",
+		"@storybook/addon-docs": "^9.1.13",
+		"@storybook/addon-vitest": "^9.1.13",
+		"@storybook/builder-vite": "^9.1.13",
+		"@storybook/react-vite": "^9.1.13",
+		"@svgr/rollup": "^8.1.0",
+		"@types/node": "^24.9.1",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
+		"@vanilla-extract/vite-plugin": "^5.1.1",
+		"@vitejs/plugin-react": "^5.0.4",
+		"@vitest/browser": "^3.2.4",
+		"@vitest/coverage-v8": "^3.2.4",
+		"playwright": "^1.56.1",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"storybook": "^9.1.13",
+		"typescript": "^5.9.3",
+		"vite": "^7.1.11",
+		"vite-plugin-dts": "^4.5.4",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.2.4"
+	}
+}

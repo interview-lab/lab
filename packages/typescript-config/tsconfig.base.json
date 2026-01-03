@@ -1,0 +1,45 @@
+{
+	"$schema": "http://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		/* Type Checking */
+		"strict": true, // 모든 엄격한 타입 체크 옵션 활성화 (noImplicitAny, strictNullChecks 등)
+		"noUnusedLocals": true, // 사용하지 않는 지역 변수가 있으면 에러 발생
+		"noUnusedParameters": true, // 사용하지 않는 함수 매개변수가 있으면 에러 발생
+		"noFallthroughCasesInSwitch": true, // switch문에서 break 없이 다음 case로 넘어가는 것을 방지
+		"noImplicitReturns": true, // 함수의 모든 코드 경로에서 값을 반환하도록 강제
+		"noUncheckedIndexedAccess": true, // 배열/객체 인덱스 접근 시 undefined 가능성을 타입에 포함
+
+		/* Module System */
+		"esModuleInterop": true, // CommonJS 모듈을 ES6 모듈처럼 import 가능하게 함 (import React from 'react')
+		"allowSyntheticDefaultImports": true, // default export가 없는 모듈에서도 default import 허용
+		"resolveJsonModule": true, // .json 파일을 모듈로 import 가능하게 함
+		"isolatedModules": true, // 각 파일을 별도 모듈로 컴파일 (Babel, esbuild 등과 호환성)
+		"verbatimModuleSyntax": true, // import type과 import를 명확히 구분하도록 강제 (번들 크기 최적화)
+
+		/* Emit */
+		"declaration": true, // .d.ts 타입 선언 파일 생성 (라이브러리 배포 시 필수)
+		"declarationMap": true, // .d.ts.map 파일 생성 (타입 정의로 이동 기능 지원)
+		"sourceMap": true, // .js.map 파일 생성 (디버깅 시 원본 TypeScript 코드 추적 가능)
+		"removeComments": false, // 컴파일된 JavaScript에서 주석 유지 (JSDoc 주석 보존)
+		"importHelpers": true, // tslib에서 헬퍼 함수 import (번들 크기 감소)
+
+		/* Interop Constraints */
+		"forceConsistentCasingInFileNames": true, // 파일명 대소문자 일관성 강제 (OS 간 호환성)
+		"skipLibCheck": true, // node_modules의 .d.ts 파일 타입 체크 생략 (컴파일 속도 향상)
+
+		/* Language and Environment */
+		"lib": [
+			"ES2022"
+		], // 사용 가능한 내장 API 정의 (Promise, Map, Set 등)
+		"target": "ES2022", // 컴파일 결과물의 JavaScript 버전
+		"moduleDetection": "force" // 모든 파일을 모듈로 취급 (global scope 오염 방지)
+	},
+	"exclude": [
+		"node_modules",
+		"dist",
+		"build",
+		".turbo",
+		".next",
+		"coverage"
+	]
+}

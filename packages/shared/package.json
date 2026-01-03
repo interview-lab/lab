@@ -1,0 +1,36 @@
+{
+	"name": "@interview-lab/shared",
+	"type": "module",
+	"version": "0.0.0",
+	"author": {
+		"name": "BHyeonKim",
+		"email": "rlaqhguse@gmail.com",
+		"url": "https://github.com/BHyeonKim"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
+		"lint": "biome check",
+		"format": "biome format --write",
+		"check-types": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.11",
+		"@interview-lab/typescript-config": "workspace:*",
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3"
+	}
+}

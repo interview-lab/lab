@@ -1,0 +1,32 @@
+{
+	"extends": "@interview-lab/typescript-config/base.json",
+	"compilerOptions": {
+		/* Type Checking - 타입 체크 (base.json의 strict: true 오버라이드) */
+		"noImplicitAny": false, // NestJS는 암묵적 any 허용
+		"strictBindCallApply": false, // NestJS는 완화
+		"noFallthroughCasesInSwitch": false, // NestJS는 허용
+		"importHelpers": false,
+
+		/* Module System - 모듈 시스템 */
+		"module": "nodenext", // Node.js 최신 모듈 시스템
+		"moduleResolution": "nodenext", // package.json exports 필드 지원
+		"resolvePackageJsonExports": true, // exports 필드 해석
+		"verbatimModuleSyntax": false, // NestJS는 CommonJS이므로 ESM/CJS 자동 변환 허용
+		"baseUrl": "./", // 모듈 경로 해석 기준 디렉터리
+		"paths": {
+			"@/*": [
+				"./src/*"
+			] // 경로 별칭 설정
+		},
+
+		/* Emit - 빌드 출력 */
+		"outDir": "./dist", // 컴파일 결과물 출력 디렉터리
+		"removeComments": true, // NestJS는 주석 제거로 번들 크기 감소
+		"incremental": true, // 증분 컴파일로 빌드 속도 향상
+
+		/* Language and Environment - 언어 및 환경 */
+		"target": "ES2023", // backend는 ES2023
+		"experimentalDecorators": true, // NestJS 데코레이터 문법 (@Injectable, @Controller)
+		"emitDecoratorMetadata": true // NestJS 의존성 주입(DI)을 위한 타입 메타데이터
+	}
+}

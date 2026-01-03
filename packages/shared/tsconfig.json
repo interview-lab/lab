@@ -1,0 +1,25 @@
+{
+	"extends": "@interview-lab/typescript-config/base.json",
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+
+		/* Emit - tsup이 빌드하므로 TypeScript는 타입 체크만 */
+		"noEmit": true,
+		"declaration": false,
+		"declarationMap": false,
+
+		/* Path Mapping */
+		"rootDir": "./src",
+		"baseUrl": "./src"
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"**/*.test.ts",
+		"**/*.spec.ts"
+	]
+}
