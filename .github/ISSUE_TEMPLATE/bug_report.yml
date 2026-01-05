@@ -1,0 +1,48 @@
+name: 버그 리포트
+description: 버그를 제보해주세요
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그 리포트를 작성해주셔서 감사합니다.
+
+  - type: input
+    id: bug-title
+    attributes:
+      label: 어떤 버그인가요?
+      description: 어떤 버그인지 간결하게 설명해주세요
+      placeholder: "예: 로그인 버튼을 클릭하면 페이지가 멈춥니다"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-context
+    attributes:
+      label: 어떤 상황에서 발생한 버그인가요?
+      description: (가능하면) Given-When-Then 형식으로 서술해주세요
+      placeholder: |
+        Given: 로그인 페이지에 접속했을 때
+        When: 이메일과 비밀번호를 입력하고 로그인 버튼을 클릭하면
+        Then: 페이지가 응답하지 않습니다
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: 예상 결과
+      description: 예상했던 정상적인 결과가 어떤 것이었는지 설명해주세요
+      placeholder: 로그인 후 대시보드 페이지로 이동해야 합니다
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 참고할만한 자료(선택)
+      description: 스크린샷, 로그, 관련 링크 등을 첨부해주세요
+      placeholder: |
+        스크린샷을 드래그 앤 드롭하거나
+        관련 링크를 붙여넣어주세요
