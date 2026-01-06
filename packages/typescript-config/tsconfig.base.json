@@ -21,7 +21,7 @@
 		"declarationMap": true, // .d.ts.map 파일 생성 (타입 정의로 이동 기능 지원)
 		"sourceMap": true, // .js.map 파일 생성 (디버깅 시 원본 TypeScript 코드 추적 가능)
 		"removeComments": false, // 컴파일된 JavaScript에서 주석 유지 (JSDoc 주석 보존)
-		"importHelpers": true, // tslib에서 헬퍼 함수 import (번들 크기 감소)
+		"importHelpers": false, // tslib에서 헬퍼 함수 import (번들 크기 감소)
 
 		/* Interop Constraints */
 		"forceConsistentCasingInFileNames": true, // 파일명 대소문자 일관성 강제 (OS 간 호환성)
