@@ -61,6 +61,7 @@ description: Create a git commit
 4. **꼬리말 (선택)**
    - Breaking changes, 이슈 참조 등
    - 형식: `키워드: 설명` 또는 `키워드 #이슈번호`
+   - 예외: `🤖 Generated with [Claude Code](https://claude.com/claude-code) Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>` 은 포함하지 않기
 
 ### Breaking Changes 표기
 
