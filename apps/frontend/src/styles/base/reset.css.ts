@@ -15,14 +15,17 @@ import * as layers from './layers.css';
  * - The "html" element is excluded, otherwise a bug in Chrome breaks the CSS
  *   hyphens property (https://github.com/elad2412/the-new-css-reset/issues/36)
  */
-globalStyle('*:where(:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *))', {
-	'@layer': {
-		[layers.reset]: {
-			all: 'unset',
-			display: 'revert',
+globalStyle(
+	'*:where(:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *))',
+	{
+		'@layer': {
+			[layers.reset]: {
+				all: 'unset',
+				display: 'revert',
+			},
 		},
 	},
-});
+);
 
 /**
  * 기본 box-sizing border-box로 설정

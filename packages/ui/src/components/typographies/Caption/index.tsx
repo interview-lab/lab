@@ -21,9 +21,7 @@ const Caption = <T extends CaptionTextType>({
 	const TextTag = textType as ElementType;
 
 	return (
-		<TextTag
-			className={mergeClassnames(CaptionStyleVarient[style], className)}
-		>
+		<TextTag className={mergeClassnames(CaptionStyleVarient[style], className)}>
 			{children}
 		</TextTag>
 	);
