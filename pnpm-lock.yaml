@@ -169,6 +169,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@interview-lab/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@vanilla-extract/css':
         specifier: ^1.17.4
         version: 1.18.0
