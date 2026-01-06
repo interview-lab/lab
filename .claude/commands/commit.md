@@ -13,6 +13,7 @@ description: Create a git commit
 ## Your task
 
 변경사항을 기반으로 Conventional Commits 규격을 준수하는 단일 커밋을 생성하세요.
+커밋하기 전에 `pnpm format`을 실행하세요.
 
 ### 커밋 메시지 구조
 
