@@ -1,0 +1,41 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import Button from '.';
+import { ButtonStyleVarient } from './button.css';
+
+const meta = {
+	title: 'Design System/Atom/Typography/Button',
+	component: Button,
+	argTypes: {
+		children: {
+			control: 'text',
+		},
+		style: {
+			control: 'select',
+			options: Object.keys(ButtonStyleVarient),
+		},
+		textType: {
+			control: 'select',
+			options: ['span', 'p', 'div', 'strong', 'label'],
+		},
+	},
+} satisfies Meta<typeof Button>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+	args: {
+		textType: 'span',
+		children: 'Button Text',
+		style: 'primary',
+	},
+};
+
+export const Secondary: Story = {
+	args: {
+		textType: 'span',
+		children: 'Button Text',
+		style: 'secondary',
+	},
+};
