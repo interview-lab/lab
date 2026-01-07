@@ -20,10 +20,6 @@ const meta = {
 		disabled: {
 			control: 'boolean',
 		},
-		icon: {
-			control: 'select',
-			options: [undefined, ...Object.keys(SvgIcons)],
-		},
 		label: {
 			control: 'text',
 		},
@@ -38,7 +34,6 @@ export const Default: Story = {
 		isError: false,
 		placeholder: 'Enter text...',
 		disabled: false,
-		icon: undefined,
 	},
 };
 
@@ -48,7 +43,6 @@ export const ErrorWithMessage: Story = {
 		errorMessage: 'This field is required',
 		placeholder: 'Enter text...',
 		disabled: false,
-		icon: undefined,
 	},
 };
 
@@ -57,6 +51,5 @@ export const ErrorWithoutMessage: Story = {
 		isError: true,
 		placeholder: 'Enter text...',
 		disabled: false,
-		icon: undefined,
 	},
 };

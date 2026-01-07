@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const labelStyle = style({
@@ -35,10 +35,26 @@ export const inputStyle = style({
 	},
 });
 
-export const iconStyle = style({
+const baseIconStyle = style({
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
 	position: 'absolute',
-	left: 16,
 	top: '50%',
 	transform: 'translateY(-50%)',
 	color: vars.color.gray,
 });
+
+export const leftIconStyle = style([
+	baseIconStyle,
+	{
+		left: 16,
+	},
+]);
+
+export const rightIconStyle = style([
+	baseIconStyle,
+	{
+		right: 16,
+	},
+]);
