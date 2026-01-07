@@ -12,7 +12,7 @@ type ButtonProps<T extends ButtonTextType> = {
 	style: keyof typeof ButtonStyleVarient;
 };
 
-const Button = <T extends ButtonTextType>({
+const ButtonText = <T extends ButtonTextType>({
 	textType,
 	children,
 	className,
@@ -27,4 +27,4 @@ const Button = <T extends ButtonTextType>({
 	);
 };
 
-export default Button;
+export default ButtonText;

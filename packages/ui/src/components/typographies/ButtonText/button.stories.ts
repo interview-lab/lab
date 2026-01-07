@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import Button from '.';
+import ButtonText from '.';
 import { ButtonStyleVarient } from './button.css';
 
 const meta = {
 	title: 'Design System/Atom/Typography/Button',
-	component: Button,
+	component: ButtonText,
 	argTypes: {
 		children: {
 			control: 'text',
@@ -18,7 +18,7 @@ const meta = {
 			options: ['span', 'p', 'div', 'strong', 'label'],
 		},
 	},
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof ButtonText>;
 
 export default meta;
 

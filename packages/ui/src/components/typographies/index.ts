@@ -1,11 +1,11 @@
 import Base from './Base';
-import Button from './Button';
+import ButtonText from './ButtonText';
 import Caption from './Caption';
 import Subtitle from './Subtitle';
 import Title from './Title';
 
 const Typography = {
-	Button,
+	ButtonText,
 	Subtitle,
 	Base,
 	Caption,

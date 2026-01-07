@@ -7,7 +7,7 @@ const baseButtonStyle = style({
 	whiteSpace: 'pre-line',
 });
 
-export const ButtonStyleVarient = styleVariants({
+export const ButtonStyleVariant = styleVariants({
 	primary: [
 		baseButtonStyle,
 		{
