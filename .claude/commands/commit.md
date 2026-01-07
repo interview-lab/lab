@@ -15,6 +15,15 @@ description: Create a git commit
 변경사항을 기반으로 Conventional Commits 규격을 준수하는 단일 커밋을 생성하세요.
 커밋하기 전에 `pnpm format`을 실행하세요.
 
+### ⚠️ 중요: 커밋 메시지 금지 사항
+
+**절대로** 다음 문구를 커밋 메시지에 포함하지 마세요:
+- `🤖 Generated with [Claude Code](https://claude.com/claude-code)`
+- `Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>`
+- 위와 유사한 자동 생성 표시 문구
+
+커밋 메시지는 순수하게 변경사항에 대한 설명만 포함해야 합니다.
+
 ### 커밋 메시지 구조
 
 ```
@@ -62,7 +71,7 @@ description: Create a git commit
 4. **꼬리말 (선택)**
    - Breaking changes, 이슈 참조 등
    - 형식: `키워드: 설명` 또는 `키워드 #이슈번호`
-   - 예외: `🤖 Generated with [Claude Code](https://claude.com/claude-code) Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>` 은 포함하지 않기
+   - **주의**: Claude Code 자동 생성 표시 문구는 절대 포함하지 않음
 
 ### Breaking Changes 표기
 
@@ -134,4 +143,10 @@ fix: 장바구니 수량 업데이트 버그 수정
 fixes #42
 ```
 
+---
+
+## 최종 확인 사항
+
 위 규칙에 따라 현재 변경사항에 적합한 커밋 메시지를 작성하고 커밋을 생성하세요.
+
+**다시 한 번 강조**: 커밋 메시지에는 Claude Code 관련 자동 생성 표시를 **절대로 포함하지 마세요**. 순수한 변경사항 설명만 작성하세요.
