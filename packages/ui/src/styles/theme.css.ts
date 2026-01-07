@@ -32,6 +32,17 @@ export const vars = createGlobalTheme(':root', {
 		// Base
 		black: '#1A2633',
 		white: '#FFFFFF',
+
+		border: {
+			default: '#324D67',
+			error: '#EF4444',
+		},
+
+		disabled: {
+			text: '#9CA3AF',
+			border: '#D1D5DB',
+			background: '#F3F4F6',
+		},
 	},
 	fontSize: {
 		// Caption (12px Light)

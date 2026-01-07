@@ -4,8 +4,8 @@
 		"rootDir": ".",
 		"baseUrl": "./src",
 		"paths": {
-			"~/*": [
-				"./src/*"
+			"@/*": [
+				"./*"
 			]
 		},
 		/* Language and Environment*/

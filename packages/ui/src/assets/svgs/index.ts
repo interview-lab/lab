@@ -9,6 +9,7 @@ export { ReactComponent as IconDatabase } from './database.svg';
 export { ReactComponent as IconDataStructure } from './datastructure.svg';
 export { ReactComponent as IconDownload } from './download.svg';
 export { ReactComponent as IconExclamation } from './exclamation.svg';
+export { ReactComponent as IconExclamationCircle } from './exclamation-circle.svg';
 export { ReactComponent as IconFire } from './fire.svg';
 export { ReactComponent as IconGraph } from './graph.svg';
 export { ReactComponent as IconHelp } from './help.svg';
