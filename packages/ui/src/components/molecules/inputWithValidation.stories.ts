@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as SvgIcons from '../../assets/svgs';
 import InputWithValidation from './InputWithValidation';
 
 const meta = {

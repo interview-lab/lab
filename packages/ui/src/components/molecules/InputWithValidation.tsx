@@ -5,7 +5,6 @@ import Input from '../atoms/Input';
 import {
 	errorMessageStyle,
 	errorStyle,
-	iconStyle,
 	inputStyle,
 } from './inputWithValidation.css';
 
