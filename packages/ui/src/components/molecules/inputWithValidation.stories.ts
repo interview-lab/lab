@@ -20,13 +20,12 @@ const meta = {
 		disabled: {
 			control: 'boolean',
 		},
-		value: {
-			control: 'text',
-			description: 'Input value',
-		},
 		icon: {
 			control: 'select',
 			options: [undefined, ...Object.keys(SvgIcons)],
+		},
+		label: {
+			control: 'text',
 		},
 	},
 } satisfies Meta<typeof InputWithValidation>;

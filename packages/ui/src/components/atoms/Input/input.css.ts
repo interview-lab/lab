@@ -1,7 +1,15 @@
 import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
-export const containerStyle = style({
+export const labelStyle = style({
+	marginBottom: 8,
+	fontFamily: vars.font.pretendard,
+	fontSize: 14,
+	fontWeight: vars.fontWeight.medium,
+	color: vars.color.blueDark,
+});
+
+export const inputContainerStyle = style({
 	position: 'relative',
 });
 
@@ -16,8 +24,8 @@ export const inputStyle = style({
 	fontFamily: vars.font.pretendard,
 	fontSize: 14,
 	fontWeight: vars.fontWeight.regular,
-	color: '#4B5563',
 	boxSizing: 'border-box',
+	color: vars.color.gray,
 
 	':disabled': {
 		color: vars.color.disabled.text,
@@ -32,4 +40,5 @@ export const iconStyle = style({
 	left: 16,
 	top: '50%',
 	transform: 'translateY(-50%)',
+	color: vars.color.gray,
 });

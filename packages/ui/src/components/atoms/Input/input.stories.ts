@@ -13,6 +13,9 @@ const meta = {
 			control: 'select',
 			options: [undefined, ...Object.keys(SvgIcons)],
 		},
+		label: {
+			control: 'text',
+		},
 	},
 } satisfies Meta<typeof Input>;
 
@@ -20,9 +23,28 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Default: Story = {
 	args: {
 		disabled: false,
 		icon: undefined,
+		id: 'input-default',
+	},
+};
+
+export const Placeholder: Story = {
+	args: {
+		disabled: false,
+		icon: undefined,
+		id: 'input-placeholder',
+		placeholder: 'Placeholder',
+	},
+};
+
+export const WithLabel: Story = {
+	args: {
+		disabled: false,
+		icon: undefined,
+		label: 'Input Label',
+		id: 'input-label',
 	},
 };
