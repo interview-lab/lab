@@ -10,6 +10,7 @@ export const buttonStyle = style({
 	padding: 0,
 	cursor: 'pointer',
 	outline: 'none',
+	transition: 'all 300ms',
 });
 
 export const iconStyle = style({

@@ -85,8 +85,8 @@ export const vars = createGlobalTheme(':root', {
 		full: '9999px',
 	},
 	border: {
-		width1: '1px',
-		width2: '2px',
+		width1: '1px solid',
+		width2: '2px solid',
 	},
 	shadow: {
 		sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
