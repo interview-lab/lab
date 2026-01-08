@@ -1,0 +1,22 @@
+model Session {
+  id     String @id @default(cuid())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+
+  category  Category
+  questions Question[]
+
+  totalScore Int?
+  status     SessionStatus
+  aiFeedback String?
+
+  createdAt DateTime  @default(now())
+  endedAt   DateTime?
+  answers   Answer[]
+}
+
+enum SessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}

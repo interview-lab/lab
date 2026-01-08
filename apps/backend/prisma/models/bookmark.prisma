@@ -1,0 +1,11 @@
+model Bookmark {
+  id         String   @id @default(cuid())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, questionId])
+}

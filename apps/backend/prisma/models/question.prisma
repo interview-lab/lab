@@ -1,0 +1,31 @@
+model Question {
+  id        String  @id @default(cuid())
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id])
+  answer    Answer?
+
+  content String
+  tip     String?
+
+  difficulty Difficulty
+  category   Category
+  bookmarks Bookmark[]
+
+  createdAt DateTime @default(now())
+}
+
+enum Category {
+  NETWORK
+  OS
+  FRONTEND
+  BACKEND
+  DATA_STRUCTURE
+  DATABASE
+  ALGORITHM
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
