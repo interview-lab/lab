@@ -16,7 +16,7 @@ export const inputStyle = style({
 	fontFamily: vars.font.pretendard,
 	fontSize: 14,
 	fontWeight: vars.fontWeight.regular,
-	color: '#4B5563',
+	color: vars.color.gray,
 	boxSizing: 'border-box',
 
 	':disabled': {

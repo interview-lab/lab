@@ -1,7 +1,7 @@
 import { mergeClassnames } from '@interview-lab/shared';
-import Icon from '../atoms/Icon';
-import type { InputProps } from '../atoms/Input';
-import Input from '../atoms/Input';
+import Icon from '../../atoms/Icon';
+import type { InputProps } from '../../atoms/Input';
+import Input from '../../atoms/Input';
 import {
 	errorMessageStyle,
 	errorStyle,
