@@ -2,8 +2,6 @@ model Answer {
   id         String   @id @default(cuid())
   questionId String   @unique
   question   Question @relation(fields: [questionId], references: [id])
-  session   Session @relation(fields: [sessionId], references: [id])
-  sessionId String
 
   content String
 
