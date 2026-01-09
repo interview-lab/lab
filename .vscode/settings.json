@@ -4,5 +4,8 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.ts": "always",
 		"source.organizeImports.biome": "always"
+	},
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma"
 	}
 }

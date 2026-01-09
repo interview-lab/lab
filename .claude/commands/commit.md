@@ -19,7 +19,7 @@ description: Create a git commit
 
 **절대로** 다음 문구를 커밋 메시지에 포함하지 마세요:
 - `🤖 Generated with [Claude Code](https://claude.com/claude-code)`
-- `Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>`
+- `Co-Authored-By: Claude <모델명> <noreply@anthropic.com>` (Opus, Sonnet, Haiku 등 모든 모델)
 - 위와 유사한 자동 생성 표시 문구
 
 커밋 메시지는 순수하게 변경사항에 대한 설명만 포함해야 합니다.
