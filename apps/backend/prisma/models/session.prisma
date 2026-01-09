@@ -3,7 +3,7 @@ model Session {
   userId Int
   user   User   @relation(fields: [userId], references: [id])
 
-  category  Category
+  category  Category?
   questions Question[]
 
   totalScore Int?
