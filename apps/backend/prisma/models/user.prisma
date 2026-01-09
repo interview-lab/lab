@@ -6,7 +6,7 @@ model User {
   password String?
 
   profileImage String?
-  level        Int
+  level        Int @default(1)
 
   googleId String? @unique
   githubId String? @unique
