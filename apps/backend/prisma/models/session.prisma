@@ -1,7 +1,7 @@
 model Session {
   id     String @id @default(cuid())
   userId Int
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   category  Category?
   questions Question[]

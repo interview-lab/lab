@@ -3,7 +3,7 @@ model Bookmark {
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
   questionId String
-  question   Question @relation(fields: [questionId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

@@ -1,7 +1,7 @@
 model Question {
   id        String  @id @default(cuid())
   sessionId String
-  session   Session @relation(fields: [sessionId], references: [id])
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   answer    Answer?
 
   content String
