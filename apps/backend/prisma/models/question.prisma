@@ -1,10 +1,10 @@
 model Question {
   id        String  @id @default(cuid())
-  sessionId String
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: SetNull)
-  answer    Answer?
+  sessionId String?
+  session   Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
   content String
+  answer  Answer?
   tip     String?
 
   difficulty Difficulty
