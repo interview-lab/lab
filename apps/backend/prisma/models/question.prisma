@@ -1,5 +1,5 @@
 model Question {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   sessionId String?
   session   Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
@@ -9,7 +9,7 @@ model Question {
 
   difficulty Difficulty
   category   Category
-  bookmarks Bookmark[]
+  bookmarks  Bookmark[]
 
   createdAt DateTime @default(now())
 }
