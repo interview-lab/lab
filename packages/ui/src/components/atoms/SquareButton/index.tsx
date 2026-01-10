@@ -6,7 +6,7 @@ import {
 	activeIconStyle,
 	buttonStyle,
 	iconStyle,
-} from './squareButton.css';
+} from '@/components/atoms/SquareButton/squareButton.css';
 
 export type SquareButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 	icon?: Parameters<typeof Icon>[0]['icon'];

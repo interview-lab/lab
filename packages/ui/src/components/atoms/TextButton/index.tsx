@@ -1,7 +1,7 @@
 import { mergeClassnames } from '@interview-lab/shared';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import Icon from '@/components/atoms/Icon';
-import { buttonStyle } from './textButton.css';
+import { buttonStyle } from '@/components/atoms/TextButton/textButton.css';
 
 export type TextButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 	children: ReactNode;

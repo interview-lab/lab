@@ -1,7 +1,10 @@
 import clsx from 'clsx';
 import type { ButtonHTMLAttributes } from 'react';
+import {
+	buttonStyle,
+	iconStyle,
+} from '@/components/atoms/CircleButton/circleButton.css';
 import Icon from '@/components/atoms/Icon';
-import { buttonStyle, iconStyle } from './circleButton.css';
 
 export type CircleButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 	icon?: Parameters<typeof Icon>[0]['icon'];
