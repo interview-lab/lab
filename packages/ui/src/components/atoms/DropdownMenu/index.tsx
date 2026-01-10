@@ -34,9 +34,9 @@ const DropdownMenu = ({
 }: DropdownMenuProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedValue, setSelectedValue] = useState<string | null>(
-		defaultValue ?? null,
-	);
+	const [selectedValue, setSelectedValue] = useState<
+		DropdownMenuItem['value'] | null
+	>(defaultValue ?? null);
 
 	useClickOutside(containerRef, () => {
 		setIsOpen(false);
@@ -51,7 +51,7 @@ const DropdownMenu = ({
 	const displayLabel = selectedItem?.label ?? defaultLabel;
 
 	const handleToggle = () => {
-		setIsOpen(!isOpen);
+		setIsOpen((openState) => !openState);
 	};
 
 	const handleSelect = (item: DropdownMenuItem) => {
