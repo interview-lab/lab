@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ButtonHTMLAttributes } from 'react';
 import Icon from '@/components/atoms/Icon';
 import { buttonStyle, iconStyle } from './circleButton.css';
@@ -9,7 +9,7 @@ export type CircleButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const CircleButton = ({ className, icon, ...props }: CircleButtonProps) => {
 	return (
-		<button className={mergeClassnames(buttonStyle, className)} {...props}>
+		<button className={clsx(buttonStyle, className)} {...props}>
 			{icon && <Icon icon={icon} className={iconStyle} />}
 		</button>
 	);

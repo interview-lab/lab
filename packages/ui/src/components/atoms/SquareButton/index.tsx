@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ButtonHTMLAttributes } from 'react';
 import Icon from '@/components/atoms/Icon';
 import {
@@ -21,7 +21,7 @@ const SquareButton = ({
 }: SquareButtonProps) => {
 	return (
 		<button
-			className={mergeClassnames(
+			className={clsx(
 				buttonStyle,
 				active ? activeButtonStyle : undefined,
 				className,
@@ -31,10 +31,7 @@ const SquareButton = ({
 			{icon && (
 				<Icon
 					icon={icon}
-					className={mergeClassnames(
-						iconStyle,
-						active ? activeIconStyle : undefined,
-					)}
+					className={clsx(iconStyle, active ? activeIconStyle : undefined)}
 				/>
 			)}
 		</button>

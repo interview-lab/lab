@@ -20,5 +20,5 @@ export const iconStyle = style({
 	height: 28,
 	top: '50%',
 	left: '50%',
-	transform: 'translate(-45%, -50%)',
+	transform: 'translate(-50%, -50%)',
 });
