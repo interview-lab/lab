@@ -1,7 +1,15 @@
 import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
-export const containerStyle = style({
+export const labelStyle = style({
+	marginBottom: 8,
+	fontFamily: vars.font.pretendard,
+	fontSize: 14,
+	fontWeight: vars.fontWeight.medium,
+	color: vars.color.blueDark,
+});
+
+export const inputContainerStyle = style({
 	position: 'relative',
 });
 
@@ -27,9 +35,26 @@ export const inputStyle = style({
 	},
 });
 
-export const iconStyle = style({
+const baseIconStyle = style({
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
 	position: 'absolute',
-	left: 16,
 	top: '50%',
 	transform: 'translateY(-50%)',
+	color: vars.color.gray,
 });
+
+export const leftIconStyle = style([
+	baseIconStyle,
+	{
+		left: 16,
+	},
+]);
+
+export const rightIconStyle = style([
+	baseIconStyle,
+	{
+		right: 16,
+	},
+]);

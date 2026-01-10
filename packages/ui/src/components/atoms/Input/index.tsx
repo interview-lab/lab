@@ -1,17 +1,46 @@
 import { mergeClassnames } from '@interview-lab/shared';
-import type { InputHTMLAttributes } from 'react';
-import Icon from '@/components/atoms/Icon';
-import { containerStyle, iconStyle, inputStyle } from './input.css';
+import type { InputHTMLAttributes, ReactElement } from 'react';
+import {
+	inputContainerStyle,
+	inputStyle,
+	labelStyle,
+	leftIconStyle,
+	rightIconStyle,
+} from './input.css';
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
-	icon?: Parameters<typeof Icon>[0]['icon'];
-};
+	leftIcon?: ReactElement;
+	rightIcon?: ReactElement;
+} & (
+		| {
+				label: string;
+				id: string;
+		  }
+		| {
+				label?: never;
+				id?: string;
+		  }
+	);
 
-const Input = ({ className, icon, ...props }: InputProps) => {
+const Input = ({
+	className,
+	label,
+	leftIcon,
+	rightIcon,
+	...props
+}: InputProps) => {
 	return (
-		<div className={containerStyle}>
-			{icon && <Icon icon={icon} className={iconStyle} />}
-			<input className={mergeClassnames(inputStyle, className)} {...props} />
+		<div>
+			{label && (
+				<label htmlFor={props.id} className={labelStyle}>
+					{label}
+				</label>
+			)}
+			<div className={inputContainerStyle}>
+				{leftIcon && <span className={leftIconStyle}>{leftIcon}</span>}
+				<input className={mergeClassnames(inputStyle, className)} {...props} />
+				{rightIcon && <span className={rightIconStyle}>{rightIcon}</span>}
+			</div>
 		</div>
 	);
 };

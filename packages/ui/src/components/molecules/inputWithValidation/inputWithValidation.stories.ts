@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as SvgIcons from '@/assets/svgs';
 import InputWithValidation from './InputWithValidation';
 
 const meta = {
@@ -20,13 +19,8 @@ const meta = {
 		disabled: {
 			control: 'boolean',
 		},
-		value: {
+		label: {
 			control: 'text',
-			description: 'Input value',
-		},
-		icon: {
-			control: 'select',
-			options: [undefined, ...Object.keys(SvgIcons)],
 		},
 	},
 } satisfies Meta<typeof InputWithValidation>;
@@ -39,7 +33,6 @@ export const Default: Story = {
 		isError: false,
 		placeholder: 'Enter text...',
 		disabled: false,
-		icon: undefined,
 	},
 };
 
@@ -49,7 +42,6 @@ export const ErrorWithMessage: Story = {
 		errorMessage: 'This field is required',
 		placeholder: 'Enter text...',
 		disabled: false,
-		icon: undefined,
 	},
 };
 
@@ -58,6 +50,5 @@ export const ErrorWithoutMessage: Story = {
 		isError: true,
 		placeholder: 'Enter text...',
 		disabled: false,
-		icon: undefined,
 	},
 };
