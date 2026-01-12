@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ElementType, ReactNode } from 'react';
 import type { Text } from '@/types/text';
 import { CaptionStyleVarient } from './caption.css';
@@ -21,7 +21,7 @@ const Caption = <T extends CaptionTextType>({
 	const TextTag = textType as ElementType;
 
 	return (
-		<TextTag className={mergeClassnames(CaptionStyleVarient[style], className)}>
+		<TextTag className={clsx(CaptionStyleVarient[style], className)}>
 			{children}
 		</TextTag>
 	);

@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ElementType, ReactNode } from 'react';
 import type { Text } from '@/types/text';
 import { TitleStyleVarient } from './title.css';
@@ -21,7 +21,7 @@ const Title = <T extends TitleTextType>({
 	const TextTag = textType as ElementType;
 
 	return (
-		<TextTag className={mergeClassnames(TitleStyleVarient[style], className)}>
+		<TextTag className={clsx(TitleStyleVarient[style], className)}>
 			{children}
 		</TextTag>
 	);

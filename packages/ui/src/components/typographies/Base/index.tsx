@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ElementType, ReactNode } from 'react';
 import type { Text } from '@/types/text';
 import { BaseStyleVarient } from './base.css';
@@ -21,7 +21,7 @@ const Base = <T extends BaseTextType>({
 	const TextTag = textType as ElementType;
 
 	return (
-		<TextTag className={mergeClassnames(BaseStyleVarient[style], className)}>
+		<TextTag className={clsx(BaseStyleVarient[style], className)}>
 			{children}
 		</TextTag>
 	);

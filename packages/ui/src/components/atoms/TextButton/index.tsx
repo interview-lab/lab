@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import Icon from '@/components/atoms/Icon';
 import { buttonStyle } from '@/components/atoms/TextButton/textButton.css';
@@ -17,7 +17,7 @@ const TextButton = ({
 	...props
 }: TextButtonProps) => {
 	return (
-		<button className={mergeClassnames(buttonStyle, className)} {...props}>
+		<button className={clsx(buttonStyle, className)} {...props}>
 			{showIcon && icon && <Icon icon={icon} />}
 			{children}
 		</button>

@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ElementType, ReactNode } from 'react';
 import type { Text } from '@/types/text';
 import { ButtonStyleVariant } from './button.css';
@@ -21,7 +21,7 @@ const ButtonText = <T extends ButtonTextType>({
 	const TextTag = textType as ElementType;
 
 	return (
-		<TextTag className={mergeClassnames(ButtonStyleVariant[style], className)}>
+		<TextTag className={clsx(ButtonStyleVariant[style], className)}>
 			{children}
 		</TextTag>
 	);

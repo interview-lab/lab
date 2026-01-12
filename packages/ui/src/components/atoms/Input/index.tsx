@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { InputHTMLAttributes, ReactElement } from 'react';
 import {
 	inputContainerStyle,
@@ -38,7 +38,7 @@ const Input = ({
 			)}
 			<div className={inputContainerStyle}>
 				{leftIcon && <span className={leftIconStyle}>{leftIcon}</span>}
-				<input className={mergeClassnames(inputStyle, className)} {...props} />
+				<input className={clsx(inputStyle, className)} {...props} />
 				{rightIcon && <span className={rightIconStyle}>{rightIcon}</span>}
 			</div>
 		</div>
