@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ElementType, ReactNode } from 'react';
 import type { Text } from '@/types/text';
 import { SubtitleStyleVarient } from './subtitle.css';
@@ -21,9 +21,7 @@ const Subtitle = <T extends SubtitleTextType>({
 	const TextTag = textType as ElementType;
 
 	return (
-		<TextTag
-			className={mergeClassnames(SubtitleStyleVarient[style], className)}
-		>
+		<TextTag className={clsx(SubtitleStyleVarient[style], className)}>
 			{children}
 		</TextTag>
 	);

@@ -16,16 +16,16 @@ export const inputContainerStyle = style({
 export const inputStyle = style({
 	height: 52,
 	minWidth: 200,
-	border: `2px solid ${vars.color.border.default}`,
+	border: `${vars.border.width2} ${vars.color.border.default}`,
 	borderRadius: vars.radius.default,
 	paddingInline: 44,
 	display: 'flex',
 	alignItems: 'center',
 	fontFamily: vars.font.pretendard,
-	fontSize: 14,
+	fontSize: vars.fontSize.sizeSm,
 	fontWeight: vars.fontWeight.regular,
-	boxSizing: 'border-box',
 	color: vars.color.gray,
+	boxSizing: 'border-box',
 
 	':disabled': {
 		color: vars.color.disabled.text,

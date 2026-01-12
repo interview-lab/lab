@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import Icon from '../atoms/Icon';
-import type { InputProps } from '../atoms/Input';
-import Input from '../atoms/Input';
+import Icon from '@/components/atoms/Icon';
+import type { InputProps } from '@/components/atoms/Input';
+import Input from '@/components/atoms/Input';
 import {
 	errorMessageStyle,
 	errorStyle,
