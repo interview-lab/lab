@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { HTMLAttributes } from 'react';
 import { useRef, useState } from 'react';
 import Icon from '@/components/atoms/Icon';
@@ -28,34 +28,27 @@ const DropdownMenu = ({
 	className,
 	items,
 	defaultLabel = '모든 카테고리',
-	defaultValue,
+	defaultValue = '',
 	onSelect,
 	...props
 }: DropdownMenuProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedValue, setSelectedValue] = useState<
-		DropdownMenuItem['value'] | null
-	>(defaultValue ?? null);
+	const [selectedItem, setSelectedItem] = useState<DropdownMenuItem>({
+		label: defaultLabel,
+		value: defaultValue,
+	});
 
 	useClickOutside(containerRef, () => {
 		setIsOpen(false);
 	});
-
-	const allItems: DropdownMenuItem[] = [
-		{ label: defaultLabel, value: '' },
-		...items,
-	];
-
-	const selectedItem = allItems.find((item) => item.value === selectedValue);
-	const displayLabel = selectedItem?.label ?? defaultLabel;
 
 	const handleToggle = () => {
 		setIsOpen((openState) => !openState);
 	};
 
 	const handleSelect = (item: DropdownMenuItem) => {
-		setSelectedValue(item.value);
+		setSelectedItem(item);
 		setIsOpen(false);
 		onSelect?.(item);
 	};
@@ -63,29 +56,26 @@ const DropdownMenu = ({
 	return (
 		<div
 			ref={containerRef}
-			className={mergeClassnames(containerStyle, className)}
+			className={clsx(containerStyle, className)}
 			{...props}
 		>
 			<button
 				type="button"
-				className={mergeClassnames(
-					buttonStyle,
-					isOpen ? activeButtonStyle : undefined,
-				)}
+				className={clsx(buttonStyle, isOpen && activeButtonStyle)}
 				onClick={handleToggle}
 			>
-				<p>{displayLabel}</p>
+				<span>{selectedItem.label}</span>
 				<Icon icon="IconOpen" />
 			</button>
 			{isOpen && (
 				<div className={menuStyle}>
-					{allItems.map((item) => (
+					{items.map((item) => (
 						<button
 							type="button"
 							key={item.value}
-							className={mergeClassnames(
+							className={clsx(
 								menuItemStyle,
-								selectedValue === item.value ? activeMenuItemStyle : undefined,
+								selectedItem.value === item.value && activeMenuItemStyle,
 							)}
 							onClick={() => handleSelect(item)}
 						>
