@@ -29,5 +29,5 @@ export const iconStyle = style({
 });
 
 export const activeIconStyle = style({
-	color: '#FFFFFF',
+	color: vars.color.white,
 });
