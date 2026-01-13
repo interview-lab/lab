@@ -27,6 +27,16 @@ export type Answer = Prisma.AnswerModel;
  */
 export type Bookmark = Prisma.BookmarkModel;
 /**
+ * Model EmailVerification
+ *
+ */
+export type EmailVerification = Prisma.EmailVerificationModel;
+/**
+ * Model OAuthPendingRegistration
+ *
+ */
+export type OAuthPendingRegistration = Prisma.OAuthPendingRegistrationModel;
+/**
  * Model Question
  *
  */

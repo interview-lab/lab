@@ -1,0 +1,13 @@
+model OAuthPendingRegistration {
+  id            Int      @id @default(autoincrement())
+  provider      String
+  providerId    String
+  tempToken     String   @unique
+  providerEmail String?
+  providerName  String?
+  profileImage  String?
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  @@unique([provider, providerId])
+}

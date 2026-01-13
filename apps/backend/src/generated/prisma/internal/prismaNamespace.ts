@@ -208,17 +208,18 @@ export type XOR<T, U> = T extends object
 /**
  * Is T a Record?
  */
-type IsObject<T extends any> = T extends Array<any>
-	? False
-	: T extends Date
+type IsObject<T extends any> =
+	T extends Array<any>
 		? False
-		: T extends Uint8Array
+		: T extends Date
 			? False
-			: T extends BigInt
+			: T extends Uint8Array
 				? False
-				: T extends object
-					? True
-					: False;
+				: T extends BigInt
+					? False
+					: T extends object
+						? True
+						: False;
 
 /**
  * If it's T[], return T
@@ -417,6 +418,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never
 export const ModelName = {
 	Answer: 'Answer',
 	Bookmark: 'Bookmark',
+	EmailVerification: 'EmailVerification',
+	OAuthPendingRegistration: 'OAuthPendingRegistration',
 	Question: 'Question',
 	Session: 'Session',
 	User: 'User',
@@ -441,7 +444,14 @@ export type TypeMap<
 		omit: GlobalOmitOptions;
 	};
 	meta: {
-		modelProps: 'answer' | 'bookmark' | 'question' | 'session' | 'user';
+		modelProps:
+			| 'answer'
+			| 'bookmark'
+			| 'emailVerification'
+			| 'oAuthPendingRegistration'
+			| 'question'
+			| 'session'
+			| 'user';
 		txIsolationLevel: TransactionIsolationLevel;
 	};
 	model: {
@@ -593,6 +603,158 @@ export type TypeMap<
 					args: Prisma.BookmarkCountArgs<ExtArgs>;
 					result:
 						| runtime.Types.Utils.Optional<Prisma.BookmarkCountAggregateOutputType>
+						| number;
+				};
+			};
+		};
+		EmailVerification: {
+			payload: Prisma.$EmailVerificationPayload<ExtArgs>;
+			fields: Prisma.EmailVerificationFieldRefs;
+			operations: {
+				findUnique: {
+					args: Prisma.EmailVerificationFindUniqueArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload> | null;
+				};
+				findUniqueOrThrow: {
+					args: Prisma.EmailVerificationFindUniqueOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>;
+				};
+				findFirst: {
+					args: Prisma.EmailVerificationFindFirstArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload> | null;
+				};
+				findFirstOrThrow: {
+					args: Prisma.EmailVerificationFindFirstOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>;
+				};
+				findMany: {
+					args: Prisma.EmailVerificationFindManyArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>[];
+				};
+				create: {
+					args: Prisma.EmailVerificationCreateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>;
+				};
+				createMany: {
+					args: Prisma.EmailVerificationCreateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				createManyAndReturn: {
+					args: Prisma.EmailVerificationCreateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>[];
+				};
+				delete: {
+					args: Prisma.EmailVerificationDeleteArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>;
+				};
+				update: {
+					args: Prisma.EmailVerificationUpdateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>;
+				};
+				deleteMany: {
+					args: Prisma.EmailVerificationDeleteManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateMany: {
+					args: Prisma.EmailVerificationUpdateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateManyAndReturn: {
+					args: Prisma.EmailVerificationUpdateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>[];
+				};
+				upsert: {
+					args: Prisma.EmailVerificationUpsertArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerificationPayload>;
+				};
+				aggregate: {
+					args: Prisma.EmailVerificationAggregateArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AggregateEmailVerification>;
+				};
+				groupBy: {
+					args: Prisma.EmailVerificationGroupByArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.EmailVerificationGroupByOutputType>[];
+				};
+				count: {
+					args: Prisma.EmailVerificationCountArgs<ExtArgs>;
+					result:
+						| runtime.Types.Utils.Optional<Prisma.EmailVerificationCountAggregateOutputType>
+						| number;
+				};
+			};
+		};
+		OAuthPendingRegistration: {
+			payload: Prisma.$OAuthPendingRegistrationPayload<ExtArgs>;
+			fields: Prisma.OAuthPendingRegistrationFieldRefs;
+			operations: {
+				findUnique: {
+					args: Prisma.OAuthPendingRegistrationFindUniqueArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload> | null;
+				};
+				findUniqueOrThrow: {
+					args: Prisma.OAuthPendingRegistrationFindUniqueOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>;
+				};
+				findFirst: {
+					args: Prisma.OAuthPendingRegistrationFindFirstArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload> | null;
+				};
+				findFirstOrThrow: {
+					args: Prisma.OAuthPendingRegistrationFindFirstOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>;
+				};
+				findMany: {
+					args: Prisma.OAuthPendingRegistrationFindManyArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>[];
+				};
+				create: {
+					args: Prisma.OAuthPendingRegistrationCreateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>;
+				};
+				createMany: {
+					args: Prisma.OAuthPendingRegistrationCreateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				createManyAndReturn: {
+					args: Prisma.OAuthPendingRegistrationCreateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>[];
+				};
+				delete: {
+					args: Prisma.OAuthPendingRegistrationDeleteArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>;
+				};
+				update: {
+					args: Prisma.OAuthPendingRegistrationUpdateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>;
+				};
+				deleteMany: {
+					args: Prisma.OAuthPendingRegistrationDeleteManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateMany: {
+					args: Prisma.OAuthPendingRegistrationUpdateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateManyAndReturn: {
+					args: Prisma.OAuthPendingRegistrationUpdateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>[];
+				};
+				upsert: {
+					args: Prisma.OAuthPendingRegistrationUpsertArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$OAuthPendingRegistrationPayload>;
+				};
+				aggregate: {
+					args: Prisma.OAuthPendingRegistrationAggregateArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AggregateOAuthPendingRegistration>;
+				};
+				groupBy: {
+					args: Prisma.OAuthPendingRegistrationGroupByArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.OAuthPendingRegistrationGroupByOutputType>[];
+				};
+				count: {
+					args: Prisma.OAuthPendingRegistrationCountArgs<ExtArgs>;
+					result:
+						| runtime.Types.Utils.Optional<Prisma.OAuthPendingRegistrationCountAggregateOutputType>
 						| number;
 				};
 			};
@@ -887,6 +1049,34 @@ export const BookmarkScalarFieldEnum = {
 export type BookmarkScalarFieldEnum =
 	(typeof BookmarkScalarFieldEnum)[keyof typeof BookmarkScalarFieldEnum];
 
+export const EmailVerificationScalarFieldEnum = {
+	id: 'id',
+	email: 'email',
+	code: 'code',
+	expiresAt: 'expiresAt',
+	verified: 'verified',
+	attempts: 'attempts',
+	createdAt: 'createdAt',
+} as const;
+
+export type EmailVerificationScalarFieldEnum =
+	(typeof EmailVerificationScalarFieldEnum)[keyof typeof EmailVerificationScalarFieldEnum];
+
+export const OAuthPendingRegistrationScalarFieldEnum = {
+	id: 'id',
+	provider: 'provider',
+	providerId: 'providerId',
+	tempToken: 'tempToken',
+	providerEmail: 'providerEmail',
+	providerName: 'providerName',
+	profileImage: 'profileImage',
+	expiresAt: 'expiresAt',
+	createdAt: 'createdAt',
+} as const;
+
+export type OAuthPendingRegistrationScalarFieldEnum =
+	(typeof OAuthPendingRegistrationScalarFieldEnum)[keyof typeof OAuthPendingRegistrationScalarFieldEnum];
+
 export const QuestionScalarFieldEnum = {
 	id: 'id',
 	sessionId: 'sessionId',
@@ -1001,6 +1191,14 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
 	$PrismaModel,
 	'DateTime[]'
+>;
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
+	$PrismaModel,
+	'Boolean'
 >;
 
 /**
@@ -1170,6 +1368,8 @@ export type PrismaClientOptions = (
 export type GlobalOmitConfig = {
 	answer?: Prisma.AnswerOmit;
 	bookmark?: Prisma.BookmarkOmit;
+	emailVerification?: Prisma.EmailVerificationOmit;
+	oAuthPendingRegistration?: Prisma.OAuthPendingRegistrationOmit;
 	question?: Prisma.QuestionOmit;
 	session?: Prisma.SessionOmit;
 	user?: Prisma.UserOmit;
@@ -1188,11 +1388,8 @@ export type GetLogType<T> = CheckIsLogLevel<
 	T extends LogDefinition ? T['level'] : T
 >;
 
-export type GetEvents<T extends any[]> = T extends Array<
-	LogLevel | LogDefinition
->
-	? GetLogType<T[number]>
-	: never;
+export type GetEvents<T extends any[]> =
+	T extends Array<LogLevel | LogDefinition> ? GetLogType<T[number]> : never;
 
 export type QueryEvent = {
 	timestamp: Date;

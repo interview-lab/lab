@@ -56,6 +56,8 @@ export const AnyNull = runtime.AnyNull;
 export const ModelName = {
 	Answer: 'Answer',
 	Bookmark: 'Bookmark',
+	EmailVerification: 'EmailVerification',
+	OAuthPendingRegistration: 'OAuthPendingRegistration',
 	Question: 'Question',
 	Session: 'Session',
 	User: 'User',
@@ -99,6 +101,34 @@ export const BookmarkScalarFieldEnum = {
 
 export type BookmarkScalarFieldEnum =
 	(typeof BookmarkScalarFieldEnum)[keyof typeof BookmarkScalarFieldEnum];
+
+export const EmailVerificationScalarFieldEnum = {
+	id: 'id',
+	email: 'email',
+	code: 'code',
+	expiresAt: 'expiresAt',
+	verified: 'verified',
+	attempts: 'attempts',
+	createdAt: 'createdAt',
+} as const;
+
+export type EmailVerificationScalarFieldEnum =
+	(typeof EmailVerificationScalarFieldEnum)[keyof typeof EmailVerificationScalarFieldEnum];
+
+export const OAuthPendingRegistrationScalarFieldEnum = {
+	id: 'id',
+	provider: 'provider',
+	providerId: 'providerId',
+	tempToken: 'tempToken',
+	providerEmail: 'providerEmail',
+	providerName: 'providerName',
+	profileImage: 'profileImage',
+	expiresAt: 'expiresAt',
+	createdAt: 'createdAt',
+} as const;
+
+export type OAuthPendingRegistrationScalarFieldEnum =
+	(typeof OAuthPendingRegistrationScalarFieldEnum)[keyof typeof OAuthPendingRegistrationScalarFieldEnum];
 
 export const QuestionScalarFieldEnum = {
 	id: 'id',

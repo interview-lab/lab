@@ -168,6 +168,19 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
 	_max?: Prisma.NestedIntFilter<$PrismaModel>;
 };
 
+export type BoolFilter<$PrismaModel = never> = {
+	equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+	not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean;
+};
+
+export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+	equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+	not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean;
+	_count?: Prisma.NestedIntFilter<$PrismaModel>;
+	_min?: Prisma.NestedBoolFilter<$PrismaModel>;
+	_max?: Prisma.NestedBoolFilter<$PrismaModel>;
+};
+
 export type EnumDifficultyFilter<$PrismaModel = never> = {
 	equals?: $Enums.Difficulty | Prisma.EnumDifficultyFieldRefInput<$PrismaModel>;
 	in?:
@@ -508,6 +521,19 @@ export type NestedFloatFilter<$PrismaModel = never> = {
 	gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>;
 	gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>;
 	not?: Prisma.NestedFloatFilter<$PrismaModel> | number;
+};
+
+export type NestedBoolFilter<$PrismaModel = never> = {
+	equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+	not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean;
+};
+
+export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+	equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+	not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean;
+	_count?: Prisma.NestedIntFilter<$PrismaModel>;
+	_min?: Prisma.NestedBoolFilter<$PrismaModel>;
+	_max?: Prisma.NestedBoolFilter<$PrismaModel>;
 };
 
 export type NestedEnumDifficultyFilter<$PrismaModel = never> = {

@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 
-import * as path from 'node:path';
 import * as process from 'node:process';
+import * as path from 'node:path';
 
 import * as runtime from '@prisma/client/runtime/client';
 import * as $Enums from './enums.js';
@@ -52,6 +52,16 @@ export type Answer = Prisma.AnswerModel;
  *
  */
 export type Bookmark = Prisma.BookmarkModel;
+/**
+ * Model EmailVerification
+ *
+ */
+export type EmailVerification = Prisma.EmailVerificationModel;
+/**
+ * Model OAuthPendingRegistration
+ *
+ */
+export type OAuthPendingRegistration = Prisma.OAuthPendingRegistrationModel;
 /**
  * Model Question
  *
