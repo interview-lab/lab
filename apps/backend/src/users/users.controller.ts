@@ -4,10 +4,10 @@ import {
 	NotFoundException,
 	Param,
 	ParseIntPipe,
-	Request,
 	UseGuards,
 } from '@nestjs/common';
-import { TokenGuard } from '../auth/guard/token.guard';
+import { AccessTokenGuard } from '../auth/guard/token.guard';
+import { User } from './decorators/user.decorator';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -20,9 +20,9 @@ export class UsersController {
 	}
 
 	@Get('profile')
-	@UseGuards(TokenGuard)
-	getUserProfile(@Request() request) {
-		return request.user;
+	@UseGuards(AccessTokenGuard)
+	getUserProfile(@User() user) {
+		return user;
 	}
 
 	@Get(':id')

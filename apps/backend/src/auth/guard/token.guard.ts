@@ -48,3 +48,18 @@ export class RefreshTokenGuard extends TokenGuard {
 		return true;
 	}
 }
+
+@Injectable()
+export class AccessTokenGuard extends TokenGuard {
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		super.canActivate(context);
+
+		const request = context.switchToHttp().getRequest();
+
+		if (request.type !== 'access') {
+			throw new UnauthorizedException('access token이 아닙니다.');
+		}
+
+		return true;
+	}
+}
