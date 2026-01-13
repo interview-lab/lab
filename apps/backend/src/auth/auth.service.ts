@@ -9,7 +9,7 @@ import {
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
 } from './const/auth.const';
-import { JWT_ACCESS_TOKEN_Payload } from './type/jwt.type';
+import { JWT_TOKEN_Payload } from './type/jwt.type';
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스
@@ -147,7 +147,7 @@ export class AuthService {
 	 * @returns 토큰의 payload
 	 */
 	verifyToken(token: string) {
-		return this.jwtService.verify<JWT_ACCESS_TOKEN_Payload>(token, {
+		return this.jwtService.verify<JWT_TOKEN_Payload>(token, {
 			secret: JWT_SECRET,
 		});
 	}
@@ -160,7 +160,7 @@ export class AuthService {
 	 * @returns 재발급된 토큰
 	 */
 	rotateToken(token: string, isRefreshToken: boolean = false) {
-		const decoded = this.jwtService.verify<JWT_ACCESS_TOKEN_Payload>(token, {
+		const decoded = this.jwtService.verify<JWT_TOKEN_Payload>(token, {
 			secret: JWT_SECRET,
 		});
 
