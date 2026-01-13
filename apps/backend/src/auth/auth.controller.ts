@@ -1,6 +1,6 @@
 import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RefreshTokenGuard } from './guard/token.guard';
+import { RefreshTokenGuard } from './guards/token.guard';
 
 @Controller('auth')
 export class AuthController {

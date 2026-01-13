@@ -6,7 +6,7 @@ import {
 	ParseIntPipe,
 	UseGuards,
 } from '@nestjs/common';
-import { AccessTokenGuard } from '../auth/guard/token.guard';
+import { AccessTokenGuard } from '../auth/guards/token.guard';
 import { User } from './decorators/user.decorator';
 import { UsersService } from './users.service';
 
