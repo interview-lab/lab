@@ -147,9 +147,13 @@ export class AuthService {
 	 * @returns 토큰의 payload
 	 */
 	verifyToken(token: string) {
-		return this.jwtService.verify<JWT_TOKEN_Payload>(token, {
-			secret: JWT_SECRET,
-		});
+		try {
+			return this.jwtService.verify<JWT_TOKEN_Payload>(token, {
+				secret: JWT_SECRET,
+			});
+		} catch (_) {
+			throw new UnauthorizedException('토큰이 만료되었거나 유효하지 않습니다.');
+		}
 	}
 
 	/**
