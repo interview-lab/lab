@@ -10,12 +10,14 @@ import {
 
 export type SquareButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 	icon?: Parameters<typeof Icon>[0]['icon'];
+	iconColor?: string;
 	active?: boolean;
 };
 
 const SquareButton = ({
 	className,
 	icon,
+	iconColor,
 	active,
 	...props
 }: SquareButtonProps) => {
@@ -32,6 +34,7 @@ const SquareButton = ({
 				<Icon
 					icon={icon}
 					className={clsx(iconStyle, active ? activeIconStyle : undefined)}
+					style={!active && iconColor ? { color: iconColor } : undefined}
 				/>
 			)}
 		</button>

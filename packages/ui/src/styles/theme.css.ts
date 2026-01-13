@@ -73,6 +73,7 @@ export const vars = createGlobalTheme(':root', {
 		'6': '24px',
 		'8': '32px',
 		'10': '40px',
+		'11': '44px',
 		'12': '48px',
 		'16': '64px',
 	},
