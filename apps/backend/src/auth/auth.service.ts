@@ -1,8 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 import { UserModel } from '@/generated/prisma/models';
+import { PrismaService } from '@/prisma/prisma.service';
 import { UsersService } from '@/users/users.service';
+import { EmailService } from '@/email/email.service';
 import {
 	HASH_ROUNDS,
 	JWT_ACCESS_TOKEN_EXPIRES_IN,
@@ -10,6 +17,7 @@ import {
 	JWT_SECRET,
 } from './consts/auth.const';
 import { JWT_TOKEN_Payload } from './types/jwt.type';
+import type { OAuthCallbackResult, OAuthProfile } from './types/oauth.type';
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스
@@ -21,6 +29,8 @@ export class AuthService {
 	constructor(
 		private readonly jwtService: JwtService,
 		private readonly usersService: UsersService,
+		private readonly prisma: PrismaService,
+		private readonly emailService: EmailService,
 	) {}
 
 	/**
@@ -175,5 +185,144 @@ export class AuthService {
 		}
 
 		return this.signToken({ ...decoded, id: decoded.sub }, isRefreshToken);
+	}
+
+	/**
+	 * OAuth 콜백을 처리합니다.
+	 *
+	 * @description 기존 사용자는 바로 JWT를 발급하고,
+	 *              신규 사용자는 임시 토큰을 발급하여 추가 정보 입력을 유도합니다.
+	 * @param profile - OAuth 프로필 정보
+	 * @returns 기존 사용자: JWT 토큰, 신규 사용자: 임시 토큰 및 프로필 정보
+	 */
+	async handleOAuthCallback(
+		profile: OAuthProfile,
+	): Promise<OAuthCallbackResult> {
+		const { provider, providerId, email, name, profileImage } = profile;
+
+		// 1. 기존 사용자 조회
+		const existingUser = await this.usersService.getUserByOAuthId(
+			provider,
+			providerId,
+		);
+
+		if (existingUser) {
+			// 기존 사용자 -> 바로 JWT 발급
+			const tokens = this.loginUser(existingUser);
+			return {
+				isExistingUser: true,
+				...tokens,
+			};
+		}
+
+		// 2. 신규 사용자 -> 임시 토큰 발급
+		const tempToken = uuidv4();
+		const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30분
+
+		// 기존 pending 레코드 삭제 후 새로 생성
+		await this.prisma.oAuthPendingRegistration.deleteMany({
+			where: { provider, providerId },
+		});
+
+		await this.prisma.oAuthPendingRegistration.create({
+			data: {
+				provider,
+				providerId,
+				tempToken,
+				providerEmail: email,
+				providerName: name,
+				profileImage,
+				expiresAt,
+			},
+		});
+
+		return {
+			isExistingUser: false,
+			tempToken,
+			providerEmail: email,
+			providerName: name,
+		};
+	}
+
+	/**
+	 * OAuth 가입을 완료합니다.
+	 *
+	 * @description 임시 토큰을 검증하고, 이메일 인증을 확인한 후 사용자를 생성합니다.
+	 * @param tempToken - OAuth 콜백에서 발급받은 임시 토큰
+	 * @param username - 사용자명
+	 * @param email - 이메일 주소
+	 * @returns Access Token과 Refresh Token을 포함한 객체
+	 * @throws {UnauthorizedException} 유효하지 않거나 만료된 임시 토큰인 경우
+	 * @throws {BadRequestException} 이메일 인증이 완료되지 않은 경우
+	 */
+	async completeOAuthRegistration(
+		tempToken: string,
+		username: string,
+		email: string,
+	): Promise<{ accessToken: string; refreshToken: string }> {
+		// 1. pending 레코드 조회
+		const pending = await this.prisma.oAuthPendingRegistration.findUnique({
+			where: { tempToken },
+		});
+
+		if (!pending || pending.expiresAt < new Date()) {
+			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
+		}
+
+		// 2. 이메일 인증 확인
+		const isVerified = await this.emailService.isEmailVerified(email);
+		if (!isVerified) {
+			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
+		}
+
+		// 3. 사용자 생성
+		const userData: Parameters<typeof this.usersService.createUser>[0] = {
+			email,
+			username,
+			profileImage: pending.profileImage,
+		};
+
+		if (pending.provider === 'google') {
+			userData.googleId = pending.providerId;
+		} else if (pending.provider === 'github') {
+			userData.githubId = pending.providerId;
+		}
+
+		const newUser = await this.usersService.createUser(userData);
+
+		// 4. pending 레코드 삭제
+		await this.prisma.oAuthPendingRegistration.delete({
+			where: { id: pending.id },
+		});
+
+		// 5. JWT 발급
+		return this.loginUser(newUser);
+	}
+
+	/**
+	 * 기존 계정에 OAuth를 연동합니다.
+	 *
+	 * @param userId - 사용자 ID
+	 * @param provider - OAuth 제공자 ('google' | 'github')
+	 * @param providerId - OAuth 제공자의 사용자 ID
+	 * @throws {BadRequestException} 이미 다른 계정에 연결된 OAuth 계정인 경우
+	 */
+	async linkOAuthAccount(
+		userId: number,
+		provider: 'google' | 'github',
+		providerId: string,
+	): Promise<void> {
+		// 이미 연동된 계정인지 확인
+		const existing = await this.usersService.getUserByOAuthId(
+			provider,
+			providerId,
+		);
+		if (existing) {
+			throw new BadRequestException(
+				'이미 다른 계정에 연결된 OAuth 계정입니다.',
+			);
+		}
+
+		await this.usersService.linkOAuthAccount(userId, provider, providerId);
 	}
 }
