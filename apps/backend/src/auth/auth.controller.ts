@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -19,8 +19,25 @@ export class AuthController {
 		return this.authService.registerWithEmail({ email, password, username });
 	}
 
-	// @Post('refresh')
-	// refresh() {
-	// 	return this.authService.refresh();
-	// }
+	@Post('token/access')
+	refreshAccessToken(@Headers('Authorization') rawToken: string) {
+		const token = this.authService.extractTokenFromHeader(rawToken);
+
+		const newAccessToken = this.authService.rotateToken(token);
+
+		return {
+			accessToken: newAccessToken,
+		};
+	}
+
+	@Post('token/refresh')
+	refreshRefreshToken(@Headers('Authorization') rawToken: string) {
+		const token = this.authService.extractTokenFromHeader(rawToken);
+
+		const newRefreshToken = this.authService.rotateToken(token, true);
+
+		return {
+			refreshToken: newRefreshToken,
+		};
+	}
 }

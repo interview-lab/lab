@@ -120,4 +120,55 @@ export class AuthService {
 
 		return existingUser;
 	}
+
+	/**
+	 * 헤더에서 bearer 토큰을 추출합니다.
+	 *
+	 * @param header - Authorization 헤더
+	 * @returns 토큰 문자열
+	 * @throws {UnauthorizedException} 토큰이 존재하지 않는 경우
+	 */
+	extractTokenFromHeader(header: string) {
+		const splitToken = header.split(' ');
+
+		if (splitToken.length !== 2 || splitToken[0] !== 'Bearer') {
+			throw new UnauthorizedException('잘못된 토큰입니다.');
+		}
+
+		// biome-ignore lint/style/noNonNullAssertion: <splitToken[1]가 항상 존재함>
+		return splitToken[1]!;
+	}
+
+	/**
+	 * JWT 토큰을 검증합니다.
+	 *
+	 * @param token - 검증할 JWT 토큰
+	 * @returns 토큰의 payload
+	 */
+	verifyToken(token: string) {
+		return this.jwtService.verify(token, {
+			secret: JWT_SECRET,
+		});
+	}
+
+	/**
+	 * 토큰을 재발급합니다.
+	 *
+	 * @param token - 재발급할 토큰
+	 * @param isRefreshToken - Refresh Token 여부 (기본값: false)
+	 * @returns 재발급된 토큰
+	 */
+	rotateToken(token: string, isRefreshToken: boolean = false) {
+		const decoded = this.jwtService.verify(token, {
+			secret: JWT_SECRET,
+		});
+
+		if (decoded.type !== 'refresh') {
+			throw new UnauthorizedException(
+				'토큰 재발급은 refresh token만 가능합니다.',
+			);
+		}
+
+		return this.signToken({ ...decoded }, isRefreshToken);
+	}
 }
