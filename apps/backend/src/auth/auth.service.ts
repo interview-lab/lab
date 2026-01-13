@@ -8,8 +8,8 @@ import {
 	JWT_ACCESS_TOKEN_EXPIRES_IN,
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
-} from './const/auth.const';
-import { JWT_TOKEN_Payload } from './type/jwt.type';
+} from './consts/auth.const';
+import { JWT_TOKEN_Payload } from './types/jwt.type';
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스
