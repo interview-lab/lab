@@ -23,10 +23,27 @@ export class TokenGuard implements CanActivate {
 		}
 
 		const token = this.authService.extractTokenFromHeader(rawToken);
-		const { sub } = this.authService.verifyToken(token);
+		const { sub, type } = this.authService.verifyToken(token);
 
 		const user = await this.usersService.getUserById(sub);
 		request.user = user;
+		request.type = type;
+		request.token = token;
+
+		return true;
+	}
+}
+
+@Injectable()
+export class RefreshTokenGuard extends TokenGuard {
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		super.canActivate(context);
+
+		const request = context.switchToHttp().getRequest();
+
+		if (request.type !== 'refresh') {
+			throw new UnauthorizedException('refresh token이 아닙니다.');
+		}
 
 		return true;
 	}
