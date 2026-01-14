@@ -15,7 +15,7 @@ export class EmailAndPasswordDto {
 	password!: string;
 }
 
-export class ReistrationWithEmailAndPasswordDto extends EmailAndPasswordDto {
+export class RegistrationWithEmailAndPasswordDto extends EmailAndPasswordDto {
 	@IsString()
 	@MinLength(2, { message: '이름은 2자 이상이어야 합니다.' })
 	username!: string;

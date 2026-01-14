@@ -15,7 +15,7 @@ import { UsersService } from '@/users/users.service';
 import { AuthService } from './auth.service';
 import {
 	EmailAndPasswordDto,
-	ReistrationWithEmailAndPasswordDto,
+	RegistrationWithEmailAndPasswordDto,
 } from './dtos/authentication.dto';
 import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
@@ -44,7 +44,7 @@ export class AuthController {
 	 * 이메일과 비밀번호를 사용하여 회원가입합니다.
 	 */
 	@Post('register/email')
-	registerEmail(@Body() dto: ReistrationWithEmailAndPasswordDto) {
+	registerEmail(@Body() dto: RegistrationWithEmailAndPasswordDto) {
 		return this.authService.registerWithEmail(dto);
 	}
 
