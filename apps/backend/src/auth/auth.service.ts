@@ -6,6 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { MINUTE } from '@/common/consts/unit';
 import { EmailService } from '@/email/email.service';
 import { UserModel } from '@/generated/prisma/models';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -230,7 +231,7 @@ export class AuthService {
 
 		// 2. 신규 사용자 -> 임시 토큰 발급
 		const tempToken = uuidv4();
-		const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30분
+		const expiresAt = new Date(Date.now() + 30 * MINUTE); // 30분
 
 		// 기존 pending 레코드 삭제 후 새로 생성
 		await this.prisma.oAuthPendingRegistration.deleteMany({

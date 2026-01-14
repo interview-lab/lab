@@ -2,8 +2,8 @@ import { randomInt } from 'node:crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { PrismaService } from '@/prisma/prisma.service';
+import { MINUTE } from '../common/consts/unit';
 import { MAX_VERIFICATION_ATTEMPTS } from './consts/email';
-import { MINUTE } from './consts/unit';
 
 /**
  * 이메일 발송 및 인증 관련 서비스
