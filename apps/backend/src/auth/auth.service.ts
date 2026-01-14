@@ -48,7 +48,7 @@ export class AuthService {
 			throw new BadRequestException('비밀번호가 없습니다.');
 		}
 
-		const hash = await bcrypt.hash(user.password ?? '', HASH_ROUNDS);
+		const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
 
 		if (!this.emailService.isEmailVerified(user.email)) {
 			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
