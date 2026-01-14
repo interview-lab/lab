@@ -3,6 +3,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	InternalServerErrorException,
 	Post,
 	Req,
 	Res,
@@ -108,17 +109,17 @@ export class AuthController {
 
 		const result = await this.authService.handleOAuthCallback(profile);
 
+		if (!result.accessToken || !result.refreshToken) {
+			throw new InternalServerErrorException('토큰 생성에 실패했습니다.');
+		}
+
 		// 프론트엔드로 리다이렉트
 		const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 		if (result.isExistingUser) {
 			// 기존 사용자: 토큰과 함께 리다이렉트
-			this.authService.setTokenToCookie(response, result.accessToken ?? '');
-			this.authService.setTokenToCookie(
-				response,
-				result.refreshToken ?? '',
-				true,
-			);
+			this.authService.setTokenToCookie(response, result.accessToken);
+			this.authService.setTokenToCookie(response, result.refreshToken, true);
 			return response.redirect(`${frontendUrl}/auth/callback?`);
 		}
 
