@@ -52,12 +52,16 @@ export class EmailService {
 		});
 
 		// 이메일 발송
-		await this.transporter.sendMail({
-			from: process.env.GMAIL_USER,
-			to: email,
-			subject: '[Interview Lab] 이메일 인증번호',
-			html: this.getEmailTemplate(code),
-		});
+		try {
+			await this.transporter.sendMail({
+				from: process.env.GMAIL_USER,
+				to: email,
+				subject: '[Interview Lab] 이메일 인증번호',
+				html: this.getEmailTemplate(code),
+			});
+		} catch (_) {
+			throw new BadRequestException('이메일 발송에 실패했습니다.');
+		}
 	}
 
 	/**
