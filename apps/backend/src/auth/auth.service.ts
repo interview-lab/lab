@@ -122,7 +122,9 @@ export class AuthService {
 		const existingUser = await this.usersService.getUserByEmail(user.email);
 
 		if (!existingUser) {
-			throw new UnauthorizedException('존재하지 않는 사용자입니다.');
+			throw new UnauthorizedException(
+				'이메일 또는 비밀번호가 일치하지 않습니다.',
+			);
 		}
 
 		const passwordIdentical = await bcrypt.compare(
@@ -131,7 +133,9 @@ export class AuthService {
 		);
 
 		if (!passwordIdentical) {
-			throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
+			throw new UnauthorizedException(
+				'이메일 또는 비밀번호가 일치하지 않습니다.',
+			);
 		}
 
 		return existingUser;
