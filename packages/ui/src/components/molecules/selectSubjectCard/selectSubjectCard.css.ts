@@ -4,7 +4,6 @@ import { vars } from '@/styles/theme.css';
 export const containerStyle = style({
 	display: 'flex',
 	flexDirection: 'column',
-	//justifyContent: 'space-between',
 	gap: vars.spacing[2],
 	fontFamily: vars.font.pretendard,
 	padding: vars.spacing[6],
