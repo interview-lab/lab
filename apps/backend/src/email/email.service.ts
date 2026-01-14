@@ -1,5 +1,5 @@
+import { randomInt } from 'node:crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { randomInt } from 'crypto';
 import * as nodemailer from 'nodemailer';
 import { PrismaService } from '@/prisma/prisma.service';
 
