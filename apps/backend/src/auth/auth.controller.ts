@@ -13,6 +13,10 @@ import type { Response } from 'express';
 import { EmailService } from '@/email/email.service';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from './auth.service';
+import {
+	EmailAndPasswordDto,
+	ReistrationWithEmailAndPasswordDto,
+} from './dtos/authentication.dto';
 import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
@@ -32,20 +36,16 @@ export class AuthController {
 	 * 이메일과 비밀번호를 사용하여 로그인합니다.
 	 */
 	@Post('login/email')
-	loginEmail(@Body('email') email: string, @Body('password') password: string) {
-		return this.authService.loginWithEmail({ email, password });
+	loginEmail(@Body() dto: EmailAndPasswordDto) {
+		return this.authService.loginWithEmail(dto);
 	}
 
 	/**
 	 * 이메일과 비밀번호를 사용하여 회원가입합니다.
 	 */
 	@Post('register/email')
-	registerEmail(
-		@Body('email') email: string,
-		@Body('password') password: string,
-		@Body('username') username: string,
-	) {
-		return this.authService.registerWithEmail({ email, password, username });
+	registerEmail(@Body() dto: ReistrationWithEmailAndPasswordDto) {
+		return this.authService.registerWithEmail(dto);
 	}
 
 	// ===== Token 재발급 =====
