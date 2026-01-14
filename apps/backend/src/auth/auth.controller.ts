@@ -8,6 +8,7 @@ import {
 	Res,
 	UseGuards,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { EmailService } from '@/email/email.service';
 import { UsersService } from '@/users/users.service';
@@ -22,6 +23,7 @@ import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { AccessTokenGuard } from './guards/token.guard';
 
 @Controller('auth')
+@ApiTags('인증')
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
@@ -35,6 +37,10 @@ export class AuthController {
 	 * 이메일과 비밀번호를 사용하여 로그인합니다.
 	 */
 	@Post('login/email')
+	@ApiOperation({
+		summary: '이메일 로그인 API',
+		description: '이메일과 비밀번호를 사용하여 로그인합니다.',
+	})
 	async loginEmail(
 		@Body() dto: EmailAndPasswordDto,
 		@Res({ passthrough: true }) response: Response,
@@ -46,6 +52,10 @@ export class AuthController {
 	 * 이메일과 비밀번호를 사용하여 회원가입합니다.
 	 */
 	@Post('register/email')
+	@ApiOperation({
+		summary: '이메일 회원가입 API',
+		description: '이메일과 비밀번호를 사용하여 회원가입합니다.',
+	})
 	async registerEmail(
 		@Body() dto: RegistrationWithEmailAndPasswordDto,
 		@Res({ passthrough: true }) response: Response,
@@ -60,6 +70,10 @@ export class AuthController {
 	 */
 	@Get('google')
 	@UseGuards(GoogleOAuthGuard)
+	@ApiOperation({
+		summary: 'Google OAuth 로그인 API',
+		description: 'Google OAuth 로그인을 시작합니다.',
+	})
 	googleLogin() {
 		// Passport가 Google로 리다이렉트
 	}
@@ -69,6 +83,10 @@ export class AuthController {
 	 */
 	@Get('google/callback')
 	@UseGuards(GoogleOAuthGuard)
+	@ApiOperation({
+		summary: 'Google OAuth 콜백 API',
+		description: 'Google OAuth 콜백을 처리합니다.',
+	})
 	async googleCallback(
 		@Req() req: {
 			user: {
@@ -117,6 +135,10 @@ export class AuthController {
 	 * OAuth 가입을 완료합니다.
 	 */
 	@Post('oauth/complete')
+	@ApiOperation({
+		summary: 'OAuth 가입 완료 API',
+		description: 'OAuth 가입을 완료합니다.',
+	})
 	async completeOAuthRegistration(
 		@Body() dto: OAuthCompleteDto,
 		@Res({ passthrough: true }) response: Response,
@@ -141,6 +163,10 @@ export class AuthController {
 	 */
 	@Delete('oauth/unlink/google')
 	@UseGuards(AccessTokenGuard)
+	@ApiOperation({
+		summary: 'Google 계정 연동 해제 API',
+		description: 'Google 계정 연동을 해제합니다.',
+	})
 	async unlinkGoogleAccount(@Req() req: { user: { id: number } }) {
 		await this.usersService.unlinkOAuthAccount(req.user.id, 'google');
 		return { message: 'Google 계정 연동이 해제되었습니다.' };
@@ -152,6 +178,10 @@ export class AuthController {
 	 * 인증 이메일을 발송합니다.
 	 */
 	@Post('email/send-verification')
+	@ApiOperation({
+		summary: '인증 이메일 발송 API',
+		description: '인증 이메일을 발송합니다.',
+	})
 	async sendVerification(@Body() dto: SendVerificationDto) {
 		await this.emailService.sendVerificationEmail(dto.email);
 		return { message: '인증 이메일이 발송되었습니다.' };
@@ -161,6 +191,10 @@ export class AuthController {
 	 * 이메일 인증번호를 확인합니다.
 	 */
 	@Post('email/verify')
+	@ApiOperation({
+		summary: '이메일 인증 확인 API',
+		description: '이메일 인증번호를 확인합니다.',
+	})
 	async verifyEmail(@Body() dto: VerifyCodeDto) {
 		await this.emailService.verifyCode(dto.email, dto.code);
 		return { message: '이메일 인증이 완료되었습니다.' };
