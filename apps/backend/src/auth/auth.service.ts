@@ -6,10 +6,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { EmailService } from '@/email/email.service';
 import { UserModel } from '@/generated/prisma/models';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UsersService } from '@/users/users.service';
-import { EmailService } from '@/email/email.service';
 import {
 	HASH_ROUNDS,
 	JWT_ACCESS_TOKEN_EXPIRES_IN,
@@ -43,6 +43,10 @@ export class AuthService {
 		user: Pick<UserModel, 'username' | 'email' | 'password'>,
 	) {
 		const hash = await bcrypt.hash(user.password ?? '', HASH_ROUNDS);
+
+		if (!this.emailService.isEmailVerified(user.email)) {
+			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
+		}
 
 		const newUser = await this.usersService.createUser({
 			...user,
