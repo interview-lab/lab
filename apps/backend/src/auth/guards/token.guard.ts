@@ -10,8 +10,8 @@ import { AuthService } from '../auth.service';
 @Injectable()
 export class TokenGuard implements CanActivate {
 	constructor(
-		private readonly authService: AuthService,
-		private readonly usersService: UsersService,
+		protected readonly authService: AuthService,
+		protected readonly usersService: UsersService,
 	) {}
 
 	async canActivate(context: ExecutionContext) {
@@ -35,31 +35,69 @@ export class TokenGuard implements CanActivate {
 }
 
 @Injectable()
-export class RefreshTokenGuard extends TokenGuard {
-	async canActivate(context: ExecutionContext): Promise<boolean> {
-		await super.canActivate(context);
-
-		const request = context.switchToHttp().getRequest();
-
-		if (request.type !== 'refresh') {
-			throw new UnauthorizedException('refresh token이 아닙니다.');
-		}
-
-		return true;
-	}
-}
-
-@Injectable()
 export class AccessTokenGuard extends TokenGuard {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
-		await super.canActivate(context);
-
 		const request = context.switchToHttp().getRequest();
+		const response = context.switchToHttp().getResponse();
 
-		if (request.type !== 'access') {
-			throw new UnauthorizedException('access token이 아닙니다.');
+		const accessToken = request.cookies?.accessToken;
+		const refreshToken = request.cookies?.refreshToken;
+
+		// accessToken이 없으면 에러
+		if (!accessToken) {
+			throw new UnauthorizedException('Access Token이 없습니다.');
 		}
 
-		return true;
+		try {
+			// accessToken 검증 시도
+			const payload = this.authService.verifyToken(accessToken);
+
+			if (payload.type !== 'access') {
+				throw new UnauthorizedException('Access Token이 아닙니다.');
+			}
+
+			request.user = await this.usersService.getUserById(payload.sub);
+			return true;
+		} catch {
+			// accessToken 만료 시 refreshToken으로 갱신 시도
+			if (!refreshToken) {
+				throw new UnauthorizedException(
+					'토큰이 만료되었습니다. 다시 로그인해주세요.',
+				);
+			}
+
+			try {
+				// refreshToken 검증
+				const refreshPayload = this.authService.verifyToken(refreshToken);
+
+				if (refreshPayload.type !== 'refresh') {
+					throw new UnauthorizedException('유효하지 않은 Refresh Token입니다.');
+				}
+
+				// 새 토큰 발급
+				const user = await this.usersService.getUserById(refreshPayload.sub);
+
+				if (!user) {
+					throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
+				}
+
+				const tokens = this.authService.generateToken(user);
+
+				// Cookie에 새 토큰 설정
+				await this.authService.setTokenToCookie(response, tokens.accessToken);
+				await this.authService.setTokenToCookie(
+					response,
+					tokens.refreshToken,
+					true,
+				);
+
+				request.user = user;
+				return true;
+			} catch {
+				throw new UnauthorizedException(
+					'토큰이 만료되었습니다. 다시 로그인해주세요.',
+				);
+			}
+		}
 	}
 }

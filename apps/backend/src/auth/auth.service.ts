@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import type { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { MINUTE } from '@/common/consts/unit';
+import { MILLI_SECOND, MINUTE } from '@/common/consts/unit';
 import { EmailService } from '@/email/email.service';
 import { UserModel } from '@/generated/prisma/models';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -42,6 +43,7 @@ export class AuthService {
 	 * @returns Access Token과 Refresh Token을 포함한 객체
 	 */
 	async registerWithEmail(
+		response: Response,
 		user: Pick<UserModel, 'username' | 'email' | 'password'>,
 	) {
 		if (!user.password) {
@@ -59,7 +61,10 @@ export class AuthService {
 			password: hash,
 		});
 
-		return this.loginUser(newUser);
+		const tokens = this.generateToken(newUser);
+
+		this.setTokenToCookie(response, tokens.accessToken);
+		this.setTokenToCookie(response, tokens.refreshToken, true);
 	}
 
 	/**
@@ -69,10 +74,16 @@ export class AuthService {
 	 * @returns Access Token과 Refresh Token을 포함한 객체
 	 * @throws {UnauthorizedException} 사용자가 존재하지 않거나 비밀번호가 일치하지 않는 경우
 	 */
-	async loginWithEmail(user: Pick<UserModel, 'email' | 'password'>) {
+	async loginWithEmail(
+		response: Response,
+		user: Pick<UserModel, 'email' | 'password'>,
+	) {
 		const existingUser = await this.authenticateWithEmailAndPassword(user);
 
-		return this.loginUser(existingUser);
+		const tokens = this.generateToken(existingUser);
+
+		this.setTokenToCookie(response, tokens.accessToken);
+		this.setTokenToCookie(response, tokens.refreshToken, true);
 	}
 
 	/**
@@ -81,7 +92,7 @@ export class AuthService {
 	 * @param user - 토큰에 포함할 사용자 정보 (id, email)
 	 * @returns accessToken과 refreshToken을 포함한 객체
 	 */
-	loginUser(user: Pick<UserModel, 'id' | 'email'>) {
+	generateToken(user: Pick<UserModel, 'id' | 'email'>) {
 		return {
 			accessToken: this.signToken(user),
 			refreshToken: this.signToken(user, true),
@@ -126,7 +137,7 @@ export class AuthService {
 	) {
 		const existingUser = await this.usersService.getUserByEmail(user.email);
 
-		if (!existingUser) {
+		if (!existingUser || !existingUser.password) {
 			throw new UnauthorizedException(
 				'이메일 또는 비밀번호가 일치하지 않습니다.',
 			);
@@ -134,7 +145,7 @@ export class AuthService {
 
 		const passwordIdentical = await bcrypt.compare(
 			user.password ?? '',
-			existingUser.password ?? '',
+			existingUser.password,
 		);
 
 		if (!passwordIdentical) {
@@ -222,7 +233,7 @@ export class AuthService {
 
 		if (existingUser) {
 			// 기존 사용자 -> 바로 JWT 발급
-			const tokens = this.loginUser(existingUser);
+			const tokens = this.generateToken(existingUser);
 			return {
 				isExistingUser: true,
 				...tokens,
@@ -310,7 +321,7 @@ export class AuthService {
 		});
 
 		// 5. JWT 발급
-		return this.loginUser(newUser);
+		return this.generateToken(newUser);
 	}
 
 	/**
@@ -338,5 +349,26 @@ export class AuthService {
 		}
 
 		await this.usersService.linkOAuthAccount(userId, provider, providerId);
+	}
+
+	/**
+	 * 토큰을 쿠키에 저장합니다.
+	 *
+	 * @param response - 응답 객체
+	 * @param token - 저장할 토큰
+	 * @param isRefreshToken - Refresh Token 여부 (기본값: false)
+	 */
+	setTokenToCookie(response: Response, token: string, isRefreshToken = false) {
+		const key = isRefreshToken ? 'refreshToken' : 'accessToken';
+		const maxAgeInSeconds = isRefreshToken
+			? JWT_REFRESH_TOKEN_EXPIRES_IN
+			: JWT_ACCESS_TOKEN_EXPIRES_IN;
+
+		response.cookie(key, token, {
+			secure: process.env.NODE_ENV === 'production',
+			httpOnly: isRefreshToken,
+			sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+			maxAge: maxAgeInSeconds * MILLI_SECOND,
+		});
 	}
 }

@@ -3,7 +3,6 @@ import {
 	Controller,
 	Delete,
 	Get,
-	Headers,
 	Post,
 	Req,
 	Res,
@@ -20,7 +19,7 @@ import {
 import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
-import { AccessTokenGuard, RefreshTokenGuard } from './guards/token.guard';
+import { AccessTokenGuard } from './guards/token.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,48 +35,22 @@ export class AuthController {
 	 * 이메일과 비밀번호를 사용하여 로그인합니다.
 	 */
 	@Post('login/email')
-	loginEmail(@Body() dto: EmailAndPasswordDto) {
-		return this.authService.loginWithEmail(dto);
+	async loginEmail(
+		@Body() dto: EmailAndPasswordDto,
+		@Res({ passthrough: true }) response: Response,
+	) {
+		await this.authService.loginWithEmail(response, dto);
 	}
 
 	/**
 	 * 이메일과 비밀번호를 사용하여 회원가입합니다.
 	 */
 	@Post('register/email')
-	registerEmail(@Body() dto: RegistrationWithEmailAndPasswordDto) {
-		return this.authService.registerWithEmail(dto);
-	}
-
-	// ===== Token 재발급 =====
-
-	/**
-	 * Refresh Token을 사용하여 Access Token을 재발급합니다.
-	 */
-	@Post('token/access')
-	@UseGuards(RefreshTokenGuard)
-	refreshAccessToken(@Headers('Authorization') rawToken: string) {
-		const token = this.authService.extractTokenFromHeader(rawToken);
-
-		const newAccessToken = this.authService.rotateToken(token);
-
-		return {
-			accessToken: newAccessToken,
-		};
-	}
-
-	/**
-	 * Refresh Token을 사용하여 Refresh Token을 재발급합니다.
-	 */
-	@Post('token/refresh')
-	@UseGuards(RefreshTokenGuard)
-	refreshRefreshToken(@Headers('Authorization') rawToken: string) {
-		const token = this.authService.extractTokenFromHeader(rawToken);
-
-		const newRefreshToken = this.authService.rotateToken(token, true);
-
-		return {
-			refreshToken: newRefreshToken,
-		};
+	async registerEmail(
+		@Body() dto: RegistrationWithEmailAndPasswordDto,
+		@Res({ passthrough: true }) response: Response,
+	) {
+		await this.authService.registerWithEmail(response, dto);
 	}
 
 	// ===== Google OAuth =====
@@ -105,7 +78,7 @@ export class AuthController {
 				profileImage?: string;
 			};
 		},
-		@Res() res: Response,
+		@Res() response: Response,
 	) {
 		const profile = {
 			provider: 'google' as const,
@@ -122,15 +95,17 @@ export class AuthController {
 
 		if (result.isExistingUser) {
 			// 기존 사용자: 토큰과 함께 리다이렉트
-			return res.redirect(
-				`${frontendUrl}/auth/callback?` +
-					`accessToken=${result.accessToken}&` +
-					`refreshToken=${result.refreshToken}`,
+			this.authService.setTokenToCookie(response, result.accessToken ?? '');
+			this.authService.setTokenToCookie(
+				response,
+				result.refreshToken ?? '',
+				true,
 			);
+			return response.redirect(`${frontendUrl}/auth/callback?`);
 		}
 
 		// 신규 사용자: 가입 완료 페이지로 리다이렉트
-		return res.redirect(
+		return response.redirect(
 			`${frontendUrl}/auth/complete-signup?` +
 				`tempToken=${result.tempToken}&` +
 				`email=${encodeURIComponent(result.providerEmail || '')}&` +
@@ -142,16 +117,23 @@ export class AuthController {
 	 * OAuth 가입을 완료합니다.
 	 */
 	@Post('oauth/complete')
-	async completeOAuthRegistration(@Body() dto: OAuthCompleteDto) {
+	async completeOAuthRegistration(
+		@Body() dto: OAuthCompleteDto,
+		@Res({ passthrough: true }) response: Response,
+	) {
 		// 이메일 인증 확인
 		await this.emailService.verifyCode(dto.email, dto.verificationCode);
 
 		// 가입 완료
-		return this.authService.completeOAuthRegistration(
+		const tokens = await this.authService.completeOAuthRegistration(
 			dto.tempToken,
 			dto.username,
 			dto.email,
 		);
+
+		this.authService.setTokenToCookie(response, tokens.accessToken);
+		this.authService.setTokenToCookie(response, tokens.refreshToken, true);
+		return { message: 'Registration completed' };
 	}
 
 	/**
