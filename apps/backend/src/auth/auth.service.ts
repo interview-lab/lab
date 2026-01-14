@@ -43,6 +43,10 @@ export class AuthService {
 	async registerWithEmail(
 		user: Pick<UserModel, 'username' | 'email' | 'password'>,
 	) {
+		if (!user.password) {
+			throw new BadRequestException('비밀번호가 없습니다.');
+		}
+
 		const hash = await bcrypt.hash(user.password ?? '', HASH_ROUNDS);
 
 		if (!this.emailService.isEmailVerified(user.email)) {
