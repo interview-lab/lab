@@ -84,12 +84,8 @@ export class AccessTokenGuard extends TokenGuard {
 				const tokens = this.authService.generateToken(user);
 
 				// Cookie에 새 토큰 설정
-				await this.authService.setTokenToCookie(response, tokens.accessToken);
-				await this.authService.setTokenToCookie(
-					response,
-					tokens.refreshToken,
-					true,
-				);
+				this.authService.setTokenToCookie(response, tokens.accessToken);
+				this.authService.setTokenToCookie(response, tokens.refreshToken, true);
 
 				request.user = user;
 				return true;
