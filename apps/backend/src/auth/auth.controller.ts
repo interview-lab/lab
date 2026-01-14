@@ -26,11 +26,19 @@ export class AuthController {
 		private readonly usersService: UsersService,
 	) {}
 
+	// ===== Email/Password =====
+
+	/**
+	 * 이메일과 비밀번호를 사용하여 로그인합니다.
+	 */
 	@Post('login/email')
 	loginEmail(@Body('email') email: string, @Body('password') password: string) {
 		return this.authService.loginWithEmail({ email, password });
 	}
 
+	/**
+	 * 이메일과 비밀번호를 사용하여 회원가입합니다.
+	 */
 	@Post('register/email')
 	registerEmail(
 		@Body('email') email: string,
@@ -40,6 +48,11 @@ export class AuthController {
 		return this.authService.registerWithEmail({ email, password, username });
 	}
 
+	// ===== Token 재발급 =====
+
+	/**
+	 * Refresh Token을 사용하여 Access Token을 재발급합니다.
+	 */
 	@Post('token/access')
 	@UseGuards(RefreshTokenGuard)
 	refreshAccessToken(@Headers('Authorization') rawToken: string) {
@@ -52,6 +65,9 @@ export class AuthController {
 		};
 	}
 
+	/**
+	 * Refresh Token을 사용하여 Refresh Token을 재발급합니다.
+	 */
 	@Post('token/refresh')
 	@UseGuards(RefreshTokenGuard)
 	refreshRefreshToken(@Headers('Authorization') rawToken: string) {

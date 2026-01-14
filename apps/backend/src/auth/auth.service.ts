@@ -35,6 +35,7 @@ export class AuthService {
 
 	/**
 	 * 이메일로 신규 사용자를 등록하고 토큰을 발급합니다.
+	 * 이메일 인증이 완료되지 않은 경우 예외를 발생시킵니다.
 	 *
 	 * @param user - 등록할 사용자 정보 (username, email, password)
 	 * @returns Access Token과 Refresh Token을 포함한 객체
