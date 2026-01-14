@@ -2,6 +2,8 @@ import { randomInt } from 'node:crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { PrismaService } from '@/prisma/prisma.service';
+import { MAX_VERIFICATION_ATTEMPTS } from './consts/email';
+import { MINUTE } from './consts/unit';
 
 /**
  * 이메일 발송 및 인증 관련 서비스
@@ -44,7 +46,7 @@ export class EmailService {
 		});
 
 		const code = this.generateVerificationCode();
-		const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5분
+		const expiresAt = new Date(Date.now() + 5 * MINUTE); // 5분
 
 		// DB에 저장
 		await this.prisma.emailVerification.create({
@@ -88,7 +90,7 @@ export class EmailService {
 			throw new BadRequestException('유효하지 않거나 만료된 인증 요청입니다.');
 		}
 
-		if (verification.attempts >= 5) {
+		if (verification.attempts >= MAX_VERIFICATION_ATTEMPTS) {
 			throw new BadRequestException('인증 시도 횟수를 초과했습니다.');
 		}
 
@@ -122,7 +124,7 @@ export class EmailService {
 				email,
 				verified: true,
 				// 인증 완료 후 30분 이내만 유효
-				expiresAt: { gt: new Date(Date.now() - 30 * 60 * 1000) },
+				expiresAt: { gt: new Date(Date.now() - 30 * MINUTE) },
 			},
 		});
 		return !!verification;
