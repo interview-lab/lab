@@ -13,8 +13,8 @@ import type { Response } from 'express';
 import { EmailService } from '@/email/email.service';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from './auth.service';
-import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
+import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { AccessTokenGuard, RefreshTokenGuard } from './guards/token.guard';
 
