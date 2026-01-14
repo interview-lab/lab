@@ -37,7 +37,7 @@ export class TokenGuard implements CanActivate {
 @Injectable()
 export class RefreshTokenGuard extends TokenGuard {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
-		super.canActivate(context);
+		await super.canActivate(context);
 
 		const request = context.switchToHttp().getRequest();
 
@@ -52,7 +52,7 @@ export class RefreshTokenGuard extends TokenGuard {
 @Injectable()
 export class AccessTokenGuard extends TokenGuard {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
-		super.canActivate(context);
+		await super.canActivate(context);
 
 		const request = context.switchToHttp().getRequest();
 
