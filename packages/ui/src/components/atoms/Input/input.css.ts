@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const labelStyle = style({
@@ -58,3 +58,8 @@ export const rightIconStyle = style([
 		right: 16,
 	},
 ]);
+
+globalStyle(`${baseIconStyle} svg`, {
+	width: 20,
+	height: 24,
+});

@@ -23,15 +23,6 @@ export const errorMessageStyle = style({
 	},
 });
 
-export const lockIconStyle = style({
-	color: vars.color.gray,
-});
-
-export const visibleIconStyle = style({
-	color: vars.color.gray,
-	opacity: 0.7,
-});
-
 globalStyle(`${inputStyle}:has(input:disabled) svg`, {
 	color: vars.color.disabled.text,
 });
@@ -48,4 +39,8 @@ globalStyle(`${inputStyle} button`, {
 	alignItems: 'center',
 	justifyContent: 'center',
 	cursor: 'pointer',
+});
+
+globalStyle(`${inputStyle} svg`, {
+	color: vars.color.gray,
 });

@@ -3,13 +3,7 @@ import { useState } from 'react';
 import Icon from '@/components/atoms/Icon';
 import type { InputProps } from '@/components/atoms/Input';
 import Input from '@/components/atoms/Input';
-import {
-	errorMessageStyle,
-	errorStyle,
-	inputStyle,
-	lockIconStyle,
-	visibleIconStyle,
-} from './inputPassword.css';
+import { errorMessageStyle, errorStyle, inputStyle } from './inputPassword.css';
 
 type InputDefaultState = {
 	isError: false;
@@ -36,12 +30,11 @@ const InputWithValidation = (props: InputWithValidationProps) => {
 				<Input
 					{...props}
 					className={clsx(props.className, props.isError && errorStyle)}
-					leftIcon={<Icon icon="IconLock" className={lockIconStyle} />}
+					leftIcon={<Icon icon="IconLock" />}
 					rightIcon={
 						<button type="button" onClick={handleTogglePasswordVisibility}>
 							<Icon
 								icon={isPasswordVisible ? 'IconVisible' : 'IconInvisible'}
-								className={visibleIconStyle}
 							/>
 						</button>
 					}
