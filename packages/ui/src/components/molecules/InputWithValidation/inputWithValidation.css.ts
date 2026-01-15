@@ -27,6 +27,6 @@ globalStyle(`${inputStyle}:has(input:disabled) svg`, {
 	color: vars.color.disabled.text,
 });
 
-globalStyle(`${errorStyle} label,svg`, {
+globalStyle(`${errorStyle} :is(label, svg)`, {
 	color: vars.color.border.error,
 });

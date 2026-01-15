@@ -23,25 +23,27 @@ export const errorMessageStyle = style({
 	},
 });
 
-export const iconStyle = style({
-	color: vars.color.border.error,
-	position: 'absolute',
-	right: 16,
-	top: '50%',
-	transform: 'translateY(-50%)',
+export const lockIconStyle = style({
+	color: vars.color.gray,
+});
+
+export const visibleIconStyle = style({
+	color: vars.color.gray,
+	opacity: 0.7,
 });
 
 globalStyle(`${inputStyle}:has(input:disabled) svg`, {
 	color: vars.color.disabled.text,
 });
 
-globalStyle(`${errorStyle} label,svg`, {
+globalStyle(`${errorStyle} label`, {
 	color: vars.color.border.error,
 });
 
 globalStyle(`${inputStyle} button`, {
 	backgroundColor: 'transparent',
 	border: 'none',
+	padding: 0,
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',

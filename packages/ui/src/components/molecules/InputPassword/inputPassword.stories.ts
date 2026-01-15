@@ -28,15 +28,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const PasswordVisible: Story = {
-	args: {
-		isError: false,
-		placeholder: 'Enter password...',
-		disabled: false,
-	},
-};
-
-export const PasswordHidden: Story = {
+export const Primary: Story = {
 	args: {
 		isError: false,
 		placeholder: 'Enter password...',
