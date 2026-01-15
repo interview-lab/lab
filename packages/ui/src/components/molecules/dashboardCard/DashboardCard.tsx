@@ -4,7 +4,7 @@ import Icon from '@/components/atoms/Icon';
 import {
 	DASHBOARD_CARD_CONFIG,
 	type DashboardCardKey,
-} from '@/components/molecules/dashboardCard/dashboardCard.config';
+} from '@/components/molecules/DashboardCard/dashboardCard.config';
 import {
 	containerStyle,
 	headerStyle,
@@ -12,7 +12,7 @@ import {
 	iconVariantStyle,
 	titleStyle,
 	valueStyle,
-} from '@/components/molecules/dashboardCard/dashboardCard.css';
+} from '@/components/molecules/DashboardCard/dashboardCard.css';
 
 type DashboardCardProps = HTMLAttributes<HTMLDivElement> & {
 	cardKey: DashboardCardKey;

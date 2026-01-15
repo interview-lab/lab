@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import SelectSubjectCard from '@/components/molecules/selectSubjectCard/SelectSubjectCard';
-import { SUBJECT_OPTIONS } from '@/components/molecules/selectSubjectCard/subjectOptions';
+import SelectSubjectCard from '@/components/molecules/SelectSubjectCard/SelectSubjectCard';
+import { SUBJECT_OPTIONS } from '@/components/molecules/SelectSubjectCard/subjectOptions';
 
 const meta = {
 	title: 'Design System/Molecule/SelectSubjectCard',

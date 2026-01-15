@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import InterviewAnswerResultCard from '@/components/molecules/interviewAnswerResultCard/InterviewAnswerResultCard';
+import InterviewAnswerResultCard from '@/components/molecules/InterviewAnswerResultCard/InterviewAnswerResultCard';
 
 const meta = {
 	title: 'Design System/Molecule/InterviewAnswerResultCard',

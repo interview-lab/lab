@@ -3,13 +3,16 @@ import { useState } from 'react';
 import Icon from '@/components/atoms/Icon';
 import SquareButton from '@/components/atoms/SquareButton';
 import {
+	SUBJECT_OPTIONS,
+	type SubjectKey,
+} from '@/components/molecules/SelectSubjectCard/subjectOptions';
+import {
 	checkIconStyle,
 	containerStyle,
 	descriptionStyle,
 	selectedStyle,
 	titleStyle,
 } from './selectSubjectCard.css';
-import { SUBJECT_OPTIONS, type SubjectKey } from './subjectOptions';
 
 type SelectSubjectCardProps = {
 	option: SubjectKey;

@@ -14,7 +14,7 @@ export const containerStyle = style({
 	minHeight: 196,
 	width: 328,
 	border: 'none',
-	background: 'none',
+	background: vars.color.white,
 	textAlign: 'left',
 });
 
@@ -44,5 +44,7 @@ export const checkIconStyle = style({
 	position: 'absolute',
 	top: vars.spacing[6],
 	right: vars.spacing[6],
+	width: 24,
+	height: 24,
 	color: vars.color.blue,
 });

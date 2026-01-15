@@ -11,7 +11,7 @@ import {
 	iconSuccessStyle,
 	scoreStyle,
 	titleStyle,
-} from '@/components/molecules/interviewAnswerResultCard/interviewAnswerResultCard.css';
+} from '@/components/molecules/InterviewAnswerResultCard/interviewAnswerResultCard.css';
 
 const TOTAL_QUESTIONS = 10;
 

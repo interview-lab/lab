@@ -11,7 +11,7 @@ import {
 	iconStyle,
 	scoreStyle,
 	titleStyle,
-} from '@/components/molecules/interviewScoreCard/interviewScoreCard.css';
+} from '@/components/molecules/InterviewScoreCard/interviewScoreCard.css';
 
 type InterviewScoreCardProps = HTMLAttributes<HTMLDivElement> & {
 	/** 점수 (0-100) */
