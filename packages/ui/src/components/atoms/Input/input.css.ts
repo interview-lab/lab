@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const labelStyle = style({
-	marginBottom: 8,
+	marginBottom: vars.spacing['2'],
 	fontFamily: vars.font.pretendard,
 	fontSize: 14,
 	fontWeight: vars.fontWeight.medium,
@@ -16,8 +16,8 @@ export const inputContainerStyle = style({
 export const inputStyle = style({
 	height: 52,
 	minWidth: 200,
-	border: `${vars.border.width2} ${vars.color.border.default}`,
 	borderRadius: vars.radius.default,
+	border: 'none',
 	paddingInline: 44,
 	display: 'flex',
 	alignItems: 'center',
@@ -26,10 +26,10 @@ export const inputStyle = style({
 	fontWeight: vars.fontWeight.regular,
 	color: vars.color.gray,
 	boxSizing: 'border-box',
+	boxShadow: vars.shadow.input.default,
 
 	':disabled': {
 		color: vars.color.disabled.text,
-		borderColor: vars.color.disabled.border,
 		backgroundColor: vars.color.disabled.background,
 		cursor: 'not-allowed',
 	},
