@@ -6,7 +6,13 @@ export const inputStyle = style({
 });
 
 export const errorStyle = style({
-	borderColor: vars.color.border.error,
+	border: `1px solid ${vars.color.border.error}`,
+
+	selectors: {
+		'&:has(input)': {
+			border: 'none',
+		},
+	},
 });
 
 export const errorMessageStyle = style({
