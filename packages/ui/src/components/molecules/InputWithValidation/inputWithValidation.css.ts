@@ -23,14 +23,6 @@ export const errorMessageStyle = style({
 	},
 });
 
-export const iconStyle = style({
-	color: vars.color.border.error,
-	position: 'absolute',
-	right: 16,
-	top: '50%',
-	transform: 'translateY(-50%)',
-});
-
 globalStyle(`${inputStyle}:has(input:disabled) svg`, {
 	color: vars.color.disabled.text,
 });
