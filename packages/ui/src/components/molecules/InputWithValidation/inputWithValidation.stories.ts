@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import InputWithValidation from './InputWithValidation';
+import InputWithValidation from '.';
 
 const meta = {
 	title: 'Design System/Molecule/InputWithValidation',
