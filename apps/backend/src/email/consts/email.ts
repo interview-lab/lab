@@ -1,0 +1,1 @@
+export const MAX_VERIFICATION_ATTEMPTS = 5;
