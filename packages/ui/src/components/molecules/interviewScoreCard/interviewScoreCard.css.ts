@@ -30,8 +30,8 @@ export const titleStyle = style({
 
 export const iconStyle = style({
 	color: vars.color.blue,
-	width: 20,
-	height: 20,
+	width: 24,
+	height: 24,
 	flexShrink: 0,
 });
 

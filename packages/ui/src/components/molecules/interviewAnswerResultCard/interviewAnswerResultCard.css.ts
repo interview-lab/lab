@@ -31,18 +31,12 @@ export const iconSuccessStyle = style({
 	color: vars.color.green,
 	width: 24,
 	height: 24,
-	minWidth: 24,
-	minHeight: 24,
-	flexShrink: 0,
 });
 
 export const iconFailStyle = style({
 	color: vars.color.orange,
 	width: 24,
 	height: 24,
-	minWidth: 24,
-	minHeight: 24,
-	flexShrink: 0,
 });
 
 export const scoreStyle = style({
