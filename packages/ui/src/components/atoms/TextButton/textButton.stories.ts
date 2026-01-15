@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as SvgIcons from '@/assets/svgs';
-import TextButton from '.';
+import TextButton from '@/components/atoms/TextButton';
 
 const meta = {
 	title: 'Design System/Atom/TextButton',

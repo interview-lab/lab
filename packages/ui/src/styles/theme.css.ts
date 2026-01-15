@@ -9,6 +9,7 @@ export const vars = createGlobalTheme(':root', {
 		blueActive: '#0E5AAF',
 		blueLight: '#92ADC9',
 		blueDark: '#233648',
+		blueGray: '#64748B',
 		blueAlpha10: 'rgba(19, 127, 236, 0.1)',
 		blueAlpha20: 'rgba(19, 127, 236, 0.2)',
 
@@ -73,6 +74,7 @@ export const vars = createGlobalTheme(':root', {
 		'6': '24px',
 		'8': '32px',
 		'10': '40px',
+		'11': '44px',
 		'12': '48px',
 		'16': '64px',
 	},
