@@ -9,14 +9,36 @@
 	"files": [
 		"dist"
 	],
+	"sideEffects": [
+		"*.css"
+	],
 	"exports": {
 		".": {
 			"types": "./dist/src/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.umd.cjs"
+			"import": "./dist/index.js"
+		},
+		"./atoms": {
+			"types": "./dist/src/components/atoms/index.d.ts",
+			"import": "./dist/components/atoms/index.js"
+		},
+		"./molecules": {
+			"types": "./dist/src/components/molecules/index.d.ts",
+			"import": "./dist/components/molecules/index.js"
+		},
+		"./typographies": {
+			"types": "./dist/src/components/typographies/index.d.ts",
+			"import": "./dist/components/typographies/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/src/hooks/index.d.ts",
+			"import": "./dist/hooks/index.js"
 		},
 		"./styles": "./dist/ui-style.css",
-		"./fonts": "./dist/pretendard.css"
+		"./fonts": "./dist/pretendard.css",
+		"./theme": {
+			"types": "./dist/src/styles/theme.css.d.ts",
+			"import": "./dist/styles/theme.css.js"
+		}
 	},
 	"scripts": {
 		"dev": "vite build --watch",

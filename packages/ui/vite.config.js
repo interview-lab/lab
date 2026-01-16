@@ -67,19 +67,16 @@ export default defineConfig({
 	},
 	build: {
 		lib: {
-			name: 'ui',
-			entry: ['src/index.ts'],
+			entry: ['src/index.ts', 'src/styles/theme.css.ts'],
 			cssFileName: 'ui-style',
-			formats: ['es', 'umd'],
+			formats: ['es'],
 		},
 		rollupOptions: {
 			external: ['react', 'react-dom', 'react/jsx-runtime'],
 			output: {
-				globals: {
-					react: 'React',
-					'react-dom': 'ReactDOM',
-					'react/jsx-runtime': 'jsxRuntime',
-				},
+				preserveModules: true,
+				preserveModulesRoot: 'src',
+				entryFileNames: '[name].js',
 			},
 		},
 	},
