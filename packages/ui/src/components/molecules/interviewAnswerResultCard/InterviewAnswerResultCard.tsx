@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import type { HTMLAttributes } from 'react';
 import Icon from '@/components/atoms/Icon';
 import {
 	containerStyle,
@@ -13,27 +12,36 @@ import {
 	titleStyle,
 } from '@/components/molecules/InterviewAnswerResultCard/interviewAnswerResultCard.css';
 
-const TOTAL_QUESTIONS = 10;
+type BaseProps = {
+	className?: string;
+};
 
-type InterviewAnswerResultCardProps = HTMLAttributes<HTMLDivElement> & {
-	/** 카드 타입: success(잘 답변한 질문) fail(보완이 필요한 질문) */
-	variant: 'success' | 'fail';
+/** 잘 답변한 질문 카드 */
+type SuccessCardProps = {
+	variant: 'success';
 	/** 맞은 문제 수 */
 	correctCount: number;
+	/** 전체 문제 수 (정확도 계산용) */
+	totalQuestions: number;
+};
+
+/** 보완이 필요한 질문 카드 */
+type FailCardProps = {
+	variant: 'fail';
 	/** 틀린 문제 수 */
 	incorrectCount: number;
 };
 
-const InterviewAnswerResultCard = ({
-	variant,
-	correctCount,
-	incorrectCount,
-	className,
-	...props
-}: InterviewAnswerResultCardProps) => {
+type InterviewAnswerResultCardProps = (SuccessCardProps | FailCardProps) &
+	BaseProps;
+
+const InterviewAnswerResultCard = (props: InterviewAnswerResultCardProps) => {
+	const { variant, className } = props;
 	const isSuccess = variant === 'success';
-	const count = isSuccess ? correctCount : incorrectCount;
-	const accuracy = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+
+	const getCount = () => {
+		return isSuccess ? props.correctCount : props.incorrectCount;
+	};
 
 	const getTitle = () => {
 		return isSuccess ? '잘 답변한 질문' : '보완이 필요한 질문';
@@ -41,9 +49,13 @@ const InterviewAnswerResultCard = ({
 
 	const getFooterMessage = () => {
 		if (isSuccess) {
+			const accuracy = Math.round(
+				(props.correctCount / props.totalQuestions) * 100,
+			);
 			return `정확도 ${accuracy}%`;
 		}
 
+		const { incorrectCount } = props;
 		if (incorrectCount === 0) {
 			return '완벽해요!';
 		}
@@ -54,7 +66,7 @@ const InterviewAnswerResultCard = ({
 	};
 
 	return (
-		<div className={clsx(containerStyle, className)} {...props}>
+		<div className={clsx(containerStyle, className)}>
 			<div className={headerStyle}>
 				<p className={titleStyle}>{getTitle()}</p>
 				<Icon
@@ -62,7 +74,7 @@ const InterviewAnswerResultCard = ({
 					className={isSuccess ? iconSuccessStyle : iconFailStyle}
 				/>
 			</div>
-			<h2 className={scoreStyle}>{count}개</h2>
+			<h2 className={scoreStyle}>{getCount()}개</h2>
 			<div className={isSuccess ? footerSuccessStyle : footerFailStyle}>
 				<Icon
 					icon={isSuccess ? 'IconUp' : 'IconWarning'}

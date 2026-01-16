@@ -4,30 +4,48 @@ import InterviewAnswerResultCard from '@/components/molecules/InterviewAnswerRes
 const meta = {
 	title: 'Design System/Molecule/InterviewAnswerResultCard',
 	component: InterviewAnswerResultCard,
-	argTypes: {
-		variant: {
-			control: 'radio',
-			options: ['success', 'fail'],
-			description: '카드 타입',
-		},
-		correctCount: {
-			control: { type: 'number', min: 0, max: 10 },
-			description: '맞은 문제 수',
-		},
-		incorrectCount: {
-			control: { type: 'number', min: 0, max: 10 },
-			description: '틀린 문제 수',
-		},
-	},
 } satisfies Meta<typeof InterviewAnswerResultCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** 잘 답변한 질문 카드 */
+export const Success: Story = {
 	args: {
 		variant: 'success',
 		correctCount: 8,
+		totalQuestions: 10,
+	},
+};
+
+/** 보완이 필요한 질문 카드 */
+export const Fail: Story = {
+	args: {
+		variant: 'fail',
 		incorrectCount: 2,
+	},
+};
+
+/** 보완이 필요한 질문 - 완벽 */
+export const FailPerfect: Story = {
+	args: {
+		variant: 'fail',
+		incorrectCount: 0,
+	},
+};
+
+/** 보완이 필요한 질문 - 복습 권장 */
+export const FailReviewRecommended: Story = {
+	args: {
+		variant: 'fail',
+		incorrectCount: 2,
+	},
+};
+
+/** 보완이 필요한 질문 - 집중 학습 필요 */
+export const FailIntensiveStudy: Story = {
+	args: {
+		variant: 'fail',
+		incorrectCount: 5,
 	},
 };
