@@ -11,9 +11,9 @@
 	],
 	"exports": {
 		".": {
-			"types": "./dist/src/main.d.ts",
-			"import": "./dist/main.mjs",
-			"require": "./dist/main.umd.js"
+			"types": "./dist/src/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.umd.cjs"
 		},
 		"./styles": "./dist/ui-style.css",
 		"./fonts": "./dist/pretendard.css"
