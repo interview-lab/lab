@@ -1,5 +1,4 @@
 import { createGlobalTheme } from '@vanilla-extract/css';
-import { pretendard } from './text.css';
 
 export const vars = createGlobalTheme(':root', {
 	color: {
@@ -111,6 +110,6 @@ export const vars = createGlobalTheme(':root', {
 		tooltip: '150',
 	},
 	font: {
-		pretendard: pretendard,
+		pretendard: 'Pretendard, sans-serif',
 	},
 });

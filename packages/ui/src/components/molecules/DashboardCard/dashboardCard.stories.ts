@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import DashboardCard from '@/components/molecules/DashboardCard/DashboardCard';
+import DashboardCard from '@/components/molecules/DashboardCard';
 
 const meta = {
 	title: 'Design System/Molecule/DashboardCard',
