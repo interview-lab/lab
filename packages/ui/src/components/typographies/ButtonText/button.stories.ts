@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import ButtonText from '.';
-import { ButtonStyleVarient } from './button.css';
+import ButtonText from '@/components/typographies/ButtonText';
+import { ButtonStyleVariant } from '@/components/typographies/ButtonText/button.css';
 
 const meta = {
 	title: 'Design System/Atom/Typography/Button',
@@ -11,7 +11,7 @@ const meta = {
 		},
 		style: {
 			control: 'select',
-			options: Object.keys(ButtonStyleVarient),
+			options: Object.keys(ButtonStyleVariant),
 		},
 		textType: {
 			control: 'select',
