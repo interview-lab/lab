@@ -18,15 +18,7 @@ export default function AuthLayout({
 	return (
 		<div className={authLayoutStyle}>
 			<div className={column1Style}>
-				<div className={formContainerStyle}>
-					<Typography.Title textType="h2" style="primary">
-						Welcome back
-					</Typography.Title>
-					<Typography.Base textType="p" style="secondary">
-						Enter your details to access your interview dashboard.
-					</Typography.Base>
-					<div>{children}</div>
-				</div>
+				<div className={formContainerStyle}>{children}</div>
 			</div>
 			<div className={column2Style}>
 				<Image

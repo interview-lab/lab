@@ -34,6 +34,14 @@ export default function FormLayout({
 
 	return (
 		<>
+			<Typography.Title textType="h2" style="primary">
+				{mode === 'login' ? 'Welcome back' : 'Create an account'}
+			</Typography.Title>
+			<Typography.Base textType="p" style="secondary">
+				{mode === 'login'
+					? 'Access real interview questions and practice tools.'
+					: 'Enter your details to access your interview dashboard.'}
+			</Typography.Base>
 			<Molecule.Toggle
 				items={ToggleOptions}
 				selectedValue={selectedValue}
