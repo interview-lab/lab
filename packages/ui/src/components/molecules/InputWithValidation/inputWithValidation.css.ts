@@ -1,6 +1,10 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
+export const containerStyle = style({
+	width: '100%',
+});
+
 export const inputStyle = style({
 	position: 'relative',
 });
