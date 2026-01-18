@@ -15,12 +15,12 @@ export const column1Style = style({
 });
 
 export const formContainerStyle = style({
-	maxWidth: 448,
-	padding: vars.spacing['8'],
+	minWidth: 448,
 });
 
 globalStyle(`${formContainerStyle} h2+p`, {
 	marginTop: vars.spacing['3'],
+	marginBottom: vars.spacing['8'],
 	color: vars.color.gray,
 });
 
