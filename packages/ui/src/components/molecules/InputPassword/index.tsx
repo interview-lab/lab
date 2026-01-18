@@ -6,7 +6,7 @@ import Input from '@/components/atoms/Input';
 import { errorMessageStyle, errorStyle, inputStyle } from './inputPassword.css';
 
 type InputDefaultState = {
-	isError: false;
+	isError?: false;
 };
 
 type InputErrorState = {
