@@ -8,6 +8,7 @@ import svgr from '@svgr/rollup';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react';
 import copy from 'rollup-plugin-copy';
+import preserveDirectives from 'rollup-plugin-preserve-directives';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -21,10 +22,12 @@ const dirname =
 export default defineConfig({
 	plugins: [
 		react(),
+		preserveDirectives(),
 		dts({
 			tsconfigPath: './tsconfig.json',
 			outDir: 'dist',
 			rollupTypes: false,
+			entryRoot: 'src',
 		}),
 		vanillaExtractPlugin(),
 		svgr({ include: '**/*.svg' }),

@@ -314,6 +314,9 @@ importers:
       rollup-plugin-copy:
         specifier: ^3.5.0
         version: 3.5.0
+      rollup-plugin-preserve-directives:
+        specifier: ^0.4.0
+        version: 0.4.0(rollup@4.54.0)
       storybook:
         specifier: ^9.1.13
         version: 9.1.17(@testing-library/dom@10.4.1)(prettier@3.7.4)(vite@7.3.0(@types/node@24.10.4)(jiti@2.6.1)(terser@5.44.1))
@@ -5475,6 +5478,11 @@ packages:
   rollup-plugin-copy@3.5.0:
     resolution: {integrity: sha512-wI8D5dvYovRMx/YYKtUNt3Yxaw4ORC9xo6Gt9t22kveWz1enG9QrhVlagzwrxSC455xD1dHMKhIJkbsQ7d48BA==}
     engines: {node: '>=8.3'}
+
+  rollup-plugin-preserve-directives@0.4.0:
+    resolution: {integrity: sha512-gx4nBxYm5BysmEQS+e2tAMrtFxrGvk+Pe5ppafRibQi0zlW7VYAbEGk6IKDw9sJGPdFWgVTE0o4BU4cdG0Fylg==}
+    peerDependencies:
+      rollup: 2.x || 3.x || 4.x
 
   rollup@4.54.0:
     resolution: {integrity: sha512-3nk8Y3a9Ea8szgKhinMlGMhGMw89mqule3KWczxhIzqudyHdCIOHw8WJlj/r329fACjKLEh13ZSk7oE22kyeIw==}
@@ -12345,6 +12353,12 @@ snapshots:
       fs-extra: 8.1.0
       globby: 10.0.1
       is-plain-object: 3.0.1
+
+  rollup-plugin-preserve-directives@0.4.0(rollup@4.54.0):
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.54.0)
+      magic-string: 0.30.21
+      rollup: 4.54.0
 
   rollup@4.54.0:
     dependencies:
