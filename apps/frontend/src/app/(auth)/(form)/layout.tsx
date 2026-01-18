@@ -1,6 +1,7 @@
 'use client';
 import { Atom, Molecule, Typography } from '@interview-lab/ui';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
 	dividerStyle,
@@ -20,16 +21,23 @@ export default function FormLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const router = useRouter();
+	const mode = usePathname().split('/').pop();
 	const [selectedValue, setSelectedValue] = useState<ToggleValue>(
-		ToggleOptions[0].value,
+		mode as ToggleValue,
 	);
+
+	const handleModeChange = (value: ToggleValue) => {
+		setSelectedValue(value);
+		router.replace(`/${value}`);
+	};
 
 	return (
 		<>
 			<Molecule.Toggle
 				items={ToggleOptions}
 				selectedValue={selectedValue}
-				onSelect={(value) => setSelectedValue(value)}
+				onSelect={handleModeChange}
 			/>
 			{children}
 			<Typography.Base textType="p" style="secondary" className={dividerStyle}>
@@ -39,16 +47,6 @@ export default function FormLayout({
 				<Atom.TextButton icon="IconGithub">Github</Atom.TextButton>
 				<Atom.TextButton icon="IconGoogle">Google</Atom.TextButton>
 			</div>
-			<Typography.Base
-				textType="p"
-				style="secondary"
-				className={signUpLinkStyle}
-			>
-				Don't have an account?{' '}
-				<strong>
-					<Link href="/signup">Sign Up for free</Link>
-				</strong>
-			</Typography.Base>
 		</>
 	);
 }
