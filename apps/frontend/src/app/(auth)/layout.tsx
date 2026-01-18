@@ -1,7 +1,4 @@
-'use client';
-
-import { Atom } from '@interview-lab/ui';
-import * as Typography from '@interview-lab/ui/typographies';
+import { Atom, Typography } from '@interview-lab/ui';
 import Image from 'next/image';
 import {
 	authImageContentStyle,

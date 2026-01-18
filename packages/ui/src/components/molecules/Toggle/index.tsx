@@ -11,8 +11,8 @@ export type ToggleItem<T = string> = {
 };
 
 type ToggleProps<T = string> = {
-	items: ToggleItem<T>[];
-	selectedValue: ToggleItem<T>['value'];
+	items: readonly ToggleItem<T>[];
+	selectedValue: T;
 	onSelect: (value: T) => void;
 };
 
