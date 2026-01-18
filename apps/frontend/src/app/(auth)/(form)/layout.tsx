@@ -23,12 +23,8 @@ export default function FormLayout({
 }>) {
 	const router = useRouter();
 	const mode = usePathname().split('/').pop();
-	const [selectedValue, setSelectedValue] = useState<ToggleValue>(
-		mode as ToggleValue,
-	);
 
 	const handleModeChange = (value: ToggleValue) => {
-		setSelectedValue(value);
 		router.replace(`/${value}`);
 	};
 
@@ -44,7 +40,7 @@ export default function FormLayout({
 			</Typography.Base>
 			<Molecule.Toggle
 				items={ToggleOptions}
-				selectedValue={selectedValue}
+				selectedValue={mode as ToggleValue}
 				onSelect={handleModeChange}
 			/>
 			{children}
