@@ -58,7 +58,7 @@ const ERROR_MESSAGE: Record<FieldName, string> = {
 	username: 'Username must be at least 3 characters long',
 	email: 'Please enter a valid email address',
 	password:
-		'Password must include at least one uppercase letter, one lowercase letter, and one special character',
+		'Password include at least one uppercase letter, one lowercase letter',
 	confirmPassword: 'Passwords do not match',
 };
 
