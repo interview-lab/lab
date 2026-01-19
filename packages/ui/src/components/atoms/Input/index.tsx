@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import type { InputHTMLAttributes, ReactElement } from 'react';
 import {
+	containerStyle,
 	inputContainerStyle,
 	inputStyle,
 	labelStyle,
@@ -30,7 +31,7 @@ const Input = ({
 	...props
 }: InputProps) => {
 	return (
-		<div>
+		<div className={containerStyle}>
 			{label && (
 				<label htmlFor={props.id} className={labelStyle}>
 					{label}

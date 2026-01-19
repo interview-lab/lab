@@ -11,6 +11,8 @@ export { ReactComponent as IconDownload } from './download.svg';
 export { ReactComponent as IconExclamation } from './exclamation.svg';
 export { ReactComponent as IconExclamationCircle } from './exclamation-circle.svg';
 export { ReactComponent as IconFire } from './fire.svg';
+export { ReactComponent as IconGithub } from './github.svg';
+export { ReactComponent as IconGoogle } from './google.svg';
 export { ReactComponent as IconGraph } from './graph.svg';
 export { ReactComponent as IconHelp } from './help.svg';
 export { ReactComponent as IconHome } from './home.svg';

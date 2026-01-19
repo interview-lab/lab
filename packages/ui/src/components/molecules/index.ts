@@ -1,17 +1,7 @@
-import DashboardCard from './DashboardCard';
-import InputPassword from './InputPassword';
-import InputWithValidation from './InputPassword';
-import InterviewAnswerResultCard from './InterviewAnswerResultCard';
-import InterviewScoreCard from './InterviewScoreCard';
-import SelectSubjectCard from './SelectSubjectCard';
-
-const Molecule = {
-	DashboardCard,
-	InterviewAnswerResultCard,
-	InterviewScoreCard,
-	SelectSubjectCard,
-	InputPassword,
-	InputWithValidation,
-};
-
-export default Molecule;
+export { default as DashboardCard } from './DashboardCard';
+export { default as InputPassword } from './InputPassword';
+export { default as InputWithValidation } from './InputWithValidation';
+export { default as InterviewAnswerResultCard } from './InterviewAnswerResultCard';
+export { default as InterviewScoreCard } from './InterviewScoreCard';
+export { default as SelectSubjectCard } from './SelectSubjectCard';
+export { default as Toggle } from './Toggle';

@@ -1,7 +1,1 @@
-import useClickOutside from './useClickOutside';
-
-const Hook = {
-	useClickOutside,
-};
-
-export default Hook;
+export { default as useClickOutside } from './useClickOutside';

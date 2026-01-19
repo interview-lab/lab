@@ -81,6 +81,7 @@ export const vars = createGlobalTheme(':root', {
 		'11': '44px',
 		'12': '48px',
 		'16': '64px',
+		'20': '80px',
 	},
 	radius: {
 		sm: '4px',

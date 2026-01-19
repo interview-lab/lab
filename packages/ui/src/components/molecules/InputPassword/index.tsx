@@ -1,3 +1,5 @@
+'use client';
+
 import clsx from 'clsx';
 import { useState } from 'react';
 import Icon from '@/components/atoms/Icon';
@@ -6,7 +8,7 @@ import Input from '@/components/atoms/Input';
 import { errorMessageStyle, errorStyle, inputStyle } from './inputPassword.css';
 
 type InputDefaultState = {
-	isError: false;
+	isError?: false;
 };
 
 type InputErrorState = {

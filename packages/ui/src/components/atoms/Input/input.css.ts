@@ -2,6 +2,7 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const labelStyle = style({
+	display: 'block',
 	marginBottom: vars.spacing['2'],
 	fontFamily: vars.font.pretendard,
 	fontSize: 14,
@@ -9,13 +10,19 @@ export const labelStyle = style({
 	color: vars.color.blueDark,
 });
 
+export const containerStyle = style({
+	width: '100%',
+});
+
 export const inputContainerStyle = style({
 	position: 'relative',
+	width: '100%',
 });
 
 export const inputStyle = style({
 	height: 52,
 	minWidth: 200,
+	width: '100%',
 	borderRadius: vars.radius.default,
 	border: 'none',
 	paddingInline: 44,

@@ -1,4 +1,7 @@
-export * from './components/atoms';
-export * from './components/molecules';
-export * from './components/typographies';
-export * from './hooks';
+// Namespace exports
+import * as Atom from './components/atoms';
+import * as Molecule from './components/molecules';
+import * as Typography from './components/typographies';
+import * as Hook from './hooks';
+
+export { Atom, Molecule, Typography, Hook };
