@@ -3,7 +3,6 @@ import {
 	Controller,
 	Delete,
 	Get,
-	InternalServerErrorException,
 	Post,
 	Req,
 	Res,
@@ -109,10 +108,6 @@ export class AuthController {
 
 		const result = await this.authService.handleOAuthCallback(profile);
 
-		if (!result.accessToken || !result.refreshToken) {
-			throw new InternalServerErrorException('토큰 생성에 실패했습니다.');
-		}
-
 		// 프론트엔드로 리다이렉트
 		const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
@@ -125,8 +120,8 @@ export class AuthController {
 
 		// 신규 사용자: 가입 완료 페이지로 리다이렉트
 		return response.redirect(
-			`${frontendUrl}/auth/complete-signup?` +
-				`tempToken=${result.tempToken}&` +
+			`${frontendUrl}/additional-info` +
+				`?tempToken=${result.tempToken}&` +
 				`email=${encodeURIComponent(result.providerEmail || '')}&` +
 				`name=${encodeURIComponent(result.providerName || '')}`,
 		);

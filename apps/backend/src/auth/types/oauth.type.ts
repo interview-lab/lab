@@ -17,13 +17,19 @@ export interface OAuthProfile {
 /**
  * OAuth 콜백 결과
  */
-export interface OAuthCallbackResult {
-	isExistingUser: boolean;
-	// 기존 사용자인 경우
-	accessToken?: string;
-	refreshToken?: string;
-	// 신규 사용자인 경우
-	tempToken?: string;
+export type OAuthCallbackResult =
+	| OAuthCallBackExistingUser
+	| OAuthCallBackNewUser;
+
+type OAuthCallBackExistingUser = {
+	isExistingUser: true;
+	accessToken: string;
+	refreshToken: string;
+};
+
+type OAuthCallBackNewUser = {
+	isExistingUser: false;
+	tempToken: string;
 	providerEmail?: string;
 	providerName?: string;
-}
+};
