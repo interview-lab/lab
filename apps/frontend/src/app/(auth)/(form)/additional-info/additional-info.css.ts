@@ -12,3 +12,8 @@ export const sendVerificationCodeButton = style({
 	height: 52,
 	marginTop: 25,
 });
+
+export const timerStyle = style({
+	backgroundColor: vars.color.grayLight,
+	color: vars.color.gray,
+});

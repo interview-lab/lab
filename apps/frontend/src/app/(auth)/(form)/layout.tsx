@@ -62,8 +62,12 @@ export default function FormLayout({
 						Or continue with
 					</Typography.Base>
 					<div className={socialButtonContainerStyle}>
-						<Atom.TextButton icon="IconGithub">Github</Atom.TextButton>
-						<Atom.TextButton icon="IconGoogle">Google</Atom.TextButton>
+						<a href={`${process.env.NEXT_PUBLIC_API_SERVER}/auth/google`}>
+							<Atom.TextButton icon="IconGithub">Github</Atom.TextButton>
+						</a>
+						<a href={`${process.env.NEXT_PUBLIC_API_SERVER}/auth/google`}>
+							<Atom.TextButton icon="IconGoogle">Google</Atom.TextButton>
+						</a>
 					</div>
 				</>
 			)}

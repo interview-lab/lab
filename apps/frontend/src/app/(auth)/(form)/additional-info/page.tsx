@@ -1,15 +1,24 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
+import clsx from 'clsx';
+import { useSearchParams } from 'next/navigation';
+import { type MouseEvent, useEffect } from 'react';
 import { useAdditionalForm } from '@/hooks/useAdditionalInfoForm';
+import useTimer from '@/hooks/useTimer';
 import { buttonStyle, formStyle } from '../login/page.css';
 import {
 	emailFieldContainerStyle,
 	sendVerificationCodeButton,
+	timerStyle,
 } from './additional-info.css';
 
+const DEFAULT_PENDING_TIME = 60;
+
 export default function AdditionalInfoPage() {
+	const searchParams = useSearchParams();
 	const [state, dispatch] = useAdditionalForm();
+	const [time, updateTime] = useTimer(0);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -25,6 +34,43 @@ export default function AdditionalInfoPage() {
 			}),
 		});
 	};
+
+	const handleSendVerificationCode = async (
+		e: MouseEvent<HTMLButtonElement>,
+	) => {
+		e.preventDefault();
+		updateTime(DEFAULT_PENDING_TIME);
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/email/send-verification`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+					'x-temp-token': searchParams.get('tempToken') ?? '',
+				},
+				method: 'POST',
+				body: JSON.stringify({
+					email: state.email.value,
+				}),
+			},
+		);
+		const { remainingTime } = await response.json();
+		if (remainingTime) {
+			updateTime(remainingTime);
+		}
+	};
+
+	useEffect(() => {
+		dispatch({
+			type: 'change',
+			field: 'email',
+			value: searchParams.get('email') || '',
+		});
+		dispatch({
+			type: 'change',
+			field: 'username',
+			value: searchParams.get('name') || '',
+		});
+	}, [searchParams, dispatch]);
 
 	const isFormValid = Object.values(state).every(
 		(field) => !field.isError && field.touched,
@@ -59,8 +105,13 @@ export default function AdditionalInfoPage() {
 					}
 					onBlur={() => dispatch({ type: 'blur', field: 'email' })}
 				/>
-				<Atom.TextButton type="button" className={sendVerificationCodeButton}>
-					인증번호 전송
+				<Atom.TextButton
+					type="button"
+					className={clsx(sendVerificationCodeButton, time && timerStyle)}
+					onClick={handleSendVerificationCode}
+					disabled={state.email.isError || time > 0}
+				>
+					{time > 0 ? `${time} S` : '인증번호 전송'}
 				</Atom.TextButton>
 			</div>
 			<Molecule.InputWithValidation
