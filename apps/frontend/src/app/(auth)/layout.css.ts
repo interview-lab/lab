@@ -47,7 +47,7 @@ export const authImageStyle = style({
 });
 
 export const authImageContentStyle = style({
-	padding: 80,
+	padding: vars.spacing['20'],
 	color: 'black',
 	zIndex: 10,
 });
