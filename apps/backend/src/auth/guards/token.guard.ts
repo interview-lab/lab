@@ -108,7 +108,7 @@ export class TempTokenGaurd implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest();
 
-		const tempToken = request.body.tempToken;
+		const tempToken = request.headers['x-temp-token'];
 
 		if (!tempToken) {
 			throw new UnauthorizedException('Temp Token이 없습니다.');

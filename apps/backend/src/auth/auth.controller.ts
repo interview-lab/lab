@@ -17,7 +17,7 @@ import {
 	EmailAndPasswordDto,
 	RegistrationWithEmailAndPasswordDto,
 } from './dtos/authentication.dto';
-import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
+import { SendVerificationDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { AccessTokenGuard, TempTokenGaurd } from './guards/token.guard';
@@ -180,21 +180,20 @@ export class AuthController {
 		description: '인증 이메일을 발송합니다.',
 	})
 	async sendVerification(@Body() dto: SendVerificationDto) {
+		const verification = await this.emailService.getVerificationInfo(dto.email);
+
+		const date = new Date();
+
+		if (verification && verification.expiresAt.getTime() > date.getTime()) {
+			return {
+				message: '이미 인증 이메일이 발송되었습니다.',
+				remainingTime: Math.floor(
+					(verification.expiresAt.getTime() - date.getTime()) / 1000,
+				),
+			};
+		}
+
 		await this.emailService.sendVerificationEmail(dto.email);
 		return { message: '인증 이메일이 발송되었습니다.' };
-	}
-
-	/**
-	 * 이메일 인증번호를 확인합니다.
-	 */
-	@Post('email/verify')
-	@UseGuards(TempTokenGaurd)
-	@ApiOperation({
-		summary: '이메일 인증 확인 API',
-		description: '이메일 인증번호를 확인합니다.',
-	})
-	async verifyEmail(@Body() dto: VerifyCodeDto) {
-		await this.emailService.verifyCode(dto.email, dto.code);
-		return { message: '이메일 인증이 완료되었습니다.' };
 	}
 }

@@ -88,7 +88,13 @@ export class EmailService {
 	 * @returns 인증 정보
 	 */
 	async getVerificationInfo(email: string) {
-		return await this.prisma.emailVerification.findFirst({ where: { email } });
+		return await this.prisma.emailVerification.findFirst({
+			where: {
+				email,
+				verified: false,
+			},
+			orderBy: { createdAt: 'desc' },
+		});
 	}
 
 	/**
@@ -118,6 +124,11 @@ export class EmailService {
 
 		if (!verification) {
 			throw new BadRequestException('유효하지 않거나 만료된 인증 요청입니다.');
+		}
+
+		// 만료 시간 검증
+		if (verification.expiresAt.getTime() < Date.now()) {
+			throw new BadRequestException('인증번호가 만료되었습니다.');
 		}
 
 		if (verification.attempts >= MAX_VERIFICATION_ATTEMPTS) {
