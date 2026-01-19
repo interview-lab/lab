@@ -68,7 +68,11 @@ export default function AdditionalInfoPage() {
 				label="Varification Code"
 				id="varificationCode"
 				placeholder="000000"
-				type="number"
+				type="text"
+				inputMode="numeric"
+				pattern="[0-9]{6}"
+				maxLength={6}
+				minLength={6}
 				value={state.verificationCode.value}
 				isError={state.verificationCode.isError}
 				errorMessage={state.verificationCode.errorMessage}
