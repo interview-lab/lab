@@ -1,13 +1,7 @@
 'use client';
 import { Atom, Molecule, Typography } from '@interview-lab/ui';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import {
-	dividerStyle,
-	signUpLinkStyle,
-	socialButtonContainerStyle,
-} from './layout.css';
+import { dividerStyle, socialButtonContainerStyle } from './layout.css';
 
 const ToggleOptions = [
 	{ value: 'login', label: 'Login' },
