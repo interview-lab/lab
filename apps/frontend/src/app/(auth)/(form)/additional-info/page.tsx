@@ -6,7 +6,7 @@ import { buttonStyle, formStyle } from '../login/page.css';
 import {
 	emailFieldContainerStyle,
 	sendVerificationCodeButton,
-} from './additonal-info.css';
+} from './additional-info.css';
 
 export default function AdditionalInfoPage() {
 	const [state, dispatch] = useAdditionalForm();
@@ -21,7 +21,7 @@ export default function AdditionalInfoPage() {
 			body: JSON.stringify({
 				email: state.email.value,
 				username: state.username.value,
-				varificationCode: state.varificationCode.value,
+				varificationCode: state.verificationCode.value,
 			}),
 		});
 	};
@@ -69,17 +69,17 @@ export default function AdditionalInfoPage() {
 				id="varificationCode"
 				placeholder="000000"
 				type="number"
-				value={state.varificationCode.value}
-				isError={state.varificationCode.isError}
-				errorMessage={state.varificationCode.errorMessage}
+				value={state.verificationCode.value}
+				isError={state.verificationCode.isError}
+				errorMessage={state.verificationCode.errorMessage}
 				onChange={(e) =>
 					dispatch({
 						type: 'change',
-						field: 'varificationCode',
+						field: 'verificationCode',
 						value: e.target.value,
 					})
 				}
-				onBlur={() => dispatch({ type: 'blur', field: 'varificationCode' })}
+				onBlur={() => dispatch({ type: 'blur', field: 'verificationCode' })}
 			/>
 			<Atom.TextButton
 				className={buttonStyle}
