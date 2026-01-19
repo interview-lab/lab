@@ -20,7 +20,7 @@ import {
 import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
-import { AccessTokenGuard } from './guards/token.guard';
+import { AccessTokenGuard, TempTokenGaurd } from './guards/token.guard';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -174,6 +174,7 @@ export class AuthController {
 	 * 인증 이메일을 발송합니다.
 	 */
 	@Post('email/send-verification')
+	@UseGuards(TempTokenGaurd)
 	@ApiOperation({
 		summary: '인증 이메일 발송 API',
 		description: '인증 이메일을 발송합니다.',
@@ -187,6 +188,7 @@ export class AuthController {
 	 * 이메일 인증번호를 확인합니다.
 	 */
 	@Post('email/verify')
+	@UseGuards(TempTokenGaurd)
 	@ApiOperation({
 		summary: '이메일 인증 확인 API',
 		description: '이메일 인증번호를 확인합니다.',
