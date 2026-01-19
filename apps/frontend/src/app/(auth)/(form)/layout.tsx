@@ -3,12 +3,26 @@ import { Atom, Molecule, Typography } from '@interview-lab/ui';
 import { usePathname, useRouter } from 'next/navigation';
 import { dividerStyle, socialButtonContainerStyle } from './layout.css';
 
+type ToggleValue = (typeof ToggleOptions)[number]['value'];
+
+type Page = 'login' | 'signup' | 'additional-info';
+
 const ToggleOptions = [
 	{ value: 'login', label: 'Login' },
 	{ value: 'signup', label: 'Sign Up' },
 ] as const;
 
-type ToggleValue = (typeof ToggleOptions)[number]['value'];
+const PAGE_TITLE: Record<Page, string> = {
+	login: 'Welcome back',
+	signup: 'Create an account',
+	'additional-info': 'Additional information',
+} as const;
+
+const PAGE_DESCRIPTION: Record<Page, string> = {
+	login: 'Access real interview questions and practice tools.',
+	signup: 'Enter your details to access your interview dashboard.',
+	'additional-info': 'Enter your details to access your interview dashboard.',
+} as const;
 
 export default function FormLayout({
 	children,
@@ -16,7 +30,7 @@ export default function FormLayout({
 	children: React.ReactNode;
 }>) {
 	const router = useRouter();
-	const mode = usePathname().split('/').pop();
+	const mode = usePathname().split('/').pop() as Page;
 
 	const handleModeChange = (value: ToggleValue) => {
 		router.replace(`/${value}`);
@@ -25,26 +39,34 @@ export default function FormLayout({
 	return (
 		<>
 			<Typography.Title textType="h2" style="primary">
-				{mode === 'login' ? 'Welcome back' : 'Create an account'}
+				{PAGE_TITLE[mode]}
 			</Typography.Title>
 			<Typography.Base textType="p" style="secondary">
-				{mode === 'login'
-					? 'Access real interview questions and practice tools.'
-					: 'Enter your details to access your interview dashboard.'}
+				{PAGE_DESCRIPTION[mode]}
 			</Typography.Base>
-			<Molecule.Toggle
-				items={ToggleOptions}
-				selectedValue={mode as ToggleValue}
-				onSelect={handleModeChange}
-			/>
+			{(mode === 'login' || mode === 'signup') && (
+				<Molecule.Toggle
+					items={ToggleOptions}
+					selectedValue={mode as ToggleValue}
+					onSelect={handleModeChange}
+				/>
+			)}
 			{children}
-			<Typography.Base textType="p" style="secondary" className={dividerStyle}>
-				Or continue with
-			</Typography.Base>
-			<div className={socialButtonContainerStyle}>
-				<Atom.TextButton icon="IconGithub">Github</Atom.TextButton>
-				<Atom.TextButton icon="IconGoogle">Google</Atom.TextButton>
-			</div>
+			{(mode === 'login' || mode === 'signup') && (
+				<>
+					<Typography.Base
+						textType="p"
+						style="secondary"
+						className={dividerStyle}
+					>
+						Or continue with
+					</Typography.Base>
+					<div className={socialButtonContainerStyle}>
+						<Atom.TextButton icon="IconGithub">Github</Atom.TextButton>
+						<Atom.TextButton icon="IconGoogle">Google</Atom.TextButton>
+					</div>
+				</>
+			)}
 		</>
 	);
 }
