@@ -41,17 +41,13 @@ export class EmailService {
 	 */
 	async sendVerificationEmail(email: string): Promise<void> {
 		// 기존 미인증 레코드 삭제
-		await this.prisma.emailVerification.deleteMany({
-			where: { email, verified: false },
-		});
+		await this.deleteVerification(email);
 
+		// 인증번호 생성
 		const code = this.generateVerificationCode();
-		const expiresAt = new Date(Date.now() + 5 * MINUTE); // 5분
 
 		// DB에 저장
-		await this.prisma.emailVerification.create({
-			data: { email, code, expiresAt },
-		});
+		await this.createVerificationInfo(email, code);
 
 		// 이메일 발송
 		try {
@@ -67,6 +63,47 @@ export class EmailService {
 	}
 
 	/**
+	 * 이메일 인증 정보를 생성합니다.
+	 *
+	 * @param email - 인증 정보를 생성할 이메일 주소
+	 * @param code - 인증번호
+	 * @returns 생성된 인증 정보
+	 */
+	async createVerificationInfo(email: string, code: string) {
+		const expiresAt = new Date(Date.now() + 1 * MINUTE);
+
+		return await this.prisma.emailVerification.create({
+			data: {
+				email,
+				code,
+				expiresAt,
+			},
+		});
+	}
+
+	/**
+	 * 이메일 인증 정보를 조회합니다.
+	 *
+	 * @param email - 인증 정보를 조회할 이메일 주소
+	 * @returns 인증 정보
+	 */
+	async getVerificationInfo(email: string) {
+		return await this.prisma.emailVerification.findFirst({ where: { email } });
+	}
+
+	/**
+	 * 이메일 인증 정보를 삭제합니다.
+	 *
+	 * @param email - 인증 정보를 삭제할 이메일 주소
+	 * @returns 삭제된 레코드 수
+	 */
+	async deleteVerification(email: string) {
+		return await this.prisma.emailVerification.deleteMany({
+			where: { email, verified: false },
+		});
+	}
+
+	/**
 	 * 인증번호를 검증합니다.
 	 *
 	 * @param email - 인증 요청한 이메일 주소
@@ -77,14 +114,7 @@ export class EmailService {
 	 * @throws {BadRequestException} 인증번호 불일치 시
 	 */
 	async verifyCode(email: string, code: string): Promise<boolean> {
-		const verification = await this.prisma.emailVerification.findFirst({
-			where: {
-				email,
-				verified: false,
-				expiresAt: { gt: new Date() },
-			},
-			orderBy: { createdAt: 'desc' },
-		});
+		const verification = await this.getVerificationInfo(email);
 
 		if (!verification) {
 			throw new BadRequestException('유효하지 않거나 만료된 인증 요청입니다.');
