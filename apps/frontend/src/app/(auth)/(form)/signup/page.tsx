@@ -1,8 +1,8 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
+import { useSignupForm } from '../../../../hooks/useSignupForm';
 import { buttonStyle, formStyle } from '../login/page.css';
-import { useSignupForm } from './useSignupForm';
 
 export default function SignupPage() {
 	const [state, dispatch] = useSignupForm();
