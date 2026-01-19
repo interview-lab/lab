@@ -7,8 +7,26 @@ import { buttonStyle, formStyle } from './page.css';
 export default function LoginPage() {
 	const [state, dispatch] = useLoginForm();
 
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/login/email`, {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			body: JSON.stringify({
+				email: state.email.value,
+				password: state.password.value,
+			}),
+		});
+	};
+
+	const isFormValid = Object.values(state).every(
+		(field) => !field.isError && field.touched,
+	);
+
 	return (
-		<form className={formStyle}>
+		<form className={formStyle} onSubmit={handleSubmit}>
 			<Molecule.InputWithValidation
 				leftIcon={<Atom.Icon icon="IconMail" />}
 				label="Email"
@@ -35,7 +53,11 @@ export default function LoginPage() {
 				}
 				onBlur={() => dispatch({ type: 'blur', field: 'password' })}
 			/>
-			<Atom.TextButton className={buttonStyle} type="submit">
+			<Atom.TextButton
+				className={buttonStyle}
+				type="submit"
+				disabled={!isFormValid}
+			>
 				Sign in
 			</Atom.TextButton>
 		</form>
