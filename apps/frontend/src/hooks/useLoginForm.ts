@@ -96,7 +96,7 @@ function reducer(state: FormState, action: Action): FormState {
 	return state;
 }
 
-export function useLoginForm() {
+export default function useLoginForm() {
 	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
 	return [state, dispatch] as const;

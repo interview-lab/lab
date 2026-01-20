@@ -105,7 +105,7 @@ function reducer(state: FormState, action: Action): FormState {
 	return state;
 }
 
-export function useAdditionalForm() {
+export default function useAdditionalInfoForm() {
 	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
 	return [state, dispatch] as const;

@@ -4,7 +4,7 @@ import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { type MouseEvent, useEffect } from 'react';
-import { useAdditionalForm } from '@/hooks/useAdditionalInfoForm';
+import useAdditionalInfoForm from '@/hooks/useAdditionalInfoForm';
 import useTimer from '@/hooks/useTimer';
 import { buttonStyle, formStyle } from '../login/page.css';
 import {
@@ -17,7 +17,7 @@ const DEFAULT_PENDING_TIME = 60;
 
 export default function AdditionalInfoPage() {
 	const searchParams = useSearchParams();
-	const [state, dispatch] = useAdditionalForm();
+	const [state, dispatch] = useAdditionalInfoForm();
 	const [time, updateTime] = useTimer(0);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
