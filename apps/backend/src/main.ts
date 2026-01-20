@@ -17,10 +17,14 @@ async function bootstrap() {
 		.setTitle('Interview lab API')
 		.setDescription('인터뷰랩 API 문서')
 		.setVersion('1.0')
+		.addCookieAuth('accessToken', { type: 'http' })
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('api', app, document);
+	SwaggerModule.setup('api', app, document, {
+		yamlDocumentUrl: 'api/yaml',
+		jsonDocumentUrl: 'api/json',
+	});
 
 	await app.listen(process.env.PORT ?? 3000);
 }

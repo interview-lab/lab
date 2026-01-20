@@ -8,7 +8,7 @@ import {
 	Res,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { EmailService } from '@/email/email.service';
 import { UsersService } from '@/users/users.service';
@@ -135,6 +135,10 @@ export class AuthController {
 	@ApiOperation({
 		summary: 'OAuth 가입 완료 API',
 		description: 'OAuth 가입을 완료합니다.',
+	})
+	@ApiHeader({
+		name: 'x-temp-token',
+		required: true,
 	})
 	async completeOAuthRegistration(
 		@Body() dto: OAuthCompleteDto,
