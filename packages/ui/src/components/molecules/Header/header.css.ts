@@ -34,13 +34,26 @@ export const navStyle = style({
 	listStyle: 'none',
 });
 
-export const navButtonStyle = style({
+export const navLinkStyle = style({
+	display: 'flex',
+	alignItems: 'center',
 	gap: vars.spacing[2],
-	minWidth: 'auto',
 	padding: vars.spacing[2],
-	background: 'transparent',
-	fontWeight: vars.fontWeight.regular,
+	color: vars.color.blueGray,
+	textDecoration: 'none',
+	fontFamily: 'inherit',
+	fontSize: 'inherit',
 	cursor: 'pointer',
+	transition: 'color 300ms',
+	':hover': {
+		color: vars.color.blue,
+	},
+	':visited': {
+		color: vars.color.black,
+	},
+	':active': {
+		color: vars.color.black,
+	},
 });
 
 export const userProfileButtonStyle = style({
