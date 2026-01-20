@@ -326,13 +326,7 @@ export class AuthService {
 			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
 		}
 
-		// 2. 이메일 인증 확인
-		const isVerified = await this.emailService.isEmailVerified(email);
-		if (!isVerified) {
-			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
-		}
-
-		// 3. 사용자 생성
+		// 2. 사용자 생성
 		const userData: Parameters<typeof this.usersService.createUser>[0] = {
 			email,
 			username,
@@ -347,15 +341,15 @@ export class AuthService {
 
 		const newUser = await this.usersService.createUser(userData);
 
-		// 4. pending 레코드 삭제
+		// 3. pending 레코드 삭제
 		await this.prisma.oAuthPendingRegistration.delete({
 			where: { id: pending.id },
 		});
 
-		// 5. 이메일 인증 삭제
+		// 4. 이메일 인증 삭제
 		await this.emailService.deleteVerification(email);
 
-		// 6. JWT 발급
+		// 5. JWT 발급
 		return this.generateToken(newUser);
 	}
 
