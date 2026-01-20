@@ -102,7 +102,7 @@ export class AccessTokenGuard extends TokenGuard {
  * 임시 토큰이 존재하는지 확인합니다.
  */
 @Injectable()
-export class TempTokenGaurd implements CanActivate {
+export class TempTokenGuard implements CanActivate {
 	constructor(protected readonly authService: AuthService) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
