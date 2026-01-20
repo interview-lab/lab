@@ -57,7 +57,8 @@ const ERROR_MESSAGE: Record<FieldName, string> = {
 const VALIDATION_RULES = {
 	email: (value: string) => AUTH.CONST.EMAIL_REGEX.test(value),
 	username: (value: string) => value.length >= AUTH.CONST.USERNAME_MIN_LENGTH,
-	verificationCode: (value: string) => value.length === 6,
+	verificationCode: (value: string) =>
+		value.length === AUTH.CONST.VERIFICATION_CODE_LENGTH && /^\d+$/.test(value),
 } satisfies Record<FieldName, (value: string) => boolean>;
 
 function validate(field: FieldName, value: string): boolean {

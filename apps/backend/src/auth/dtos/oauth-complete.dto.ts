@@ -1,6 +1,12 @@
 import { AUTH } from '@interview-lab/shared';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+	IsEmail,
+	IsNumberString,
+	IsString,
+	MaxLength,
+	MinLength,
+} from 'class-validator';
 
 /**
  * OAuth 가입 완료 요청 DTO
@@ -10,13 +16,6 @@ import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 	description: 'OAuth 가입 완료 DTO',
 })
 export class OAuthCompleteDto {
-	@IsString()
-	@ApiProperty({
-		description: '임시 토큰',
-		example: 'uuid-token',
-	})
-	tempToken!: string;
-
 	@IsString()
 	@MinLength(AUTH.CONST.USERNAME_MIN_LENGTH)
 	@MaxLength(20)
@@ -33,7 +32,7 @@ export class OAuthCompleteDto {
 	})
 	email!: string;
 
-	@IsString()
+	@IsNumberString()
 	@MinLength(AUTH.CONST.VERIFICATION_CODE_LENGTH)
 	@MaxLength(AUTH.CONST.VERIFICATION_CODE_LENGTH)
 	@ApiProperty({

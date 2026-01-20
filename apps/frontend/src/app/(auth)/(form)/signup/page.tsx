@@ -1,30 +1,88 @@
 'use client';
-
+import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
+import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
+import { type FormEvent, type MouseEvent, useState } from 'react';
 import useSignupForm from '@/hooks/useSignupForm';
+import useTimer from '@/hooks/useTimer';
 import { buttonStyle, formStyle } from '../login/page.css';
+import {
+	emailFieldContainerStyle,
+	sendVerificationCodeButton,
+	timerStyle,
+} from './signup.css';
+
+const DEFAULT_PENDING_TIME = 60;
 
 export default function SignupPage() {
+	const router = useRouter();
 	const [state, dispatch] = useSignupForm();
+	const [time, updateTime] = useTimer(0);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`, {
-			headers: {
-				'Content-Type': 'application/json',
+		if (isLoading) return;
+
+		setIsLoading(true);
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					email: state.email.value,
+					password: state.password.value,
+					username: state.username.value,
+					verificationCode: state.verificationCode.value,
+				}),
 			},
-			method: 'POST',
-			body: JSON.stringify({
-				email: state.email.value,
-				password: state.password.value,
-				username: state.username.value,
-			}),
-		});
+		);
+
+		if (response.ok) {
+			router.push('/');
+		}
+		setIsLoading(false);
+	};
+
+	const handleSendVerificationCode = async (
+		e: MouseEvent<HTMLButtonElement>,
+	) => {
+		e.preventDefault();
+		if (isLoading) return;
+
+		setIsLoading(true);
+		updateTime(DEFAULT_PENDING_TIME);
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/email/send-verification`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					email: state.email.value,
+				}),
+			},
+		);
+		const { remainingTime } = await response.json();
+		if (remainingTime) {
+			updateTime(remainingTime);
+		}
+		setIsLoading(false);
 	};
 
 	const isFormValid = Object.values(state).every(
 		(field) => !field.isError && field.touched,
 	);
+
+	const sendVerificationCodeText =
+		time > 0 ? `${time} S` : isLoading ? '전송 중' : '인증번호 전송';
 
 	return (
 		<form className={formStyle} onSubmit={handleSubmit}>
@@ -41,18 +99,55 @@ export default function SignupPage() {
 				}
 				onBlur={() => dispatch({ type: 'blur', field: 'username' })}
 			/>
+			<div className={emailFieldContainerStyle}>
+				<Molecule.InputWithValidation
+					leftIcon={<Atom.Icon icon="IconMail" />}
+					label="Email"
+					id="email"
+					placeholder="dev@example.com"
+					value={state.email.value}
+					isError={state.email.isError}
+					errorMessage={state.email.errorMessage}
+					onChange={(e) =>
+						dispatch({ type: 'change', field: 'email', value: e.target.value })
+					}
+					onBlur={() => dispatch({ type: 'blur', field: 'email' })}
+				/>
+				<Atom.TextButton
+					type="button"
+					className={clsx(
+						sendVerificationCodeButton,
+						(time || isLoading) && timerStyle,
+					)}
+					onClick={handleSendVerificationCode}
+					disabled={
+						!state.email.touched || state.email.isError || time > 0 || isLoading
+					}
+				>
+					{sendVerificationCodeText}
+				</Atom.TextButton>
+			</div>
 			<Molecule.InputWithValidation
-				leftIcon={<Atom.Icon icon="IconMail" />}
-				label="Email"
-				id="email"
-				placeholder="dev@example.com"
-				value={state.email.value}
-				isError={state.email.isError}
-				errorMessage={state.email.errorMessage}
+				leftIcon={<Atom.Icon icon="IconKey" />}
+				label="Verification Code"
+				id="verificationCode"
+				placeholder="000000"
+				type="text"
+				inputMode="numeric"
+				pattern={`[0-9]{${AUTH.CONST.VERIFICATION_CODE_LENGTH}}`}
+				maxLength={AUTH.CONST.VERIFICATION_CODE_LENGTH}
+				minLength={AUTH.CONST.VERIFICATION_CODE_LENGTH}
+				value={state.verificationCode.value}
+				isError={state.verificationCode.isError}
+				errorMessage={state.verificationCode.errorMessage}
 				onChange={(e) =>
-					dispatch({ type: 'change', field: 'email', value: e.target.value })
+					dispatch({
+						type: 'change',
+						field: 'verificationCode',
+						value: e.target.value,
+					})
 				}
-				onBlur={() => dispatch({ type: 'blur', field: 'email' })}
+				onBlur={() => dispatch({ type: 'blur', field: 'verificationCode' })}
 			/>
 			<Molecule.InputPassword
 				leftIcon={<Atom.Icon icon="IconLock" />}
@@ -87,7 +182,7 @@ export default function SignupPage() {
 			<Atom.TextButton
 				className={buttonStyle}
 				type="submit"
-				disabled={!isFormValid}
+				disabled={!isFormValid || isLoading}
 			>
 				Sign up
 			</Atom.TextButton>

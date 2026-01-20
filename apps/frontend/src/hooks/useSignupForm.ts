@@ -10,7 +10,12 @@ type FieldState = {
 	errorMessage: string;
 };
 
-type FieldName = 'username' | 'email' | 'password' | 'confirmPassword';
+type FieldName =
+	| 'username'
+	| 'email'
+	| 'password'
+	| 'confirmPassword'
+	| 'verificationCode';
 
 type FormState = Record<FieldName, FieldState>;
 
@@ -52,6 +57,12 @@ const INITIAL_STATE: FormState = {
 		isError: false,
 		errorMessage: '',
 	},
+	verificationCode: {
+		value: '',
+		touched: false,
+		isError: false,
+		errorMessage: '',
+	},
 };
 
 const ERROR_MESSAGE: Record<FieldName, string> = {
@@ -60,6 +71,7 @@ const ERROR_MESSAGE: Record<FieldName, string> = {
 	password:
 		'Password include at least one uppercase letter, one lowercase letter',
 	confirmPassword: 'Passwords do not match',
+	verificationCode: `Verification code must be ${AUTH.CONST.VERIFICATION_CODE_LENGTH} digits`,
 };
 
 const VALIDATION_RULES = {
@@ -68,6 +80,8 @@ const VALIDATION_RULES = {
 	password: (value: string) => AUTH.CONST.PASSWORD_REGEX.test(value),
 	confirmPassword: (password: string, confirmPassword: string) =>
 		password === confirmPassword,
+	verificationCode: (value: string) =>
+		value.length === AUTH.CONST.VERIFICATION_CODE_LENGTH && /^\d+$/.test(value),
 } satisfies Record<FieldName, (...args: string[]) => boolean>;
 
 function validate(field: FieldName, value: string, state: FormState): boolean {

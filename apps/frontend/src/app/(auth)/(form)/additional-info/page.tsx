@@ -26,9 +26,10 @@ export default function AdditionalInfoPage() {
 		if (isLoading) return;
 
 		setIsLoading(true);
-		await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`, {
+		await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/complete`, {
 			headers: {
 				'Content-Type': 'application/json',
+				'x-temp-token': searchParams.get('tempToken') ?? '',
 			},
 			method: 'POST',
 			body: JSON.stringify({
@@ -53,7 +54,6 @@ export default function AdditionalInfoPage() {
 			{
 				headers: {
 					'Content-Type': 'application/json',
-					'x-temp-token': searchParams.get('tempToken') ?? '',
 				},
 				method: 'POST',
 				body: JSON.stringify({
@@ -75,9 +75,17 @@ export default function AdditionalInfoPage() {
 			value: searchParams.get('email') || '',
 		});
 		dispatch({
+			type: 'blur',
+			field: 'email',
+		});
+		dispatch({
 			type: 'change',
 			field: 'username',
 			value: searchParams.get('name') || '',
+		});
+		dispatch({
+			type: 'blur',
+			field: 'username',
 		});
 	}, [searchParams, dispatch]);
 
@@ -124,7 +132,9 @@ export default function AdditionalInfoPage() {
 						(time || isLoading) && timerStyle,
 					)}
 					onClick={handleSendVerificationCode}
-					disabled={state.email.isError || time > 0 || isLoading}
+					disabled={
+						!state.email.touched || state.email.isError || time > 0 || isLoading
+					}
 				>
 					{sendVerificationCodeText}
 				</Atom.TextButton>

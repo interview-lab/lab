@@ -16,6 +16,7 @@
 		"prod": "node dist/main",
 		"lint": "biome check",
 		"format": "biome format --write",
+		"push-db": "prisma db push",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",

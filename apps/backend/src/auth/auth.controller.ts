@@ -115,7 +115,7 @@ export class AuthController {
 			// 기존 사용자: 토큰과 함께 리다이렉트
 			this.authService.setTokenToCookie(response, result.accessToken);
 			this.authService.setTokenToCookie(response, result.refreshToken, true);
-			return response.redirect(`${frontendUrl}/auth/callback?`);
+			return response.redirect(`${frontendUrl}/`);
 		}
 
 		// 신규 사용자: 가입 완료 페이지로 리다이렉트
@@ -131,12 +131,16 @@ export class AuthController {
 	 * OAuth 가입을 완료합니다.
 	 */
 	@Post('oauth/complete')
+	@UseGuards(TempTokenGuard)
 	@ApiOperation({
 		summary: 'OAuth 가입 완료 API',
 		description: 'OAuth 가입을 완료합니다.',
 	})
 	async completeOAuthRegistration(
 		@Body() dto: OAuthCompleteDto,
+		@Req() request: {
+			tempToken: string;
+		},
 		@Res({ passthrough: true }) response: Response,
 	) {
 		// 이메일 인증 확인
@@ -144,7 +148,7 @@ export class AuthController {
 
 		// 가입 완료
 		const tokens = await this.authService.completeOAuthRegistration(
-			dto.tempToken,
+			request.tempToken,
 			dto.username,
 			dto.email,
 		);
@@ -174,7 +178,6 @@ export class AuthController {
 	 * 인증 이메일을 발송합니다.
 	 */
 	@Post('email/send-verification')
-	@UseGuards(TempTokenGuard)
 	@ApiOperation({
 		summary: '인증 이메일 발송 API',
 		description: '인증 이메일을 발송합니다.',
