@@ -18,6 +18,7 @@ import {
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
 } from './consts/auth.const';
+import { RegistrationWithEmailAndPasswordDto } from './dtos/authentication.dto';
 import { JWT_TOKEN_Payload } from './types/jwt.type';
 import type { OAuthCallbackResult, OAuthProfile } from './types/oauth.type';
 
@@ -39,25 +40,30 @@ export class AuthService {
 	 * 이메일로 신규 사용자를 등록하고 토큰을 발급합니다.
 	 * 이메일 인증이 완료되지 않은 경우 예외를 발생시킵니다.
 	 *
-	 * @param user - 등록할 사용자 정보 (username, email, password)
+	 * @param dto - 등록할 사용자 정보 (username, email, password)
 	 * @returns Access Token과 Refresh Token을 포함한 객체
 	 */
 	async registerWithEmail(
 		response: Response,
-		user: Pick<UserModel, 'username' | 'email' | 'password'>,
+		dto: RegistrationWithEmailAndPasswordDto,
 	) {
-		if (!user.password) {
+		if (!dto.password) {
 			throw new BadRequestException('비밀번호가 없습니다.');
 		}
 
-		const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
+		const isVerified = await this.emailService.verifyCode(
+			dto.email,
+			dto.verificationCode,
+		);
 
-		if (!this.emailService.isEmailVerified(user.email)) {
+		if (!isVerified) {
 			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
 		}
 
+		const hash = await bcrypt.hash(dto.password, HASH_ROUNDS);
+
 		const newUser = await this.usersService.createUser({
-			...user,
+			...dto,
 			password: hash,
 		});
 

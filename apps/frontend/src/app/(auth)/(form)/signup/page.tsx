@@ -109,7 +109,9 @@ export default function SignupPage() {
 						(time || isLoading) && timerStyle,
 					)}
 					onClick={handleSendVerificationCode}
-					disabled={state.email.isError || time > 0 || isLoading}
+					disabled={
+						!state.email.touched || state.email.isError || time > 0 || isLoading
+					}
 				>
 					{sendVerificationCodeText}
 				</Atom.TextButton>

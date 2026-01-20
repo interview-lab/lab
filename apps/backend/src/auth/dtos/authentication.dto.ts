@@ -1,6 +1,12 @@
 import { AUTH } from '@interview-lab/shared';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
+import {
+	IsEmail,
+	IsString,
+	Matches,
+	MaxLength,
+	MinLength,
+} from 'class-validator';
 
 @ApiSchema({
 	name: 'EmailAndPasswordDto',
@@ -40,4 +46,13 @@ export class RegistrationWithEmailAndPasswordDto extends EmailAndPasswordDto {
 		message: '이름은 3자 이상이어야 합니다.',
 	})
 	username!: string;
+
+	@IsString()
+	@MinLength(AUTH.CONST.VERIFICATION_CODE_LENGTH)
+	@MaxLength(AUTH.CONST.VERIFICATION_CODE_LENGTH)
+	@ApiProperty({
+		description: '이메일 인증 코드',
+		example: '123456',
+	})
+	verificationCode!: string;
 }

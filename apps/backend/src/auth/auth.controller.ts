@@ -131,6 +131,7 @@ export class AuthController {
 	 * OAuth 가입을 완료합니다.
 	 */
 	@Post('oauth/complete')
+	@UseGuards(TempTokenGuard)
 	@ApiOperation({
 		summary: 'OAuth 가입 완료 API',
 		description: 'OAuth 가입을 완료합니다.',
@@ -174,7 +175,6 @@ export class AuthController {
 	 * 인증 이메일을 발송합니다.
 	 */
 	@Post('email/send-verification')
-	@UseGuards(TempTokenGuard)
 	@ApiOperation({
 		summary: '인증 이메일 발송 API',
 		description: '인증 이메일을 발송합니다.',
