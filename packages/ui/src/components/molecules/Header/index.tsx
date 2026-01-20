@@ -1,5 +1,6 @@
 import defaultUserImage from '@/assets/image/default-user-image.jpeg';
 import { Icon, TextButton } from '@/components/atoms';
+import type { IconName } from '@/components/atoms/Icon';
 import {
 	containerStyle,
 	logoStyle,
@@ -9,47 +10,65 @@ import {
 	userProfileButtonStyle,
 	userProfileImageStyle,
 } from '@/components/molecules/Header/header.css';
+import { mergeClassnames } from '@interview-lab/shared';
 
-const Header = () => {
+type NavItem = {
+	label: string;
+	icon: IconName;
+	onClick?: () => void;
+};
+
+type HeaderProps = {
+	title?: string;
+	logoIcon?: IconName;
+	navItems?: NavItem[];
+	userImage?: string;
+	onUserProfileClick?: () => void;
+	className?: string;
+};
+
+const DEFAULT_NAV_ITEMS: NavItem[] = [
+	{ label: 'Dashboard', icon: 'IconHome' },
+	{ label: 'Practice', icon: 'IconCode' },
+	{ label: 'History', icon: 'IconReplay' },
+	{ label: 'Setting', icon: 'IconSetting' },
+];
+
+const Header = ({
+	title = 'DevInterview',
+	logoIcon = 'IconTerminal',
+	navItems = DEFAULT_NAV_ITEMS,
+	userImage = defaultUserImage,
+	onUserProfileClick,
+	className,
+}: HeaderProps) => {
 	return (
-		<div className={containerStyle}>
+		<div className={mergeClassnames(containerStyle, className)}>
 			<div className={logoStyle}>
-				<Icon icon="IconTerminal" width={24} height={24} />
-				<h1 className={titleStyle}>DevInterview</h1>
+				<Icon icon={logoIcon} width={24} height={24} />
+				<h1 className={titleStyle}>{title}</h1>
 			</div>
 			<nav className={navStyle}>
+				{navItems.map((item) => (
+					<li key={item.label}>
+						<TextButton
+							icon={item.icon}
+							iconSize={24}
+							className={navButtonStyle}
+							onClick={item.onClick}
+						>
+							{item.label}
+						</TextButton>
+					</li>
+				))}
 				<li>
-					<TextButton icon="IconHome" iconSize={24} className={navButtonStyle}>
-						Dashboard
-					</TextButton>
-				</li>
-				<li>
-					<TextButton icon="IconCode" iconSize={24} className={navButtonStyle}>
-						Practice
-					</TextButton>
-				</li>
-				<li>
-					<TextButton
-						icon="IconReplay"
-						iconSize={24}
-						className={navButtonStyle}
+					<button
+						type="button"
+						className={userProfileButtonStyle}
+						onClick={onUserProfileClick}
 					>
-						History
-					</TextButton>
-				</li>
-				<li>
-					<TextButton
-						icon="IconSetting"
-						iconSize={24}
-						className={navButtonStyle}
-					>
-						Setting
-					</TextButton>
-				</li>
-				<li>
-					<button type="button" className={userProfileButtonStyle}>
 						<img
-							src={defaultUserImage}
+							src={userImage}
 							alt="User profile"
 							className={userProfileImageStyle}
 						/>
