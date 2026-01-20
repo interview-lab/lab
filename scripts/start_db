@@ -2,4 +2,8 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"                                                                                                                                                                                                                               
 
-docker compose -f "$SCRIPT_DIR/../apps/backend/docker/db-compose.yml" up 
+docker compose -f "$SCRIPT_DIR/../apps/backend/docker/db-compose.yml" up --wait
+
+cd "$SCRIPT_DIR/../apps/backend" && npm run push-db
+
+cd ../..
