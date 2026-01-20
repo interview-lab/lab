@@ -14,7 +14,7 @@ const TextButton = ({
 	className,
 	children,
 	icon,
-	iconSize,
+	iconSize = 24,
 	showIcon = true,
 	...props
 }: TextButtonProps) => {

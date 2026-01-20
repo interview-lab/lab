@@ -28,7 +28,7 @@ type HeaderProps = {
 };
 
 const DEFAULT_NAV_ITEMS: NavItem[] = [
-	{ label: 'Dashboard', icon: 'IconHome' },
+	{ label: 'Dashboard', icon: 'IconDashboard' },
 	{ label: 'Practice', icon: 'IconCode' },
 	{ label: 'History', icon: 'IconReplay' },
 	{ label: 'Setting', icon: 'IconSetting' },
