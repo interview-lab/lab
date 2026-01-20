@@ -1,5 +1,5 @@
 'use client';
-
+import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
@@ -121,9 +121,9 @@ export default function AdditionalInfoPage() {
 				placeholder="000000"
 				type="text"
 				inputMode="numeric"
-				pattern="[0-9]{6}"
-				maxLength={6}
-				minLength={6}
+				pattern={`[0-9]{${AUTH.CONST.VERIFICATION_CODE_LENGTH}}`}
+				maxLength={AUTH.CONST.VERIFICATION_CODE_LENGTH}
+				minLength={AUTH.CONST.VERIFICATION_CODE_LENGTH}
 				value={state.verificationCode.value}
 				isError={state.verificationCode.isError}
 				errorMessage={state.verificationCode.errorMessage}

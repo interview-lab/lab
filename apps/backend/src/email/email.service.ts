@@ -1,4 +1,5 @@
 import { randomInt } from 'node:crypto';
+import { AUTH } from '@interview-lab/shared';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -30,7 +31,10 @@ export class EmailService {
 	 * @returns 6자리 숫자 문자열
 	 */
 	private generateVerificationCode(): string {
-		return randomInt(100000, 999999).toString();
+		return randomInt(
+			10 ** (AUTH.CONST.VERIFICATION_CODE_LENGTH - 1),
+			10 ** AUTH.CONST.VERIFICATION_CODE_LENGTH - 1,
+		).toString();
 	}
 
 	/**
