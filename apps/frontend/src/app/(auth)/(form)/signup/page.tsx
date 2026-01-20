@@ -2,6 +2,7 @@
 import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 import { type FormEvent, type MouseEvent, useState } from 'react';
 import useSignupForm from '@/hooks/useSignupForm';
 import useTimer from '@/hooks/useTimer';
@@ -15,6 +16,7 @@ import {
 const DEFAULT_PENDING_TIME = 60;
 
 export default function SignupPage() {
+	const router = useRouter();
 	const [state, dispatch] = useSignupForm();
 	const [time, updateTime] = useTimer(0);
 	const [isLoading, setIsLoading] = useState(false);
@@ -24,18 +26,26 @@ export default function SignupPage() {
 		if (isLoading) return;
 
 		setIsLoading(true);
-		await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`, {
-			headers: {
-				'Content-Type': 'application/json',
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify({
+					email: state.email.value,
+					password: state.password.value,
+					username: state.username.value,
+					verificationCode: state.verificationCode.value,
+				}),
 			},
-			method: 'POST',
-			body: JSON.stringify({
-				email: state.email.value,
-				password: state.password.value,
-				username: state.username.value,
-				verificationCode: state.verificationCode.value,
-			}),
-		});
+		);
+
+		if (response.ok) {
+			router.push('/');
+		}
 		setIsLoading(false);
 	};
 
@@ -54,6 +64,7 @@ export default function SignupPage() {
 					'Content-Type': 'application/json',
 				},
 				method: 'POST',
+				credentials: 'include',
 				body: JSON.stringify({
 					email: state.email.value,
 				}),
