@@ -30,7 +30,7 @@ export default function AdditionalInfoPage() {
 			body: JSON.stringify({
 				email: state.email.value,
 				username: state.username.value,
-				varificationCode: state.verificationCode.value,
+				verificationCode: state.verificationCode.value,
 			}),
 		});
 	};
@@ -116,8 +116,8 @@ export default function AdditionalInfoPage() {
 			</div>
 			<Molecule.InputWithValidation
 				leftIcon={<Atom.Icon icon="IconKey" />}
-				label="Varification Code"
-				id="varificationCode"
+				label="Verification Code"
+				id="verificationCode"
 				placeholder="000000"
 				type="text"
 				inputMode="numeric"
