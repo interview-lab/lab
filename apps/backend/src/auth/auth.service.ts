@@ -62,8 +62,9 @@ export class AuthService {
 
 		const hash = await bcrypt.hash(dto.password, HASH_ROUNDS);
 
+		const { verificationCode: _, ...userData } = dto;
 		const newUser = await this.usersService.createUser({
-			...dto,
+			...userData,
 			password: hash,
 		});
 
