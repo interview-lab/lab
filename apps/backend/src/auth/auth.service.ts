@@ -284,6 +284,12 @@ export class AuthService {
 		};
 	}
 
+	/**
+	 * 임시 토큰으로 OAuth pending 레코드를 조회합니다.
+	 *
+	 * @param tempToken - 임시 토큰
+	 * @returns OAuth pending 레코드
+	 */
 	async getPendingRegistration(tempToken: string) {
 		return await this.prisma.oAuthPendingRegistration.findFirst({
 			where: { tempToken },
@@ -307,8 +313,11 @@ export class AuthService {
 		email: string,
 	): Promise<{ accessToken: string; refreshToken: string }> {
 		// 1. pending 레코드 조회
-		const pending = await this.prisma.oAuthPendingRegistration.findUnique({
+		const pending = await this.prisma.oAuthPendingRegistration.findFirst({
 			where: { tempToken },
+			orderBy: {
+				createdAt: 'desc',
+			},
 		});
 
 		if (!pending || pending.expiresAt < new Date()) {
@@ -341,7 +350,10 @@ export class AuthService {
 			where: { id: pending.id },
 		});
 
-		// 5. JWT 발급
+		// 5. 이메일 인증 삭제
+		await this.emailService.deleteVerification(email);
+
+		// 6. JWT 발급
 		return this.generateToken(newUser);
 	}
 

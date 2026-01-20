@@ -61,6 +61,7 @@ export class AuthController {
 		@Res({ passthrough: true }) response: Response,
 	) {
 		await this.authService.registerWithEmail(response, dto);
+		await this.emailService.deleteVerification(dto.email);
 	}
 
 	// ===== Google OAuth =====
@@ -149,6 +150,8 @@ export class AuthController {
 			dto.username,
 			dto.email,
 		);
+
+		// 이메일 인증 삭제
 
 		this.authService.setTokenToCookie(response, tokens.accessToken);
 		this.authService.setTokenToCookie(response, tokens.refreshToken, true);
