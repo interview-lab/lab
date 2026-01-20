@@ -12,12 +12,12 @@ import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { EmailService } from '@/email/email.service';
 import { UsersService } from '@/users/users.service';
+
 import { AuthService } from './auth.service';
 import {
 	EmailAndPasswordDto,
 	RegistrationWithEmailAndPasswordDto,
 } from './dtos/authentication.dto';
-import { SendVerificationDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { AccessTokenGuard, TempTokenGuard } from './guards/token.guard';
@@ -174,33 +174,5 @@ export class AuthController {
 	async unlinkGoogleAccount(@Req() req: { user: { id: number } }) {
 		await this.usersService.unlinkOAuthAccount(req.user.id, 'google');
 		return { message: 'Google 계정 연동이 해제되었습니다.' };
-	}
-
-	// ===== Email Verification =====
-
-	/**
-	 * 인증 이메일을 발송합니다.
-	 */
-	@Post('email/send-verification')
-	@ApiOperation({
-		summary: '인증 이메일 발송 API',
-		description: '인증 이메일을 발송합니다.',
-	})
-	async sendVerification(@Body() dto: SendVerificationDto) {
-		const verification = await this.emailService.getVerificationInfo(dto.email);
-
-		const date = new Date();
-
-		if (verification && verification.expiresAt.getTime() > date.getTime()) {
-			return {
-				message: '이미 인증 이메일이 발송되었습니다.',
-				remainingTime: Math.floor(
-					(verification.expiresAt.getTime() - date.getTime()) / 1000,
-				),
-			};
-		}
-
-		await this.emailService.sendVerificationEmail(dto.email);
-		return { message: '인증 이메일이 발송되었습니다.' };
 	}
 }

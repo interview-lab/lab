@@ -184,7 +184,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/auth/email/send-verification': {
+	'/email/send-verification': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -197,7 +197,7 @@ export interface paths {
 		 * 인증 이메일 발송 API
 		 * @description 인증 이메일을 발송합니다.
 		 */
-		post: operations['AuthController_sendVerification'];
+		post: operations['EmailController_sendVerification'];
 		delete?: never;
 		options?: never;
 		head?: never;
@@ -269,6 +269,19 @@ export interface components {
 			 * @example test@example.com
 			 */
 			email: string;
+		};
+		/** @description 인증 이메일 발송 응답 DTO */
+		VerificationResponseDto: {
+			/**
+			 * @description 응답 메시지
+			 * @example 인증 이메일이 발송되었습니다.
+			 */
+			message: string;
+			/**
+			 * @description 남은 시간 (초)
+			 * @example 300
+			 */
+			remainingTime: number;
 		};
 	};
 	responses: never;
@@ -448,7 +461,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_sendVerification: {
+	EmailController_sendVerification: {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -465,7 +478,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					'application/json': components['schemas']['VerificationResponseDto'];
+				};
 			};
 		};
 	};
