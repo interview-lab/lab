@@ -14,9 +14,7 @@ services:
       timeout: 5s                                                                                                                                                                                                                   
       retries: 10    
     volumes:
-      - /var/lib/postgresql/data
-      # 개발중엔 볼륨 사용하지 않음
-      # - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
