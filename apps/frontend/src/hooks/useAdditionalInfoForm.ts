@@ -10,7 +10,7 @@ type FieldState = {
 	errorMessage: string;
 };
 
-type FieldName = 'email' | 'password';
+type FieldName = 'username' | 'email' | 'verificationCode';
 
 type FormState = Record<FieldName, FieldState>;
 
@@ -34,7 +34,13 @@ const INITIAL_STATE: FormState = {
 		isError: false,
 		errorMessage: '',
 	},
-	password: {
+	username: {
+		value: '',
+		touched: false,
+		isError: false,
+		errorMessage: '',
+	},
+	verificationCode: {
 		value: '',
 		touched: false,
 		isError: false,
@@ -44,12 +50,14 @@ const INITIAL_STATE: FormState = {
 
 const ERROR_MESSAGE: Record<FieldName, string> = {
 	email: 'Please enter a valid email address',
-	password: 'Password is required',
+	username: 'Username Must be at least 3 characters long',
+	verificationCode: 'Verification code is 6 digits',
 };
 
 const VALIDATION_RULES = {
 	email: (value: string) => AUTH.CONST.EMAIL_REGEX.test(value),
-	password: (value: string) => value.length > 0,
+	username: (value: string) => value.length >= AUTH.CONST.USERNAME_MIN_LENGTH,
+	verificationCode: (value: string) => value.length === 6,
 } satisfies Record<FieldName, (value: string) => boolean>;
 
 function validate(field: FieldName, value: string): boolean {
@@ -68,6 +76,7 @@ function reducer(state: FormState, action: Action): FormState {
 
 		if (state[action.field].touched) {
 			const isValid = validate(action.field, action.value);
+
 			updatedState[action.field] = {
 				...updatedState[action.field],
 				isError: !isValid,
@@ -96,7 +105,7 @@ function reducer(state: FormState, action: Action): FormState {
 	return state;
 }
 
-export default function useLoginForm() {
+export default function useAdditionalInfoForm() {
 	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
 	return [state, dispatch] as const;

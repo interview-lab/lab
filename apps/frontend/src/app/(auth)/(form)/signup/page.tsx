@@ -1,7 +1,7 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
-import { useSignupForm } from '../../../../hooks/useSignupForm';
+import useSignupForm from '@/hooks/useSignupForm';
 import { buttonStyle, formStyle } from '../login/page.css';
 
 export default function SignupPage() {

@@ -129,7 +129,7 @@ function reducer(state: FormState, action: Action): FormState {
 	return state;
 }
 
-export function useSignupForm() {
+export default function useSignupForm() {
 	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
 	return [state, dispatch] as const;

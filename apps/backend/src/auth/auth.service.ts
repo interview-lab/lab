@@ -213,6 +213,15 @@ export class AuthService {
 	}
 
 	/**
+	 * 임시 토큰을 생성합니다.
+	 *
+	 * @returns 임시 토큰 문자열
+	 */
+	generateTempToken() {
+		return uuidv4();
+	}
+
+	/**
 	 * OAuth 콜백을 처리합니다.
 	 *
 	 * @description 기존 사용자는 바로 JWT를 발급하고,
@@ -241,7 +250,7 @@ export class AuthService {
 		}
 
 		// 2. 신규 사용자 -> 임시 토큰 발급
-		const tempToken = uuidv4();
+		const tempToken = this.generateTempToken();
 		const expiresAt = new Date(Date.now() + 30 * MINUTE); // 30분
 
 		// 기존 pending 레코드 삭제 후 새로 생성
@@ -267,6 +276,12 @@ export class AuthService {
 			providerEmail: email,
 			providerName: name,
 		};
+	}
+
+	async getPendingRegistration(tempToken: string) {
+		return await this.prisma.oAuthPendingRegistration.findFirst({
+			where: { tempToken },
+		});
 	}
 
 	/**

@@ -3,7 +3,6 @@ import {
 	Controller,
 	Delete,
 	Get,
-	InternalServerErrorException,
 	Post,
 	Req,
 	Res,
@@ -18,10 +17,10 @@ import {
 	EmailAndPasswordDto,
 	RegistrationWithEmailAndPasswordDto,
 } from './dtos/authentication.dto';
-import { SendVerificationDto, VerifyCodeDto } from './dtos/email-verify.dto';
+import { SendVerificationDto } from './dtos/email-verify.dto';
 import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
-import { AccessTokenGuard } from './guards/token.guard';
+import { AccessTokenGuard, TempTokenGuard } from './guards/token.guard';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -109,10 +108,6 @@ export class AuthController {
 
 		const result = await this.authService.handleOAuthCallback(profile);
 
-		if (!result.accessToken || !result.refreshToken) {
-			throw new InternalServerErrorException('토큰 생성에 실패했습니다.');
-		}
-
 		// 프론트엔드로 리다이렉트
 		const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
@@ -125,8 +120,8 @@ export class AuthController {
 
 		// 신규 사용자: 가입 완료 페이지로 리다이렉트
 		return response.redirect(
-			`${frontendUrl}/auth/complete-signup?` +
-				`tempToken=${result.tempToken}&` +
+			`${frontendUrl}/additional-info` +
+				`?tempToken=${result.tempToken}&` +
 				`email=${encodeURIComponent(result.providerEmail || '')}&` +
 				`name=${encodeURIComponent(result.providerName || '')}`,
 		);
@@ -179,25 +174,26 @@ export class AuthController {
 	 * 인증 이메일을 발송합니다.
 	 */
 	@Post('email/send-verification')
+	@UseGuards(TempTokenGuard)
 	@ApiOperation({
 		summary: '인증 이메일 발송 API',
 		description: '인증 이메일을 발송합니다.',
 	})
 	async sendVerification(@Body() dto: SendVerificationDto) {
+		const verification = await this.emailService.getVerificationInfo(dto.email);
+
+		const date = new Date();
+
+		if (verification && verification.expiresAt.getTime() > date.getTime()) {
+			return {
+				message: '이미 인증 이메일이 발송되었습니다.',
+				remainingTime: Math.floor(
+					(verification.expiresAt.getTime() - date.getTime()) / 1000,
+				),
+			};
+		}
+
 		await this.emailService.sendVerificationEmail(dto.email);
 		return { message: '인증 이메일이 발송되었습니다.' };
-	}
-
-	/**
-	 * 이메일 인증번호를 확인합니다.
-	 */
-	@Post('email/verify')
-	@ApiOperation({
-		summary: '이메일 인증 확인 API',
-		description: '이메일 인증번호를 확인합니다.',
-	})
-	async verifyEmail(@Body() dto: VerifyCodeDto) {
-		await this.emailService.verifyCode(dto.email, dto.code);
-		return { message: '이메일 인증이 완료되었습니다.' };
 	}
 }

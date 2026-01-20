@@ -28,10 +28,14 @@ export const socialButtonContainerStyle = style({
 	gap: vars.spacing['4'],
 });
 
-globalStyle(`${socialButtonContainerStyle} button`, {
+globalStyle(`${socialButtonContainerStyle} > *`, {
 	flexGrow: 1,
+});
+
+globalStyle(`${socialButtonContainerStyle}  button`, {
 	backgroundColor: '#F0F2F5',
 	color: vars.color.grayDark,
+	width: '100%',
 });
 
 globalStyle(`${socialButtonContainerStyle} button > svg`, {
