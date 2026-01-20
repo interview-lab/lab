@@ -3,7 +3,7 @@ import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
-import { type MouseEvent, useEffect } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 import useAdditionalInfoForm from '@/hooks/useAdditionalInfoForm';
 import useTimer from '@/hooks/useTimer';
 import { buttonStyle, formStyle } from '../login/page.css';
@@ -19,9 +19,13 @@ export default function AdditionalInfoPage() {
 	const searchParams = useSearchParams();
 	const [state, dispatch] = useAdditionalInfoForm();
 	const [time, updateTime] = useTimer(0);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (isLoading) return;
+
+		setIsLoading(true);
 		fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -33,12 +37,16 @@ export default function AdditionalInfoPage() {
 				verificationCode: state.verificationCode.value,
 			}),
 		});
+		setIsLoading(false);
 	};
 
 	const handleSendVerificationCode = async (
 		e: MouseEvent<HTMLButtonElement>,
 	) => {
 		e.preventDefault();
+		if (isLoading) return;
+
+		setIsLoading(true);
 		updateTime(DEFAULT_PENDING_TIME);
 		const response = await fetch(
 			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/email/send-verification`,
@@ -57,6 +65,7 @@ export default function AdditionalInfoPage() {
 		if (remainingTime) {
 			updateTime(remainingTime);
 		}
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
@@ -75,6 +84,9 @@ export default function AdditionalInfoPage() {
 	const isFormValid = Object.values(state).every(
 		(field) => !field.isError && field.touched,
 	);
+
+	const sendVerificationCodeText =
+		time > 0 ? `${time} S` : isLoading ? '전송 중' : '인증번호 전송';
 
 	return (
 		<form className={formStyle} onSubmit={handleSubmit}>
@@ -107,11 +119,14 @@ export default function AdditionalInfoPage() {
 				/>
 				<Atom.TextButton
 					type="button"
-					className={clsx(sendVerificationCodeButton, time && timerStyle)}
+					className={clsx(
+						sendVerificationCodeButton,
+						(time || isLoading) && timerStyle,
+					)}
 					onClick={handleSendVerificationCode}
-					disabled={state.email.isError || time > 0}
+					disabled={state.email.isError || time > 0 || isLoading}
 				>
-					{time > 0 ? `${time} S` : '인증번호 전송'}
+					{sendVerificationCodeText}
 				</Atom.TextButton>
 			</div>
 			<Molecule.InputWithValidation
@@ -139,7 +154,7 @@ export default function AdditionalInfoPage() {
 			<Atom.TextButton
 				className={buttonStyle}
 				type="submit"
-				disabled={!isFormValid}
+				disabled={!isFormValid || isLoading}
 			>
 				Sign up
 			</Atom.TextButton>
