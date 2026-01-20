@@ -122,6 +122,8 @@ export class TempTokenGuard implements CanActivate {
 			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
 		}
 
+		request.tempToken = tempToken;
+
 		return true;
 	}
 }

@@ -138,6 +138,9 @@ export class AuthController {
 	})
 	async completeOAuthRegistration(
 		@Body() dto: OAuthCompleteDto,
+		@Req() request: {
+			tempToken: string;
+		},
 		@Res({ passthrough: true }) response: Response,
 	) {
 		// 이메일 인증 확인
@@ -145,7 +148,7 @@ export class AuthController {
 
 		// 가입 완료
 		const tokens = await this.authService.completeOAuthRegistration(
-			dto.tempToken,
+			request.tempToken,
 			dto.username,
 			dto.email,
 		);
