@@ -3,7 +3,7 @@ import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
-import { type MouseEvent, useEffect, useState } from 'react';
+import { type FormEvent, type MouseEvent, useEffect, useState } from 'react';
 import useAdditionalInfoForm from '@/hooks/useAdditionalInfoForm';
 import useTimer from '@/hooks/useTimer';
 import { buttonStyle, formStyle } from '../login/page.css';
@@ -21,12 +21,12 @@ export default function AdditionalInfoPage() {
 	const [time, updateTime] = useTimer(0);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (isLoading) return;
 
 		setIsLoading(true);
-		fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`, {
+		await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
