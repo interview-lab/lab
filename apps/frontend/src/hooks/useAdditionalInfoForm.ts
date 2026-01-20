@@ -51,7 +51,7 @@ const INITIAL_STATE: FormState = {
 const ERROR_MESSAGE: Record<FieldName, string> = {
 	email: 'Please enter a valid email address',
 	username: 'Username Must be at least 3 characters long',
-	verificationCode: 'Varification code is 6 digits',
+	verificationCode: 'Verification code is 6 digits',
 };
 
 const VALIDATION_RULES = {
