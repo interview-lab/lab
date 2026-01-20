@@ -116,7 +116,7 @@ export class AuthController {
 			// 기존 사용자: 토큰과 함께 리다이렉트
 			this.authService.setTokenToCookie(response, result.accessToken);
 			this.authService.setTokenToCookie(response, result.refreshToken, true);
-			return response.redirect(`${frontendUrl}/auth/callback?`);
+			return response.redirect(`${frontendUrl}/`);
 		}
 
 		// 신규 사용자: 가입 완료 페이지로 리다이렉트
