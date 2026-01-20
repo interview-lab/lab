@@ -1,6 +1,13 @@
 import { AUTH } from '@interview-lab/shared';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+	IsDecimal,
+	IsEmail,
+	IsNumberString,
+	IsString,
+	MaxLength,
+	MinLength,
+} from 'class-validator';
 
 /**
  * OAuth 가입 완료 요청 DTO
@@ -33,7 +40,7 @@ export class OAuthCompleteDto {
 	})
 	email!: string;
 
-	@IsString()
+	@IsNumberString()
 	@MinLength(AUTH.CONST.VERIFICATION_CODE_LENGTH)
 	@MaxLength(AUTH.CONST.VERIFICATION_CODE_LENGTH)
 	@ApiProperty({
