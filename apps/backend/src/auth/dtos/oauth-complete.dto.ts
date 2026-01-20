@@ -1,7 +1,6 @@
 import { AUTH } from '@interview-lab/shared';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 import {
-	IsDecimal,
 	IsEmail,
 	IsNumberString,
 	IsString,
@@ -17,13 +16,6 @@ import {
 	description: 'OAuth 가입 완료 DTO',
 })
 export class OAuthCompleteDto {
-	@IsString()
-	@ApiProperty({
-		description: '임시 토큰',
-		example: 'uuid-token',
-	})
-	tempToken!: string;
-
 	@IsString()
 	@MinLength(AUTH.CONST.USERNAME_MIN_LENGTH)
 	@MaxLength(20)
