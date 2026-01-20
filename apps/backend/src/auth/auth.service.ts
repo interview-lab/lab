@@ -71,6 +71,8 @@ export class AuthService {
 
 		this.setTokenToCookie(response, tokens.accessToken);
 		this.setTokenToCookie(response, tokens.refreshToken, true);
+
+		this.emailService.deleteVerification(dto.email);
 	}
 
 	/**
