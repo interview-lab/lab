@@ -4,7 +4,7 @@ import {
 	SendVerificationDto,
 	VerificationResponseDto,
 } from '@/email/dtos/email-verify.dto';
-import { EmailService } from './email.service';
+import { EmailService } from '@/email/email.service';
 
 @Controller('email')
 @ApiTags('이메일')

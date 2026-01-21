@@ -10,17 +10,16 @@ import {
 } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { EmailService } from '@/email/email.service';
-import { UsersService } from '@/users/users.service';
-
-import { AuthService } from './auth.service';
+import { AuthService } from '@/auth/auth.service';
 import {
 	EmailAndPasswordDto,
 	RegistrationWithEmailAndPasswordDto,
-} from './dtos/authentication.dto';
-import { OAuthCompleteDto } from './dtos/oauth-complete.dto';
-import { GoogleOAuthGuard } from './guards/google-oauth.guard';
-import { AccessTokenGuard, TempTokenGuard } from './guards/token.guard';
+} from '@/auth/dtos/authentication.dto';
+import { OAuthCompleteDto } from '@/auth/dtos/oauth-complete.dto';
+import { GoogleOAuthGuard } from '@/auth/guards/google-oauth.guard';
+import { AccessTokenGuard, TempTokenGuard } from '@/auth/guards/token.guard';
+import { EmailService } from '@/email/email.service';
+import { UsersService } from '@/users/users.service';
 
 @Controller('auth')
 @ApiTags('인증')
