@@ -97,3 +97,33 @@ export class AccessTokenGuard extends TokenGuard {
 		}
 	}
 }
+
+/**
+ * 임시 토큰이 존재하는지 확인합니다.
+ *
+ * @description OAuth 가입 완료 API에서 사용됩니다.
+ */
+@Injectable()
+export class TempTokenGuard implements CanActivate {
+	constructor(protected readonly authService: AuthService) {}
+
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		const request = context.switchToHttp().getRequest();
+
+		const tempToken = request.headers['x-temp-token'];
+
+		if (!tempToken) {
+			throw new UnauthorizedException('Temp Token이 없습니다.');
+		}
+
+		const pending = await this.authService.getPendingRegistration(tempToken);
+
+		if (!pending || Date.now() > pending.expiresAt.getTime()) {
+			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
+		}
+
+		request.tempToken = tempToken;
+
+		return true;
+	}
+}

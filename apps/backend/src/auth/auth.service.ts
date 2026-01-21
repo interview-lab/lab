@@ -18,6 +18,7 @@ import {
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
 } from './consts/auth.const';
+import { RegistrationWithEmailAndPasswordDto } from './dtos/authentication.dto';
 import { JWT_TOKEN_Payload } from './types/jwt.type';
 import type { OAuthCallbackResult, OAuthProfile } from './types/oauth.type';
 
@@ -39,25 +40,31 @@ export class AuthService {
 	 * 이메일로 신규 사용자를 등록하고 토큰을 발급합니다.
 	 * 이메일 인증이 완료되지 않은 경우 예외를 발생시킵니다.
 	 *
-	 * @param user - 등록할 사용자 정보 (username, email, password)
+	 * @param dto - 등록할 사용자 정보 (username, email, password)
 	 * @returns Access Token과 Refresh Token을 포함한 객체
 	 */
 	async registerWithEmail(
 		response: Response,
-		user: Pick<UserModel, 'username' | 'email' | 'password'>,
+		dto: RegistrationWithEmailAndPasswordDto,
 	) {
-		if (!user.password) {
+		if (!dto.password) {
 			throw new BadRequestException('비밀번호가 없습니다.');
 		}
 
-		const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
+		const isVerified = await this.emailService.verifyCode(
+			dto.email,
+			dto.verificationCode,
+		);
 
-		if (!this.emailService.isEmailVerified(user.email)) {
+		if (!isVerified) {
 			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
 		}
 
+		const hash = await bcrypt.hash(dto.password, HASH_ROUNDS);
+
+		const { verificationCode: _, ...userData } = dto;
 		const newUser = await this.usersService.createUser({
-			...user,
+			...userData,
 			password: hash,
 		});
 
@@ -65,6 +72,8 @@ export class AuthService {
 
 		this.setTokenToCookie(response, tokens.accessToken);
 		this.setTokenToCookie(response, tokens.refreshToken, true);
+
+		this.emailService.deleteVerification(dto.email);
 	}
 
 	/**
@@ -213,6 +222,15 @@ export class AuthService {
 	}
 
 	/**
+	 * 임시 토큰을 생성합니다.
+	 *
+	 * @returns 임시 토큰 문자열
+	 */
+	generateTempToken() {
+		return uuidv4();
+	}
+
+	/**
 	 * OAuth 콜백을 처리합니다.
 	 *
 	 * @description 기존 사용자는 바로 JWT를 발급하고,
@@ -241,7 +259,7 @@ export class AuthService {
 		}
 
 		// 2. 신규 사용자 -> 임시 토큰 발급
-		const tempToken = uuidv4();
+		const tempToken = this.generateTempToken();
 		const expiresAt = new Date(Date.now() + 30 * MINUTE); // 30분
 
 		// 기존 pending 레코드 삭제 후 새로 생성
@@ -270,6 +288,18 @@ export class AuthService {
 	}
 
 	/**
+	 * 임시 토큰으로 OAuth pending 레코드를 조회합니다.
+	 *
+	 * @param tempToken - 임시 토큰
+	 * @returns OAuth pending 레코드
+	 */
+	async getPendingRegistration(tempToken: string) {
+		return await this.prisma.oAuthPendingRegistration.findFirst({
+			where: { tempToken },
+		});
+	}
+
+	/**
 	 * OAuth 가입을 완료합니다.
 	 *
 	 * @description 임시 토큰을 검증하고, 이메일 인증을 확인한 후 사용자를 생성합니다.
@@ -286,21 +316,18 @@ export class AuthService {
 		email: string,
 	): Promise<{ accessToken: string; refreshToken: string }> {
 		// 1. pending 레코드 조회
-		const pending = await this.prisma.oAuthPendingRegistration.findUnique({
+		const pending = await this.prisma.oAuthPendingRegistration.findFirst({
 			where: { tempToken },
+			orderBy: {
+				createdAt: 'desc',
+			},
 		});
 
 		if (!pending || pending.expiresAt < new Date()) {
 			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
 		}
 
-		// 2. 이메일 인증 확인
-		const isVerified = await this.emailService.isEmailVerified(email);
-		if (!isVerified) {
-			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
-		}
-
-		// 3. 사용자 생성
+		// 2. 사용자 생성
 		const userData: Parameters<typeof this.usersService.createUser>[0] = {
 			email,
 			username,
@@ -315,10 +342,13 @@ export class AuthService {
 
 		const newUser = await this.usersService.createUser(userData);
 
-		// 4. pending 레코드 삭제
+		// 3. pending 레코드 삭제
 		await this.prisma.oAuthPendingRegistration.delete({
 			where: { id: pending.id },
 		});
+
+		// 4. 이메일 인증 삭제
+		await this.emailService.deleteVerification(email);
 
 		// 5. JWT 발급
 		return this.generateToken(newUser);

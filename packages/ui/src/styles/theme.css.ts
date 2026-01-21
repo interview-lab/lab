@@ -11,6 +11,7 @@ export const vars = createGlobalTheme(':root', {
 		blueGray: '#64748B',
 		blueAlpha10: 'rgba(19, 127, 236, 0.1)',
 		blueAlpha20: 'rgba(19, 127, 236, 0.2)',
+		blueAlpha30: 'rgba(19, 127, 236, 0.3)',
 
 		// Gray
 		gray: '#4B5563',
@@ -28,6 +29,10 @@ export const vars = createGlobalTheme(':root', {
 		orangeAlpha10: 'rgba(249, 115, 22, 0.1)',
 		orangeAlpha20: 'rgba(249, 115, 22, 0.2)',
 		orangeAlpha70: 'rgba(249, 115, 22, 0.7)',
+
+		// Purple
+		purple: '#A855F7',
+		purpleAlpha10: 'rgba(168, 85, 247, 0.1)',
 
 		// Base
 		black: '#1A2633',
@@ -76,6 +81,7 @@ export const vars = createGlobalTheme(':root', {
 		'11': '44px',
 		'12': '48px',
 		'16': '64px',
+		'20': '80px',
 	},
 	radius: {
 		sm: '4px',

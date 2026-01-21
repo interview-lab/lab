@@ -13,13 +13,16 @@ export const containerStyle = style({
 	boxSizing: 'border-box',
 	minHeight: 196,
 	width: 328,
-	border: 'none',
 	background: vars.color.white,
 	textAlign: 'left',
+	border: `${vars.border.width1} ${vars.color.grayLight}`,
+	boxShadow: vars.shadow.sm,
 });
 
 export const selectedStyle = style({
 	border: `${vars.border.width1} ${vars.color.blue}`,
+	background: vars.color.blueAlpha10,
+	boxShadow: vars.shadow.md,
 });
 
 export const titleStyle = style({
@@ -27,12 +30,12 @@ export const titleStyle = style({
 	fontWeight: vars.fontWeight.bold,
 	color: vars.color.black,
 	margin: 0,
-	marginTop: vars.spacing[4],
+	marginTop: vars.spacing[2],
 });
 
 export const descriptionStyle = style({
 	fontSize: vars.fontSize.sizeSm,
-	fontWeight: vars.fontWeight.regular,
+	fontWeight: vars.fontWeight.medium,
 	color: vars.color.gray,
 	margin: 0,
 	paddingRight: vars.spacing[5],

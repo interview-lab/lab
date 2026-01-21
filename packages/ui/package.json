@@ -9,14 +9,20 @@
 	"files": [
 		"dist"
 	],
+	"sideEffects": [
+		"*.css"
+	],
 	"exports": {
 		".": {
-			"types": "./dist/src/main.d.ts",
-			"import": "./dist/main.mjs",
-			"require": "./dist/main.umd.js"
+			"types": "./dist/src/index.d.ts",
+			"import": "./dist/index.js"
 		},
 		"./styles": "./dist/ui-style.css",
-		"./fonts": "./dist/pretendard.css"
+		"./fonts": "./dist/pretendard.css",
+		"./theme": {
+			"types": "./dist/styles/theme.css.d.ts",
+			"import": "./dist/styles/theme.css.js"
+		}
 	},
 	"scripts": {
 		"dev": "vite build --watch",
@@ -56,6 +62,7 @@
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
 		"rollup-plugin-copy": "^3.5.0",
+		"rollup-plugin-preserve-directives": "^0.4.0",
 		"storybook": "^9.1.13",
 		"typescript": "^5.9.3",
 		"vite": "^7.1.11",

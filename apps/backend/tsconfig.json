@@ -27,7 +27,9 @@
 		/* Language and Environment - 언어 및 환경 */
 		"target": "ES2023", // backend는 ES2023
 		"experimentalDecorators": true, // NestJS 데코레이터 문법 (@Injectable, @Controller)
-		"emitDecoratorMetadata": true // NestJS 의존성 주입(DI)을 위한 타입 메타데이터
+		"emitDecoratorMetadata": true, // NestJS 의존성 주입(DI)을 위한 타입 메타데이터
+
+		"noUncheckedIndexedAccess": true
 	},
 	"exclude": [
 		"dist/"

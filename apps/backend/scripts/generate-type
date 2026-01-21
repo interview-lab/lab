@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# .env 파일에서 PORT 로드
+if [ -f "$SCRIPT_DIR/../.env" ]; then
+  export $(grep '^PORT=' "$SCRIPT_DIR/../.env" | xargs)
+fi
+
+npx openapi-typescript http://localhost:${PORT:-8080}/api/yaml -o $SCRIPT_DIR/../../frontend/src/types/api.ts

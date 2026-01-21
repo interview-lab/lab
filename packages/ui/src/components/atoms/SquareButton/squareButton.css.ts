@@ -15,14 +15,14 @@ export const buttonStyle = style({
 
 export const activeButtonStyle = style({
 	backgroundColor: vars.color.blue,
-	boxShadow: `0 10px 15px -3px ${vars.color.blue}, 0 4px 6px -4px ${vars.color.blue}`,
+	boxShadow: `0 10px 15px -3px ${vars.color.blueAlpha30}, 0 4px 6px -4px ${vars.color.blueAlpha30}`,
 });
 
 export const iconStyle = style({
 	position: 'absolute',
-	color: vars.color.gray,
+	color: vars.color.grayLight,
 	width: 24,
-	height: 28,
+	height: 24,
 	top: '50%',
 	left: '50%',
 	transform: 'translate(-50%, -50%)',

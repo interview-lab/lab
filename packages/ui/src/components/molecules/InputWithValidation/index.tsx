@@ -3,13 +3,14 @@ import Icon from '@/components/atoms/Icon';
 import type { InputProps } from '@/components/atoms/Input';
 import Input from '@/components/atoms/Input';
 import {
+	containerStyle,
 	errorMessageStyle,
 	errorStyle,
 	inputStyle,
 } from './inputWithValidation.css';
 
 type InputDefaultState = {
-	isError: false;
+	isError?: false;
 };
 
 type InputErrorState = {
@@ -22,7 +23,7 @@ type InputWithValidationProps = InputProps &
 
 const InputWithValidation = (props: InputWithValidationProps) => {
 	return (
-		<div>
+		<div className={containerStyle}>
 			<div className={clsx(inputStyle, props.isError && errorStyle)}>
 				<Input
 					className={clsx(props.className, props.isError && errorStyle)}
