@@ -18,7 +18,7 @@ export const sendButtonStyle = style({
 	fontFamily: vars.font.pretendard,
 	color: vars.color.white,
 	fontWeight: vars.fontWeight.semibold,
-	fontSize: 18,
+	fontSize: vars.fontSize.sizeLg,
 	paddingInline: 14,
 	cursor: 'pointer',
 	':hover': {
