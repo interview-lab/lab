@@ -24,8 +24,10 @@ export default function useAsync<T = void>(): UseAsyncReturn<T> {
 		} catch (e) {
 			if (e instanceof Error) {
 				setError(e.message);
+			} else {
+				setError('문제가 발생했습니다.');
 			}
-			return undefined;
+			return;
 		} finally {
 			isLoadingRef.current = false;
 			setIsLoading(false);
