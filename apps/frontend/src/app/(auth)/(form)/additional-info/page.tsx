@@ -63,6 +63,7 @@ export default function AdditionalInfoPage() {
 			});
 
 			if (error) {
+				updateTime(0);
 				throw new Error(error);
 			}
 

@@ -55,7 +55,10 @@ export default function SignupPage() {
 				body: { email: state.email.value },
 			});
 
-			if (error) throw new Error('에러 발생');
+			if (error) {
+				updateTime(0);
+				throw new Error('에러 발생');
+			}
 
 			updateTime(data.remainingTime);
 		});
