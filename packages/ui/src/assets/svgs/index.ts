@@ -4,6 +4,7 @@ export { ReactComponent as IconCheck } from './check.svg';
 export { ReactComponent as IconCheckCircle } from './checkcircle.svg';
 export { ReactComponent as IconClock } from './clock.svg';
 export { ReactComponent as IconClose } from './close.svg';
+export { ReactComponent as IconCode } from './code.svg';
 export { ReactComponent as IconDashboard } from './dashboard.svg';
 export { ReactComponent as IconDatabase } from './database.svg';
 export { ReactComponent as IconDataStructure } from './datastructure.svg';

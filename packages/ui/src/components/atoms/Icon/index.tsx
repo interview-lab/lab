@@ -1,8 +1,10 @@
 import type { SVGProps } from 'react';
 import * as Icons from '../../../assets/svgs';
 
+export type IconName = keyof typeof Icons;
+
 type IconProps = {
-	icon: keyof typeof Icons;
+	icon: IconName;
 } & SVGProps<SVGSVGElement>;
 
 const Icon = ({ icon = 'IconBookMark', ...props }: IconProps) => {

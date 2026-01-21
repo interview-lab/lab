@@ -6,6 +6,7 @@ import { buttonStyle } from '@/components/atoms/TextButton/textButton.css';
 export type TextButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 	children: ReactNode;
 	icon?: Parameters<typeof Icon>[0]['icon'];
+	iconSize?: number;
 	showIcon?: boolean;
 };
 
@@ -13,12 +14,15 @@ const TextButton = ({
 	className,
 	children,
 	icon,
+	iconSize = 24,
 	showIcon = true,
 	...props
 }: TextButtonProps) => {
 	return (
 		<button className={clsx(buttonStyle, className)} {...props}>
-			{showIcon && icon && <Icon icon={icon} />}
+			{showIcon && icon && (
+				<Icon icon={icon} width={iconSize} height={iconSize} />
+			)}
 			{children}
 		</button>
 	);
