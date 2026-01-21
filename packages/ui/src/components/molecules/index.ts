@@ -1,6 +1,5 @@
 export { default as DashboardCard } from './DashboardCard';
 export { default as Header, navLinkStyle } from './Header';
-export type { HeaderProps } from './Header';
 export { default as InputPassword } from './InputPassword';
 export { default as InputWithValidation } from './InputWithValidation';
 export { default as InterviewAnswerResultCard } from './InterviewAnswerResultCard';

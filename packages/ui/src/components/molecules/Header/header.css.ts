@@ -17,7 +17,18 @@ export const logoStyle = style({
 	display: 'flex',
 	alignItems: 'center',
 	gap: vars.spacing[2],
+	color: vars.color.black,
+	textDecoration: 'none',
 	cursor: 'pointer',
+	':hover': {
+		color: vars.color.black,
+	},
+	':visited': {
+		color: vars.color.black,
+	},
+	':active': {
+		color: vars.color.black,
+	},
 });
 
 export const titleStyle = style({
