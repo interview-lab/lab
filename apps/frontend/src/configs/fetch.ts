@@ -7,6 +7,9 @@ const client = createClient<paths>({
 
 const middleware: Middleware = {
 	async onRequest({ request, options }) {
+		request.headers.set('Content-Type', 'application/json');
+		request.headers.set('credentials', 'include');
+
 		return request;
 	},
 	async onResponse({ request, response, options }) {
