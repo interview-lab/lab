@@ -3,12 +3,12 @@ import type { paths } from '@/types/api';
 
 const client = createClient<paths>({
 	baseUrl: process.env.NEXT_PUBLIC_API_SERVER,
+	credentials: 'include',
 });
 
 const middleware: Middleware = {
 	async onRequest({ request }) {
 		request.headers.set('Content-Type', 'application/json');
-		request.headers.set('credentials', 'include');
 
 		return request;
 	},
