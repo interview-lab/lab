@@ -6,16 +6,16 @@ const client = createClient<paths>({
 });
 
 const middleware: Middleware = {
-	async onRequest({ request, options }) {
+	async onRequest({ request }) {
 		request.headers.set('Content-Type', 'application/json');
 		request.headers.set('credentials', 'include');
 
 		return request;
 	},
-	async onResponse({ request, response, options }) {
+	async onResponse({ response }) {
 		return response;
 	},
-	async onError({ error }) {
+	async onError() {
 		return new Error('에러 발생');
 	},
 };
