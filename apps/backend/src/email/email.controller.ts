@@ -48,7 +48,9 @@ export class EmailController {
 		);
 		return {
 			message: '인증 이메일이 발송되었습니다.',
-			remainingTime: newVerification.expiresAt.getTime() - date.getTime(),
+			remainingTime: Math.floor(
+				(newVerification.expiresAt.getTime() - date.getTime()) / 1000,
+			),
 		};
 	}
 }
