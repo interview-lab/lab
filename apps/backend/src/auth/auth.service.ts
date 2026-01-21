@@ -18,6 +18,7 @@ import {
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
 } from './consts/auth.const';
+import MESSAGE from './consts/message.const';
 import { RegistrationWithEmailAndPasswordDto } from './dtos/authentication.dto';
 import { JWT_TOKEN_Payload } from './types/jwt.type';
 import type { OAuthCallbackResult, OAuthProfile } from './types/oauth.type';
@@ -48,7 +49,7 @@ export class AuthService {
 		dto: RegistrationWithEmailAndPasswordDto,
 	) {
 		if (!dto.password) {
-			throw new BadRequestException('비밀번호가 없습니다.');
+			throw new BadRequestException(MESSAGE.ERROR_PASSWORD_NOT_FOUND);
 		}
 
 		const isVerified = await this.emailService.verifyCode(

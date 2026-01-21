@@ -4,6 +4,8 @@ import {
 	Injectable,
 	UnauthorizedException,
 } from '@nestjs/common';
+import COMMON_MESSAGE from '@/common/consts/message.const';
+import USER_MESSAGE from '@/users/consts/message.const';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from '../auth.service';
 
@@ -19,7 +21,7 @@ export class TokenGuard implements CanActivate {
 		const rawToken = request.headers.authorization;
 
 		if (!rawToken) {
-			throw new UnauthorizedException('토큰이 존재하지 않습니다.');
+			throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_NOT_FOUND);
 		}
 
 		const token = this.authService.extractTokenFromHeader(rawToken);
@@ -45,7 +47,7 @@ export class AccessTokenGuard extends TokenGuard {
 
 		// accessToken이 없으면 에러
 		if (!accessToken) {
-			throw new UnauthorizedException('Access Token이 없습니다.');
+			throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_NOT_FOUND);
 		}
 
 		try {
@@ -53,7 +55,7 @@ export class AccessTokenGuard extends TokenGuard {
 			const payload = this.authService.verifyToken(accessToken);
 
 			if (payload.type !== 'access') {
-				throw new UnauthorizedException('Access Token이 아닙니다.');
+				throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_INVALID);
 			}
 
 			request.user = await this.usersService.getUserById(payload.sub);
@@ -61,9 +63,7 @@ export class AccessTokenGuard extends TokenGuard {
 		} catch {
 			// accessToken 만료 시 refreshToken으로 갱신 시도
 			if (!refreshToken) {
-				throw new UnauthorizedException(
-					'토큰이 만료되었습니다. 다시 로그인해주세요.',
-				);
+				throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_EXPIRED);
 			}
 
 			try {
@@ -71,14 +71,14 @@ export class AccessTokenGuard extends TokenGuard {
 				const refreshPayload = this.authService.verifyToken(refreshToken);
 
 				if (refreshPayload.type !== 'refresh') {
-					throw new UnauthorizedException('유효하지 않은 Refresh Token입니다.');
+					throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_INVALID);
 				}
 
 				// 새 토큰 발급
 				const user = await this.usersService.getUserById(refreshPayload.sub);
 
 				if (!user) {
-					throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
+					throw new UnauthorizedException(USER_MESSAGE.ERROR_USER_NOT_FOUND);
 				}
 
 				const tokens = this.authService.generateToken(user);
@@ -90,9 +90,7 @@ export class AccessTokenGuard extends TokenGuard {
 				request.user = user;
 				return true;
 			} catch {
-				throw new UnauthorizedException(
-					'토큰이 만료되었습니다. 다시 로그인해주세요.',
-				);
+				throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_EXPIRED);
 			}
 		}
 	}
@@ -113,13 +111,13 @@ export class TempTokenGuard implements CanActivate {
 		const tempToken = request.headers['x-temp-token'];
 
 		if (!tempToken) {
-			throw new UnauthorizedException('Temp Token이 없습니다.');
+			throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_NOT_FOUND);
 		}
 
 		const pending = await this.authService.getPendingRegistration(tempToken);
 
 		if (!pending || Date.now() > pending.expiresAt.getTime()) {
-			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
+			throw new UnauthorizedException(COMMON_MESSAGE.ERROR_TOKEN_EXPIRED);
 		}
 
 		request.tempToken = tempToken;
