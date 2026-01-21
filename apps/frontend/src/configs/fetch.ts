@@ -2,7 +2,7 @@ import createClient, { type Middleware } from 'openapi-fetch';
 import type { paths } from '@/types/api';
 
 const client = createClient<paths>({
-	baseUrl: process.env.NEXT_PUBLIC_API_URL,
+	baseUrl: process.env.NEXT_PUBLIC_API_SERVER,
 });
 
 const middleware: Middleware = {
