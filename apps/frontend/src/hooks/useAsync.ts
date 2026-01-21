@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 interface UseAsyncReturn<T> {
 	isLoading: boolean;
@@ -10,27 +10,27 @@ interface UseAsyncReturn<T> {
 export default function useAsync<T = void>(): UseAsyncReturn<T> {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
+	const isLoadingRef = useRef(false);
 
-	const execute = useCallback(
-		async (asyncFn: () => Promise<T>) => {
-			if (isLoading) return;
+	const execute = useCallback(async (asyncFn: () => Promise<T>) => {
+		if (isLoadingRef.current) return;
 
-			setIsLoading(true);
-			setError('');
-			try {
-				const result = await asyncFn();
-				return result;
-			} catch (e) {
-				if (e instanceof Error) {
-					setError(e.message);
-				}
-				return undefined;
-			} finally {
-				setIsLoading(false);
+		isLoadingRef.current = true;
+		setIsLoading(true);
+		setError('');
+		try {
+			const result = await asyncFn();
+			return result;
+		} catch (e) {
+			if (e instanceof Error) {
+				setError(e.message);
 			}
-		},
-		[isLoading],
-	);
+			return undefined;
+		} finally {
+			isLoadingRef.current = false;
+			setIsLoading(false);
+		}
+	}, []);
 
 	const reset = useCallback(() => {
 		setError('');
