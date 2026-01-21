@@ -2,17 +2,20 @@ import createClient, { type Middleware } from 'openapi-fetch';
 import type { paths } from '@/types/api';
 
 const client = createClient<paths>({
-	baseUrl: process.env.NEXT_PUBLIC_API_URL,
+	baseUrl: process.env.NEXT_PUBLIC_API_SERVER,
+	credentials: 'include',
 });
 
 const middleware: Middleware = {
-	async onRequest({ request, options }) {
+	async onRequest({ request }) {
+		request.headers.set('Content-Type', 'application/json');
+
 		return request;
 	},
-	async onResponse({ request, response, options }) {
+	async onResponse({ response }) {
 		return response;
 	},
-	async onError({ error }) {
+	async onError() {
 		return new Error('에러 발생');
 	},
 };

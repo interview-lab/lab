@@ -7,9 +7,9 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AccessTokenGuard } from '../auth/guards/token.guard';
-import { User } from './decorators/user.decorator';
-import { UsersService } from './users.service';
+import { AccessTokenGuard } from '@/auth/guards/token.guard';
+import { User } from '@/users/decorators/user.decorator';
+import { UsersService } from '@/users/users.service';
 
 @Controller('users')
 @ApiTags('사용자')

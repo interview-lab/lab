@@ -2,9 +2,9 @@ import { randomInt } from 'node:crypto';
 import { AUTH } from '@interview-lab/shared';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { MINUTE } from '@/common/consts/unit';
+import { MAX_VERIFICATION_ATTEMPTS } from '@/email/consts/email';
 import { PrismaService } from '@/prisma/prisma.service';
-import { MINUTE } from '../common/consts/unit';
-import { MAX_VERIFICATION_ATTEMPTS } from './consts/email';
 
 /**
  * 이메일 발송 및 인증 관련 서비스
@@ -43,7 +43,7 @@ export class EmailService {
 	 * @param email - 인증 이메일을 받을 이메일 주소
 	 * @throws 이메일 발송 실패 시 예외 발생
 	 */
-	async sendVerificationEmail(email: string): Promise<void> {
+	async sendVerificationEmail(email: string) {
 		// 기존 미인증 레코드 삭제
 		await this.deleteVerification(email);
 
@@ -51,7 +51,7 @@ export class EmailService {
 		const code = this.generateVerificationCode();
 
 		// DB에 저장
-		await this.createVerificationInfo(email, code);
+		const verification = await this.createVerificationInfo(email, code);
 
 		// 이메일 발송
 		try {
@@ -61,6 +61,8 @@ export class EmailService {
 				subject: '[Interview Lab] 이메일 인증번호',
 				html: this.getEmailTemplate(code),
 			});
+
+			return verification;
 		} catch (_) {
 			throw new BadRequestException('이메일 발송에 실패했습니다.');
 		}

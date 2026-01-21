@@ -1,12 +1,15 @@
 'use client';
+
 import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
-import { useSearchParams } from 'next/navigation';
-import { type FormEvent, type MouseEvent, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { type FormEvent, type MouseEvent, useEffect } from 'react';
+import { buttonStyle, formStyle } from '@/app/(auth)/(form)/login/page.css';
+import client from '@/configs/fetch';
 import useAdditionalInfoForm from '@/hooks/useAdditionalInfoForm';
+import useAsync from '@/hooks/useAsync';
 import useTimer from '@/hooks/useTimer';
-import { buttonStyle, formStyle } from '../login/page.css';
 import {
 	emailFieldContainerStyle,
 	sendVerificationCodeButton,
@@ -19,53 +22,53 @@ export default function AdditionalInfoPage() {
 	const searchParams = useSearchParams();
 	const [state, dispatch] = useAdditionalInfoForm();
 	const [time, updateTime] = useTimer(0);
-	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
+	const { isLoading, error, execute } = useAsync();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (isLoading) return;
 
-		setIsLoading(true);
-		await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/complete`, {
-			headers: {
-				'Content-Type': 'application/json',
-				'x-temp-token': searchParams.get('tempToken') ?? '',
-			},
-			method: 'POST',
-			body: JSON.stringify({
-				email: state.email.value,
-				username: state.username.value,
-				verificationCode: state.verificationCode.value,
-			}),
+		await execute(async () => {
+			const { error } = await client.POST('/auth/oauth/complete', {
+				params: {
+					header: {
+						'x-temp-token': searchParams.get('tempToken') ?? '',
+					},
+				},
+				body: {
+					username: state.username.value,
+					email: state.email.value,
+					verificationCode: state.verificationCode.value,
+				},
+			});
+
+			if (error) throw new Error('에러 발생');
+
+			router.push('/');
 		});
-		setIsLoading(false);
 	};
 
 	const handleSendVerificationCode = async (
 		e: MouseEvent<HTMLButtonElement>,
 	) => {
 		e.preventDefault();
-		if (isLoading) return;
 
-		setIsLoading(true);
-		updateTime(DEFAULT_PENDING_TIME);
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/email/send-verification`,
-			{
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify({
+		execute(async () => {
+			updateTime(DEFAULT_PENDING_TIME);
+
+			const { error, data } = await client.POST('/email/send-verification', {
+				body: {
 					email: state.email.value,
-				}),
-			},
-		);
-		const { remainingTime } = await response.json();
-		if (remainingTime) {
-			updateTime(remainingTime);
-		}
-		setIsLoading(false);
+				},
+			});
+
+			if (error) {
+				updateTime(0);
+				throw new Error(error);
+			}
+
+			updateTime(data.remainingTime);
+		});
 	};
 
 	useEffect(() => {
