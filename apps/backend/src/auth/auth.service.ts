@@ -21,7 +21,7 @@ import type {
 	OAuthProfile,
 } from '@/auth/types/oauth.type';
 import { MILLI_SECOND, MINUTE } from '@/common/consts/unit';
-import EAMIL_MESSAGE from '@/email/consts/message.const';
+import EMAIL_MESSAGE from '@/email/consts/message.const';
 import { EmailService } from '@/email/email.service';
 import { UserModel } from '@/generated/prisma/models';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -58,7 +58,7 @@ export class AuthService {
 		);
 
 		if (!isVerified) {
-			throw new BadRequestException(EAMIL_MESSAGE.ERROR_VERIFICATION_REQUIRED);
+			throw new BadRequestException(EMAIL_MESSAGE.ERROR_VERIFICATION_REQUIRED);
 		}
 
 		const hash = await bcrypt.hash(dto.password, HASH_ROUNDS);
