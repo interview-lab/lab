@@ -1,3 +1,4 @@
+export { default as AnswerActiveBar } from './AnswerActiveBar';
 export { default as DashboardCard } from './DashboardCard';
 export { default as Header, navLinkStyle } from './Header';
 export { default as InputPassword } from './InputPassword';
