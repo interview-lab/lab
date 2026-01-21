@@ -7,20 +7,25 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import type { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { MILLI_SECOND, MINUTE } from '@/common/consts/unit';
-import { EmailService } from '@/email/email.service';
-import { UserModel } from '@/generated/prisma/models';
-import { PrismaService } from '@/prisma/prisma.service';
-import { UsersService } from '@/users/users.service';
 import {
 	HASH_ROUNDS,
 	JWT_ACCESS_TOKEN_EXPIRES_IN,
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
-} from './consts/auth.const';
-import { RegistrationWithEmailAndPasswordDto } from './dtos/authentication.dto';
-import { JWT_TOKEN_Payload } from './types/jwt.type';
-import type { OAuthCallbackResult, OAuthProfile } from './types/oauth.type';
+} from '@/auth/consts/auth.const';
+import AUTH_MESSAGE from '@/auth/consts/message.const';
+import { RegistrationWithEmailAndPasswordDto } from '@/auth/dtos/authentication.dto';
+import { JWT_TOKEN_Payload } from '@/auth/types/jwt.type';
+import type {
+	OAuthCallbackResult,
+	OAuthProfile,
+} from '@/auth/types/oauth.type';
+import { MILLI_SECOND, MINUTE } from '@/common/consts/unit';
+import EMAIL_MESSAGE from '@/email/consts/message.const';
+import { EmailService } from '@/email/email.service';
+import { UserModel } from '@/generated/prisma/models';
+import { PrismaService } from '@/prisma/prisma.service';
+import { UsersService } from '@/users/users.service';
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스
@@ -47,17 +52,13 @@ export class AuthService {
 		response: Response,
 		dto: RegistrationWithEmailAndPasswordDto,
 	) {
-		if (!dto.password) {
-			throw new BadRequestException('비밀번호가 없습니다.');
-		}
-
 		const isVerified = await this.emailService.verifyCode(
 			dto.email,
 			dto.verificationCode,
 		);
 
 		if (!isVerified) {
-			throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
+			throw new BadRequestException(EMAIL_MESSAGE.ERROR_VERIFICATION_REQUIRED);
 		}
 
 		const hash = await bcrypt.hash(dto.password, HASH_ROUNDS);
@@ -148,7 +149,7 @@ export class AuthService {
 
 		if (!existingUser || !existingUser.password) {
 			throw new UnauthorizedException(
-				'이메일 또는 비밀번호가 일치하지 않습니다.',
+				AUTH_MESSAGE.ERROR_EMAIL_PASSWORD_NOT_MATCH,
 			);
 		}
 
@@ -159,7 +160,7 @@ export class AuthService {
 
 		if (!passwordIdentical) {
 			throw new UnauthorizedException(
-				'이메일 또는 비밀번호가 일치하지 않습니다.',
+				AUTH_MESSAGE.ERROR_EMAIL_PASSWORD_NOT_MATCH,
 			);
 		}
 
@@ -177,7 +178,7 @@ export class AuthService {
 		const splitToken = header.split(' ');
 
 		if (splitToken.length !== 2 || splitToken[0] !== 'Bearer') {
-			throw new UnauthorizedException('잘못된 토큰입니다.');
+			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_INVALID);
 		}
 
 		// biome-ignore lint/style/noNonNullAssertion: <splitToken[1]가 항상 존재함>
@@ -196,7 +197,7 @@ export class AuthService {
 				secret: JWT_SECRET,
 			});
 		} catch (_) {
-			throw new UnauthorizedException('토큰이 만료되었거나 유효하지 않습니다.');
+			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_EXPIRED);
 		}
 	}
 
@@ -213,9 +214,7 @@ export class AuthService {
 		});
 
 		if (decoded.type !== 'refresh') {
-			throw new UnauthorizedException(
-				'토큰 재발급은 refresh token만 가능합니다.',
-			);
+			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_REFRESH_ONLY);
 		}
 
 		return this.signToken({ ...decoded, id: decoded.sub }, isRefreshToken);
@@ -324,7 +323,7 @@ export class AuthService {
 		});
 
 		if (!pending || pending.expiresAt < new Date()) {
-			throw new UnauthorizedException('유효하지 않거나 만료된 요청입니다.');
+			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_OAUTH_REQUEST_INVALID);
 		}
 
 		// 2. 사용자 생성
@@ -373,9 +372,7 @@ export class AuthService {
 			providerId,
 		);
 		if (existing) {
-			throw new BadRequestException(
-				'이미 다른 계정에 연결된 OAuth 계정입니다.',
-			);
+			throw new BadRequestException(AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED);
 		}
 
 		await this.usersService.linkOAuthAccount(userId, provider, providerId);

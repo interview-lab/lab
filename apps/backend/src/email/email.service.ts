@@ -2,9 +2,9 @@ import { randomInt } from 'node:crypto';
 import { AUTH } from '@interview-lab/shared';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { MINUTE } from '@/common/consts/unit';
+import { MAX_VERIFICATION_ATTEMPTS } from '@/email/consts/email';
 import { PrismaService } from '@/prisma/prisma.service';
-import { MINUTE } from '../common/consts/unit';
-import { MAX_VERIFICATION_ATTEMPTS } from './consts/email';
 
 /**
  * 이메일 발송 및 인증 관련 서비스

@@ -4,7 +4,7 @@ import {
 	SendVerificationDto,
 	VerificationResponseDto,
 } from '@/email/dtos/email-verify.dto';
-import { EmailService } from './email.service';
+import { EmailService } from '@/email/email.service';
 
 @Controller('email')
 @ApiTags('이메일')
@@ -48,7 +48,9 @@ export class EmailController {
 		);
 		return {
 			message: '인증 이메일이 발송되었습니다.',
-			remainingTime: newVerification.expiresAt.getTime() - date.getTime(),
+			remainingTime: Math.floor(
+				(newVerification.expiresAt.getTime() - date.getTime()) / 1000,
+			),
 		};
 	}
 }
