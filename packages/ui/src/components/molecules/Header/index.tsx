@@ -1,4 +1,4 @@
-import { mergeClassnames } from '@interview-lab/shared';
+import clsx from 'clsx';
 import type { ReactElement } from 'react';
 import {
 	containerStyle,
@@ -34,7 +34,7 @@ type HeaderProps = {
  */
 const Header = ({ logo, navItems, className }: HeaderProps) => {
 	return (
-		<div className={mergeClassnames(containerStyle, className)}>
+		<div className={clsx(containerStyle, className)}>
 			{logo}
 			<nav className={navStyle}>
 				{navItems?.map((item) => (
