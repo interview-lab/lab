@@ -54,8 +54,6 @@ export default function AdditionalInfoPage() {
 		e.preventDefault();
 
 		execute(async () => {
-			updateTime(DEFAULT_PENDING_TIME);
-
 			const { error, data } = await client.POST('/email/send-verification', {
 				body: {
 					email: state.email.value,
