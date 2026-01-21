@@ -48,7 +48,10 @@ const navItems = [
 
 export const LoggedOut: Story = {
 	render: () => (
-		<Header logo={logo} userAction={<TextButton>Login</TextButton>} />
+		<Header
+			logo={logo}
+			navItems={[<TextButton key="login">Login</TextButton>]}
+		/>
 	),
 };
 
@@ -56,16 +59,16 @@ export const LoggedIn: Story = {
 	render: () => (
 		<Header
 			logo={logo}
-			navItems={navItems}
-			userAction={
-				<button type="button" className={userProfileButtonStyle}>
+			navItems={[
+				...navItems,
+				<button key="profile" type="button" className={userProfileButtonStyle}>
 					<img
 						src={defaultUserImage}
 						alt="User profile"
 						className={userProfileImageStyle}
 					/>
-				</button>
-			}
+				</button>,
+			]}
 		/>
 	),
 };
