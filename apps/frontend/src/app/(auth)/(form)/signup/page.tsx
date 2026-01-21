@@ -1,12 +1,15 @@
 'use client';
+
 import { AUTH } from '@interview-lab/shared';
 import { Atom, Molecule } from '@interview-lab/ui';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
-import { type FormEvent, type MouseEvent, useState } from 'react';
+import type { FormEvent, MouseEvent } from 'react';
+import { buttonStyle, formStyle } from '@/app/(auth)/(form)/login/page.css';
+import client from '@/configs/fetch';
+import useAsync from '@/hooks/useAsync';
 import useSignupForm from '@/hooks/useSignupForm';
 import useTimer from '@/hooks/useTimer';
-import { buttonStyle, formStyle } from '../login/page.css';
 import {
 	emailFieldContainerStyle,
 	sendVerificationCodeButton,
@@ -19,62 +22,46 @@ export default function SignupPage() {
 	const router = useRouter();
 	const [state, dispatch] = useSignupForm();
 	const [time, updateTime] = useTimer(0);
-	const [isLoading, setIsLoading] = useState(false);
+	const { isLoading, error, execute } = useAsync();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (isLoading) return;
 
-		setIsLoading(true);
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/register/email`,
-			{
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({
+		await execute(async () => {
+			const { error } = await client.POST('/auth/register/email', {
+				body: {
 					email: state.email.value,
 					password: state.password.value,
 					username: state.username.value,
 					verificationCode: state.verificationCode.value,
-				}),
-			},
-		);
+				},
+			});
 
-		if (response.ok) {
+			if (error) throw new Error(error);
+
 			router.push('/');
-		}
-		setIsLoading(false);
+		});
 	};
 
 	const handleSendVerificationCode = async (
 		e: MouseEvent<HTMLButtonElement>,
 	) => {
 		e.preventDefault();
-		if (isLoading) return;
 
-		setIsLoading(true);
-		updateTime(DEFAULT_PENDING_TIME);
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/email/send-verification`,
-			{
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify({
-					email: state.email.value,
-				}),
-			},
-		);
-		const { remainingTime } = await response.json();
-		if (remainingTime) {
-			updateTime(remainingTime);
-		}
-		setIsLoading(false);
+		await execute(async () => {
+			updateTime(DEFAULT_PENDING_TIME);
+
+			const { data, error } = await client.POST('/email/send-verification', {
+				body: { email: state.email.value },
+			});
+
+			if (error) {
+				updateTime(0);
+				throw new Error('에러 발생');
+			}
+
+			updateTime(data.remainingTime);
+		});
 	};
 
 	const isFormValid = Object.values(state).every(
