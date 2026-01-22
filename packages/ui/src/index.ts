@@ -5,3 +5,12 @@ import * as Typography from './components/typographies';
 import * as Hook from './hooks';
 
 export { Atom, Molecule, Typography, Hook };
+
+// Style exports
+export {
+	sideNavbarLogoStyle,
+	sideNavbarLogoTitleStyle,
+} from './components/molecules';
+
+// Type exports
+export type { NavItem } from './components/molecules';

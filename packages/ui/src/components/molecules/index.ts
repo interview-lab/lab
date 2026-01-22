@@ -7,3 +7,9 @@ export { default as InterviewAnswerResultCard } from './InterviewAnswerResultCar
 export { default as InterviewScoreCard } from './InterviewScoreCard';
 export { default as SelectSubjectCard } from './SelectSubjectCard';
 export { default as Toggle } from './Toggle';
+export {
+	default as SideNavbar,
+	logoStyle as sideNavbarLogoStyle,
+	logoTitleStyle as sideNavbarLogoTitleStyle,
+} from './SideNavbar';
+export type { NavItem } from './SideNavbar';
