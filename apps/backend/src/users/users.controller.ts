@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '@/auth/guards/token.guard';
+import type { User as UserType } from '@/generated/prisma/client';
+import MESSAGE from '@/users/consts/message.const';
 import { User } from '@/users/decorators/user.decorator';
 import { UserResponseDto } from '@/users/dtos/user.dto';
 import { UsersService } from '@/users/users.service';
-import MESSAGE from '@/users/consts/message.const';
-import type { User as UserType } from '@/generated/prisma/client';
 
 @Controller('users')
 @ApiTags('사용자')
