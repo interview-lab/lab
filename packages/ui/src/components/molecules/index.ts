@@ -6,4 +6,6 @@ export { default as InputWithValidation } from './InputWithValidation';
 export { default as InterviewAnswerResultCard } from './InterviewAnswerResultCard';
 export { default as InterviewScoreCard } from './InterviewScoreCard';
 export { default as SelectSubjectCard } from './SelectSubjectCard';
+export type { NavItem } from './SideNavbar';
+export { default as SideNavbar } from './SideNavbar';
 export { default as Toggle } from './Toggle';
