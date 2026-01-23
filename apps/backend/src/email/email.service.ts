@@ -76,7 +76,7 @@ export class EmailService {
 	 * @returns 생성된 인증 정보
 	 */
 	async createVerificationInfo(email: string, code: string) {
-		const expiresAt = new Date(Date.now() + 1 * MINUTE);
+		const expiresAt = new Date(Date.now() + 5 * MINUTE);
 
 		return await this.prisma.emailVerification.create({
 			data: {
