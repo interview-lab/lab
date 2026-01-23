@@ -6,10 +6,12 @@ import {
 	ParseIntPipe,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '@/auth/guards/token.guard';
 import { User } from '@/users/decorators/user.decorator';
+import { UserResponseDto } from '@/users/dtos/user.dto';
 import { UsersService } from '@/users/users.service';
+import MESSAGE from '@/users/consts/message.const';
 
 @Controller('users')
 @ApiTags('사용자')
@@ -21,32 +23,38 @@ export class UsersController {
 		summary: '전체 사용자 목록 조회 API',
 		description: '전체 사용자 목록을 조회합니다.',
 	})
-	getUsers() {
-		return this.usersService.getUsersList();
+	async getUsers(): Promise<UserResponseDto[]> {
+		const users = await this.usersService.getUsersList();
+		return users.map(UserResponseDto.fromUser);
 	}
 
 	@Get('profile')
 	@UseGuards(AccessTokenGuard)
+
 	@ApiOperation({
 		summary: '내 프로필 조회 API',
 		description: '로그인한 사용자의 프로필 정보를 조회합니다.',
 	})
+	@ApiCookieAuth('accessToken')
 	getUserProfile(@User() user) {
-		return user;
+		return UserResponseDto.fromUser(user);
 	}
 
 	@Get(':id')
+	@UseGuards(AccessTokenGuard)
 	@ApiOperation({
 		summary: '특정 사용자 조회 API',
 		description: '특정 사용자의 정보를 조회합니다.',
 	})
-	getUserInfo(@Param('id', ParseIntPipe) id: number) {
-		const user = this.usersService.getUserById(id);
+	async getUserInfo(
+		@Param('id', ParseIntPipe) id: number,
+	): Promise<UserResponseDto> {
+		const user = await this.usersService.getUserById(id);
 
 		if (!user) {
-			throw new NotFoundException('User not found');
+			throw new NotFoundException(MESSAGE.ERROR_USER_NOT_FOUND);
 		}
 
-		return user;
+		return UserResponseDto.fromUser(user);
 	}
 }
