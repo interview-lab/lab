@@ -12,6 +12,7 @@ import { User } from '@/users/decorators/user.decorator';
 import { UserResponseDto } from '@/users/dtos/user.dto';
 import { UsersService } from '@/users/users.service';
 import MESSAGE from '@/users/consts/message.const';
+import type { User as UserType } from '@/generated/prisma/client';
 
 @Controller('users')
 @ApiTags('사용자')
@@ -30,18 +31,16 @@ export class UsersController {
 
 	@Get('profile')
 	@UseGuards(AccessTokenGuard)
-
 	@ApiOperation({
 		summary: '내 프로필 조회 API',
 		description: '로그인한 사용자의 프로필 정보를 조회합니다.',
 	})
 	@ApiCookieAuth('accessToken')
-	getUserProfile(@User() user) {
+	getUserProfile(@User() user: UserType) {
 		return UserResponseDto.fromUser(user);
 	}
 
 	@Get(':id')
-	@UseGuards(AccessTokenGuard)
 	@ApiOperation({
 		summary: '특정 사용자 조회 API',
 		description: '특정 사용자의 정보를 조회합니다.',
