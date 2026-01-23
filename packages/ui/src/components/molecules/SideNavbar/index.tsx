@@ -26,7 +26,7 @@ type SideNavbarProps = {
 		href: string;
 		className: string;
 		children: React.ReactNode;
-	}) => React.ReactNode;
+	}) => React.ReactElement;
 	className?: string;
 };
 

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { NavItem } from '../../../../dist';
 import SquareButton from '../../atoms/SquareButton';
 import SideNavbar, { logoStyle, logoTitleStyle } from '.';
 
@@ -21,10 +22,10 @@ const Logo = (
 );
 
 const navItems = [
-	{ href: '/session', icon: 'IconPlay' as const, label: '인터뷰 모드' },
-	{ href: '/mypage', icon: 'IconMe' as const, label: '마이페이지' },
-	{ href: '/setting', icon: 'IconSetting' as const, label: '세팅' },
-];
+	{ href: '/session', icon: 'IconPlay', label: '인터뷰 모드' },
+	{ href: '/mypage', icon: 'IconMe', label: '마이페이지' },
+	{ href: '/setting', icon: 'IconSetting', label: '세팅' },
+] satisfies NavItem[];
 
 export const Default: Story = {
 	args: {
