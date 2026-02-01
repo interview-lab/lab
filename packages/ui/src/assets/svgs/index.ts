@@ -41,3 +41,4 @@ export { ReactComponent as IconTrash } from './trash.svg';
 export { ReactComponent as IconUp } from './up.svg';
 export { ReactComponent as IconVisible } from './visible.svg';
 export { ReactComponent as IconWarning } from './warning.svg';
+export { ReactComponent as IconX } from './x.svg';
