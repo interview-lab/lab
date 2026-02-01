@@ -1,3 +1,5 @@
+export { ReactComponent as Icon180Ring } from './180-ring.svg';
+export { ReactComponent as Icon180RingWithBg } from './180-ring-with-bg.svg';
 export { ReactComponent as IconBookMark } from './bookmark.svg';
 export { ReactComponent as IconCalendar } from './calendar.svg';
 export { ReactComponent as IconCheck } from './check.svg';
@@ -20,6 +22,7 @@ export { ReactComponent as IconHome } from './home.svg';
 export { ReactComponent as IconInvisible } from './invisible.svg';
 export { ReactComponent as IconKey } from './key.svg';
 export { ReactComponent as IconLike } from './like.svg';
+export { ReactComponent as IconLoadingThreeDot } from './loading-threedot.svg';
 export { ReactComponent as IconLock } from './lock.svg';
 export { ReactComponent as IconMail } from './mail.svg';
 export { ReactComponent as IconMe } from './me.svg';
