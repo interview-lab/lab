@@ -13,6 +13,7 @@ import {
 	progressContainerStyle,
 	progressSectionStyle,
 	questionNumberStyle,
+	sideBarContentStyle,
 	sideBarHeadingStyle,
 	sideBarStyle,
 } from './page.css';
@@ -79,52 +80,58 @@ export default function InterviewPage({
 	return (
 		<div className={pageStyle}>
 			<aside className={sideBarStyle}>
-				<div className={sideBarHeadingStyle}>
-					<Atom.SquareButton icon="IconGraph" active={true} />
-					<Typography.Base style="primary" textType="h1">
-						Interview Lab
-					</Typography.Base>
-				</div>
-				<div className={progressSectionStyle}>
-					<Typography.Base style="primary" textType="p">
-						INTERVIEW PROGRESS
-					</Typography.Base>
-					<div className={progressContainerStyle}>
-						{QUESTIONS.map((question, index) => (
-							<div key={question.id} data-status={question.status}>
-								<div className={lineContainerStyle}>
-									<span className={lineBackgroundStyle} />
-									<span
-										className={clsx(
-											lineStyle,
-											question.status === QuestionStatus.IN_PROGRESS &&
-												lineActiveStyle,
-											question.status === QuestionStatus.COMPLETED &&
-												lineCompletedStyle,
-										)}
-									/>
-									<div className={questionNumberStyle}>
-										{question.status === QuestionStatus.NOT_STARTED ? (
-											index + 1
-										) : question.status === QuestionStatus.IN_PROGRESS ? (
-											<div className={iconStyle} />
-										) : (
-											<Atom.Icon icon="IconCheck" />
-										)}
+				<div className={sideBarContentStyle}>
+					<div className={sideBarHeadingStyle}>
+						<Atom.SquareButton icon="IconGraph" active={true} />
+						<Typography.Base style="primary" textType="h1">
+							Interview Lab
+						</Typography.Base>
+					</div>
+					<div className={progressSectionStyle}>
+						<Typography.Base style="primary" textType="p">
+							INTERVIEW PROGRESS
+						</Typography.Base>
+						<div className={progressContainerStyle}>
+							{QUESTIONS.map((question, index) => (
+								<div key={question.id} data-status={question.status}>
+									<div className={lineContainerStyle}>
+										<span className={lineBackgroundStyle} />
+										<span
+											className={clsx(
+												lineStyle,
+												question.status === QuestionStatus.IN_PROGRESS &&
+													lineActiveStyle,
+												question.status === QuestionStatus.COMPLETED &&
+													lineCompletedStyle,
+											)}
+										/>
+										<div className={questionNumberStyle}>
+											{question.status === QuestionStatus.NOT_STARTED ? (
+												index + 1
+											) : question.status === QuestionStatus.IN_PROGRESS ? (
+												<div className={iconStyle} />
+											) : (
+												<Atom.Icon icon="IconCheck" />
+											)}
+										</div>
+									</div>
+									<div>
+										<Typography.Base style="primary" textType="p">
+											Q{index + 1}. {question.questionSummary}
+										</Typography.Base>
+										<Typography.Base style="primary" textType="p">
+											{question.subject}
+										</Typography.Base>
 									</div>
 								</div>
-								<div>
-									<Typography.Base style="primary" textType="p">
-										Q{index + 1}. {question.questionSummary}
-									</Typography.Base>
-									<Typography.Base style="primary" textType="p">
-										{question.subject}
-									</Typography.Base>
-								</div>
-							</div>
-						))}
+							))}
+						</div>
 					</div>
 				</div>
+				<Atom.TextButton>
+					세션종료
+					<Atom.Icon icon="IconX" />
+				</Atom.TextButton>
 			</aside>
 			{sessionId}
 		</div>

@@ -17,6 +17,30 @@ export const sideBarStyle = style({
 	alignItems: 'center',
 });
 
+globalStyle(`${sideBarStyle} > button`, {
+	backgroundColor: '#F1F5F9',
+	alignSelf: 'stretch',
+	position: 'relative',
+});
+
+globalStyle(`${sideBarStyle} > button:hover`, {
+	backgroundColor: '#E2E8F0',
+});
+
+globalStyle(`${sideBarStyle} > button > svg`, {
+	position: 'absolute',
+	right: vars.spacing['3'],
+	top: '50%',
+	transform: 'translateY(-50%)',
+});
+
+export const sideBarContentStyle = style({
+	display: 'flex',
+	flexDirection: 'column',
+	width: '100%',
+	flex: 1,
+});
+
 export const sideBarHeadingStyle = style({
 	display: 'flex',
 	alignItems: 'center',
