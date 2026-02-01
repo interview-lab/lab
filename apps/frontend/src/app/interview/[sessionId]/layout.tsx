@@ -132,7 +132,7 @@ export default function InterviewLayout({
 				</div>
 				<Atom.TextButton>
 					세션종료
-					<Atom.Icon icon="IconX" />
+					<Atom.Icon icon="IconX" width={20} />
 				</Atom.TextButton>
 			</aside>
 			{sessionId}
