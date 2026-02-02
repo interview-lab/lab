@@ -3,10 +3,10 @@ import {
 	ExecutionContext,
 	InternalServerErrorException,
 } from '@nestjs/common';
-import { User as UserType } from '@/generated/prisma/client';
+import type { User as UserModel } from '@/generated/prisma/client';
 
 export const User = createParamDecorator((_, context: ExecutionContext) => {
-	const { user }: { user: UserType | null } = context
+	const { user }: { user: UserModel | null } = context
 		.switchToHttp()
 		.getRequest();
 
