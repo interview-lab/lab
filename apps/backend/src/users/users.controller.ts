@@ -40,11 +40,11 @@ export class UsersController {
 
 	@Get('profile')
 	@UseGuards(AccessTokenGuard)
+	@ApiCookieAuth('accessToken')
 	@ApiOperation({
 		summary: '내 프로필 조회 API',
 		description: '로그인한 사용자의 프로필 정보를 조회합니다.',
 	})
-	@ApiCookieAuth('accessToken')
 	@ApiOkResponse({ type: ProfileDto })
 	getUserProfile(@User() user: Omit<UserModel, 'password'>): ProfileDto {
 		return plainToInstance(ProfileDto, user, {
