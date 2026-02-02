@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import Message from '@/components/molecules/Message';
+import Message from '@/components/atoms/Message';
 
 const meta = {
-	title: 'Design System/Molecule/Message',
+	title: 'Design System/Atom/Message',
 	component: Message,
 } satisfies Meta<typeof Message>;
 
