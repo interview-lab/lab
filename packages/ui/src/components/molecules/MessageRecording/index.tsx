@@ -4,25 +4,11 @@ import { badgeStyle, canvasStyle, timeStyle } from './messageRecording.css';
 
 const MINUTE = 60;
 
-type IdleStateProps = {
-	state: 'idle';
-};
-
-type RecordingStateProps = {
-	state: 'recording';
-	time: number;
+type MessageRecordingProps = {
+	state: 'recording' | 'paused';
+	time?: number;
 	mediaStream?: MediaStream;
 };
-
-type PaustedStateProps = {
-	state: 'paused';
-	time: number;
-};
-
-type MessageRecordingProps =
-	| IdleStateProps
-	| RecordingStateProps
-	| PaustedStateProps;
 
 const BAR_WIDTH = 4;
 const BAR_GAP = 2;
@@ -73,23 +59,20 @@ const drawBars = (
 	}
 };
 
-const MessageRecording = (props: MessageRecordingProps) => {
+const MessageRecording = ({
+	state,
+	mediaStream,
+	time,
+}: MessageRecordingProps) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const animationIdRef = useRef<number>(0);
 	const audioContextRef = useRef<AudioContext | null>(null);
 
-	const mediaStream =
-		props.state === 'recording' ? props.mediaStream : undefined;
-
-	const minute = String(
-		props.state !== 'idle' ? Math.floor(props.time / MINUTE) : 0,
-	).padStart(2, '0');
-	const second = String(
-		props.state !== 'idle' ? props.time % MINUTE : 0,
-	).padStart(2, '0');
+	const minute = String(time ? Math.floor(time / MINUTE) : 0).padStart(2, '0');
+	const second = String(time ? time % MINUTE : 0).padStart(2, '0');
 
 	useEffect(() => {
-		if (props.state !== 'recording' || !mediaStream) return;
+		if (state !== 'recording' || !mediaStream) return;
 
 		const canvas = canvasRef.current;
 		if (!canvas) return;
@@ -127,23 +110,23 @@ const MessageRecording = (props: MessageRecordingProps) => {
 			audioContext.close();
 			audioContextRef.current = null;
 		};
-	}, [props.state, mediaStream]);
+	}, [state, mediaStream]);
 
 	useEffect(() => {
-		if (props.state === 'paused') {
+		if (state === 'paused') {
 			cancelAnimationFrame(animationIdRef.current);
 		}
-	}, [props.state]);
+	}, [state]);
 
 	return (
 		<Message type="sent">
 			<Badge className={badgeStyle}>
 				<Icon
-					icon={props.state === 'recording' ? 'IconRecord' : 'IconMute'}
+					icon={state === 'recording' ? 'IconRecord' : 'IconMute'}
 					width={16}
 					height={20}
 				/>
-				{props.state === 'recording' ? 'LISTENING' : 'PAUSED'}
+				{state === 'recording' ? 'LISTENING' : 'PAUSED'}
 			</Badge>
 			<p className={timeStyle}>{`${minute}:${second}`}</p>
 			<canvas ref={canvasRef} className={canvasStyle} />

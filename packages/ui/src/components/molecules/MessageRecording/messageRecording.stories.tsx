@@ -5,17 +5,21 @@ import MessageRecording from '@/components/molecules/MessageRecording';
 const meta = {
 	title: 'Design System/Molecule/MessageRecording',
 	component: MessageRecording,
-} satisfies Meta<typeof MessageRecording>;
 
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Recording: Story = {
-	args: {
-		state: 'recording',
-		time: 13,
+	argTypes: {
+		time: {
+			table: {
+				disable: true,
+			},
+		},
+		mediaStream: {
+			table: {
+				disable: true,
+			},
+		},
 	},
-	render: () => {
+
+	render: (props) => {
 		const [stream, setStream] = useState<MediaStream>();
 		const [time, setTime] = useState(0);
 		const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -42,15 +46,21 @@ export const Recording: Story = {
 			};
 		}, []);
 
-		return (
-			<MessageRecording state="recording" time={time} mediaStream={stream} />
-		);
+		return <MessageRecording {...props} time={time} mediaStream={stream} />;
+	},
+} satisfies Meta<typeof MessageRecording>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Recording: Story = {
+	args: {
+		state: 'recording',
 	},
 };
 
 export const Paused: Story = {
 	args: {
 		state: 'paused',
-		time: 13,
 	},
 };
