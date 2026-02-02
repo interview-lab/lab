@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import MessageRecording from '@/components/molecules/MessageRecording';
 
 const meta = {
@@ -7,11 +7,6 @@ const meta = {
 	component: MessageRecording,
 
 	argTypes: {
-		time: {
-			table: {
-				disable: true,
-			},
-		},
 		mediaStream: {
 			table: {
 				disable: true,
@@ -21,8 +16,6 @@ const meta = {
 
 	render: (props) => {
 		const [stream, setStream] = useState<MediaStream>();
-		const [time, setTime] = useState(0);
-		const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 		useEffect(() => {
 			navigator.mediaDevices
@@ -32,21 +25,7 @@ const meta = {
 				.then(setStream);
 		}, []);
 
-		useEffect(() => {
-			if (timerRef.current) return;
-
-			timerRef.current = setInterval(() => {
-				setTime((prev) => prev + 1);
-			}, 1000);
-
-			return () => {
-				if (timerRef.current) {
-					clearInterval(timerRef.current);
-				}
-			};
-		}, []);
-
-		return <MessageRecording {...props} time={time} mediaStream={stream} />;
+		return <MessageRecording {...props} mediaStream={stream} />;
 	},
 } satisfies Meta<typeof MessageRecording>;
 

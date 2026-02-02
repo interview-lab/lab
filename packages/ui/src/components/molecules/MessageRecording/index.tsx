@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge, Icon, Message } from '@/components/atoms';
 import { badgeStyle, canvasStyle, timeStyle } from './messageRecording.css';
 
@@ -6,7 +6,6 @@ const MINUTE = 60;
 
 type MessageRecordingProps = {
 	state: 'recording' | 'paused';
-	time?: number;
 	mediaStream?: MediaStream;
 };
 
@@ -59,14 +58,12 @@ const drawBars = (
 	}
 };
 
-const MessageRecording = ({
-	state,
-	mediaStream,
-	time,
-}: MessageRecordingProps) => {
+const MessageRecording = ({ state, mediaStream }: MessageRecordingProps) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const animationIdRef = useRef<number>(0);
 	const audioContextRef = useRef<AudioContext | null>(null);
+	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+	const [time, setTime] = useState(0);
 
 	const minute = String(time ? Math.floor(time / MINUTE) : 0).padStart(2, '0');
 	const second = String(time ? time % MINUTE : 0).padStart(2, '0');
@@ -116,6 +113,25 @@ const MessageRecording = ({
 		if (state === 'paused') {
 			cancelAnimationFrame(animationIdRef.current);
 		}
+	}, [state]);
+
+	useEffect(() => {
+		if (state === 'paused' && timerRef.current) {
+			clearInterval(timerRef.current);
+			timerRef.current = null;
+		}
+
+		if (timerRef.current || state === 'paused') return;
+
+		timerRef.current = setInterval(() => {
+			setTime((prev) => prev + 1);
+		}, 1000);
+
+		return () => {
+			if (timerRef.current) {
+				clearInterval(timerRef.current);
+			}
+		};
 	}, [state]);
 
 	return (
