@@ -58,14 +58,12 @@ export default function useVoiceRecord() {
 
 			setRecordingState('idle');
 		} catch (error) {
-			if (error instanceof Error) {
-				setError(error);
-				setRecordingState('error');
-			} else {
-				setError(new Error('마이크에 엑세스하는데 문제가 발생했습니다.'));
-				setRecordingState('error');
-				alert('마이크에 엑세스하는데 문제가 발생했습니다.');
-			}
+			const errorMessage =
+				error instanceof Error
+					? error
+					: new Error('마이크에 액세스하는데 문제가 발생했습니다.');
+			setError(errorMessage);
+			setRecordingState('error');
 		}
 	}, []);
 
