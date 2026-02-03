@@ -1,26 +1,39 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
-import { useEffect, useState } from 'react';
-import useVoiceRecord from '@/hooks/useVoiceRecord';
+import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
 import {
 	buttonContainerStyle,
+	buttonDescriptionStyle,
 	pageStyle,
 	questionContainerStyle,
 	questionTextStyle,
 	tipTextStyle,
 } from './page.css';
 
+const DESCRIPTIONS: Record<RecordingState, string> = {
+	idle: '답변을 시작해주세요.',
+	recording: '답변을 전송하거나 일시정지 할 수 있습니다.',
+	paused: '답변을 재개해주세요.',
+	processing: '답변을 처리중입니다...',
+	error: '마이크 권한을 허용해주세요.',
+} as const;
+
 export default function InterviewPage({
 	params,
 }: {
 	params: Promise<{ sessionId: string }>;
 }) {
-	const [stream, mediaRecorder, chunks] = useVoiceRecord();
-	const [state, setState] =
-		useState<Parameters<typeof Molecule.InterviewSubmitButton>[0]['state']>(
-			'idle',
-		);
+	const {
+		recordingState,
+		stream,
+		chunks,
+		error,
+		startRecording,
+		pauseRecording,
+		resumeRecording,
+		stopRecording,
+	} = useVoiceRecord();
 
 	return (
 		<div className={pageStyle}>
@@ -36,31 +49,19 @@ export default function InterviewPage({
 					</p>
 				</Atom.Message>
 				<Molecule.MessageRecording
-					state={state === 'recording' ? 'recording' : 'paused'}
+					state={recordingState === 'recording' ? 'recording' : 'paused'}
 					mediaStream={stream}
 				/>
 			</div>
 			<div className={buttonContainerStyle}>
 				<Molecule.InterviewSubmitButton
-					state={state}
-					onStartRecord={() => {
-						setState('recording');
-						mediaRecorder?.start();
-					}}
-					onPause={() => {
-						setState('paused');
-						mediaRecorder?.pause();
-					}}
-					onResume={() => {
-						setState('recording');
-						mediaRecorder?.resume();
-					}}
-					onSubmit={() => {
-						setState('processing');
-						mediaRecorder?.stop();
-					}}
+					state={recordingState}
+					onStartRecord={startRecording}
+					onPause={pauseRecording}
+					onResume={resumeRecording}
+					onSubmit={stopRecording}
 				/>
-				<p>Press 'Start Recording' to answer the question.</p>
+				<p className={buttonDescriptionStyle}>{DESCRIPTIONS[recordingState]}</p>
 			</div>
 		</div>
 	);

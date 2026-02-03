@@ -2,7 +2,7 @@ import { CircleButton, Icon, TextButton } from '@/components/atoms';
 import { buttonContainer, muteButton } from './interviewSubmitButton.css';
 
 type InterviewSubmitButtonProps = {
-	state: 'idle' | 'recording' | 'paused' | 'processing';
+	state: 'idle' | 'recording' | 'paused' | 'processing' | 'error';
 	onStartRecord?: () => void;
 	onPause?: () => void;
 	onResume?: () => void;
@@ -28,6 +28,10 @@ const BUTTION_OPTIONS: Record<
 	paused: {
 		text: 'Paused',
 	},
+	error: {
+		text: 'Error',
+		icon: 'IconMute',
+	},
 };
 
 const InterviewSubmitButton = ({
@@ -42,7 +46,9 @@ const InterviewSubmitButton = ({
 	return (
 		<div className={buttonContainer}>
 			<TextButton
-				disabled={state === 'processing' || state === 'paused'}
+				disabled={
+					state === 'processing' || state === 'paused' || state === 'error'
+				}
 				onClick={state === 'idle' ? onStartRecord : onSubmit}
 			>
 				{option.icon && <Icon icon={option.icon} width={24} />}

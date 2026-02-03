@@ -23,6 +23,10 @@ globalStyle(`${buttonContainerStyle} p`, {
 	color: vars.color.gray,
 });
 
+export const buttonDescriptionStyle = style({
+	minHeight: '16px',
+});
+
 export const questionContainerStyle = style({
 	display: 'flex',
 	flexDirection: 'column',
