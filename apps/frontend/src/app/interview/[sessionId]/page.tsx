@@ -1,6 +1,7 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
+import useRequestPermission from '@/hooks/useCapturePermission';
 import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
 import {
 	buttonContainerStyle,
@@ -33,7 +34,10 @@ export default function InterviewPage({
 		pauseRecording,
 		resumeRecording,
 		stopRecording,
+		errorRecording,
+		initMediaRecorder,
 	} = useVoiceRecord();
+	useRequestPermission('microphone', initMediaRecorder, errorRecording);
 
 	return (
 		<div className={pageStyle}>

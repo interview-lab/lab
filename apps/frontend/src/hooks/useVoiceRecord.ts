@@ -1,5 +1,5 @@
 import type { Molecule } from '@interview-lab/ui';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type RecordingState = Parameters<
 	typeof Molecule.InterviewSubmitButton
@@ -32,39 +32,48 @@ export default function useVoiceRecord() {
 		mediaRecorderRef.current?.stop();
 	};
 
-	useEffect(() => {
-		(async () => {
-			try {
-				const stream = await navigator.mediaDevices.getUserMedia({
-					audio: true,
-				});
+	const errorRecording = () => {
+		setRecordingState('error');
+		setError(new Error('녹음 중 오류가 발생했습니다.'));
+	};
 
-				streamRef.current = stream;
+	const initMediaRecorder = useCallback(async () => {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: true,
+			});
 
-				const recorder = new MediaRecorder(stream);
-				recorder.ondataavailable = (event) => {
-					chunksRef.current.push(event.data);
-				};
+			streamRef.current = stream;
 
-				mediaRecorderRef.current = recorder;
-			} catch (error) {
-				if (error instanceof Error) {
-					setError(error);
-					setRecordingState('error');
-				} else {
-					setError(new Error('마이크에 엑세스하는데 문제가 발생했습니다.'));
-					setRecordingState('error');
-					alert('마이크에 엑세스하는데 문제가 발생했습니다.');
-				}
+			const recorder = new MediaRecorder(stream);
+			recorder.ondataavailable = (event) => {
+				chunksRef.current.push(event.data);
+			};
+
+			mediaRecorderRef.current = recorder;
+
+			setRecordingState('idle');
+		} catch (error) {
+			if (error instanceof Error) {
+				setError(error);
+				setRecordingState('error');
+			} else {
+				setError(new Error('마이크에 엑세스하는데 문제가 발생했습니다.'));
+				setRecordingState('error');
+				alert('마이크에 엑세스하는데 문제가 발생했습니다.');
 			}
-		})();
+		}
+	}, []);
+
+	useEffect(() => {
+		initMediaRecorder();
 
 		return () => {
 			streamRef.current?.getAudioTracks().forEach((track) => {
 				track.stop();
 			});
 		};
-	}, []);
+	}, [initMediaRecorder]);
 
 	return {
 		stream: streamRef.current,
@@ -74,6 +83,8 @@ export default function useVoiceRecord() {
 		pauseRecording,
 		resumeRecording,
 		stopRecording,
+		errorRecording,
+		initMediaRecorder,
 		recordingState,
 	} as const;
 }
