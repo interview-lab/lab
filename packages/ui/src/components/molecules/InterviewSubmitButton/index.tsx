@@ -6,6 +6,7 @@ type InterviewSubmitButtonProps = {
 	onStartRecord?: () => void;
 	onPause?: () => void;
 	onResume?: () => void;
+	onSubmit?: () => void;
 };
 
 const BUTTION_OPTIONS: Record<
@@ -34,6 +35,7 @@ const InterviewSubmitButton = ({
 	onPause,
 	onStartRecord,
 	onResume,
+	onSubmit,
 }: InterviewSubmitButtonProps) => {
 	const option = BUTTION_OPTIONS[state];
 
@@ -41,7 +43,7 @@ const InterviewSubmitButton = ({
 		<div className={buttonContainer}>
 			<TextButton
 				disabled={state === 'processing' || state === 'paused'}
-				onClick={onStartRecord}
+				onClick={state === 'idle' ? onStartRecord : onSubmit}
 			>
 				{option.icon && <Icon icon={option.icon} width={24} />}
 				{option.text}

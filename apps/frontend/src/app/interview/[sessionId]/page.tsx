@@ -2,6 +2,7 @@
 
 import { Atom, Molecule } from '@interview-lab/ui';
 import { useEffect, useState } from 'react';
+import useVoiceRecord from '@/hooks/useVoiceRecord';
 import {
 	buttonContainerStyle,
 	pageStyle,
@@ -15,19 +16,11 @@ export default function InterviewPage({
 }: {
 	params: Promise<{ sessionId: string }>;
 }) {
-	const [stream, setStream] = useState<MediaStream>();
+	const [stream, mediaRecorder, chunks] = useVoiceRecord();
 	const [state, setState] =
 		useState<Parameters<typeof Molecule.InterviewSubmitButton>[0]['state']>(
 			'idle',
 		);
-
-	useEffect(() => {
-		navigator.mediaDevices
-			.getUserMedia({
-				audio: true,
-			})
-			.then(setStream);
-	}, []);
 
 	return (
 		<div className={pageStyle}>
@@ -50,9 +43,22 @@ export default function InterviewPage({
 			<div className={buttonContainerStyle}>
 				<Molecule.InterviewSubmitButton
 					state={state}
-					onStartRecord={() => setState('recording')}
-					onPause={() => setState('paused')}
-					onResume={() => setState('recording')}
+					onStartRecord={() => {
+						setState('recording');
+						mediaRecorder?.start();
+					}}
+					onPause={() => {
+						setState('paused');
+						mediaRecorder?.pause();
+					}}
+					onResume={() => {
+						setState('recording');
+						mediaRecorder?.resume();
+					}}
+					onSubmit={() => {
+						setState('processing');
+						mediaRecorder?.stop();
+					}}
 				/>
 				<p>Press 'Start Recording' to answer the question.</p>
 			</div>
