@@ -13,7 +13,7 @@ export default function useVoiceRecord() {
 	const [recordingState, setRecordingState] = useState<RecordingState>('idle');
 	const [error, setError] = useState<Error | null>(null);
 	const mediaRecorderRef = useRef<MediaRecorder>(null);
-	const streamRef = useRef<MediaStream>(undefined);
+	const streamRef = useRef<MediaStream>(null);
 	const chunksRef = useRef<Blob[]>([]);
 
 	const startRecording = () => {

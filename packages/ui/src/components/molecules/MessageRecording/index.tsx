@@ -6,7 +6,7 @@ const MINUTE = 60;
 
 type MessageRecordingProps = {
 	state: 'recording' | 'paused';
-	mediaStream?: MediaStream;
+	mediaStream?: MediaStream | null;
 };
 
 const BAR_WIDTH = 4;
