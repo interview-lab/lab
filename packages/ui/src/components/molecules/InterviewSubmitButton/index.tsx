@@ -9,7 +9,7 @@ type InterviewSubmitButtonProps = {
 	onSubmit?: () => void;
 };
 
-const BUTTION_OPTIONS: Record<
+const BUTTON_OPTIONS: Record<
 	InterviewSubmitButtonProps['state'],
 	{ text: string; icon?: Parameters<typeof Icon>[0]['icon'] }
 > = {
@@ -41,7 +41,7 @@ const InterviewSubmitButton = ({
 	onResume,
 	onSubmit,
 }: InterviewSubmitButtonProps) => {
-	const option = BUTTION_OPTIONS[state];
+	const option = BUTTON_OPTIONS[state];
 
 	return (
 		<div className={buttonContainer}>
