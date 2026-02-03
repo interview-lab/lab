@@ -5,6 +5,10 @@ export type RecordingState = Parameters<
 	typeof Molecule.InterviewSubmitButton
 >[0]['state'];
 
+/**
+ * 오디오 녹음을 관리하는 훅
+ * @returns 녹음 상태와 제어 함수
+ */
 export default function useVoiceRecord() {
 	const [recordingState, setRecordingState] = useState<RecordingState>('idle');
 	const [error, setError] = useState<Error | null>(null);
