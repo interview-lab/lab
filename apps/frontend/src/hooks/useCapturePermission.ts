@@ -12,15 +12,24 @@ export default function useCapturePermission(
 	onDenied: () => void,
 ) {
 	useEffect(() => {
-		navigator.permissions.query({ name: type }).then((permission) => {
+		let permission: PermissionStatus | null = null;
+
+		navigator.permissions.query({ name: type }).then((permissionStatus) => {
+			permission = permissionStatus;
 			permission.onchange = () => {
-				if (permission.state === 'granted') {
+				if (permission?.state === 'granted') {
 					onGranted();
 				}
-				if (permission.state === 'denied') {
+				if (permission?.state === 'denied') {
 					onDenied();
 				}
 			};
 		});
+
+		return () => {
+			if (permission) {
+				permission.onchange = null;
+			}
+		};
 	}, [type, onGranted, onDenied]);
 }
