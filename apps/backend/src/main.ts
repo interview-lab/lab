@@ -26,7 +26,7 @@ async function bootstrap() {
 		.setTitle('Interview lab API')
 		.setDescription('인터뷰랩 API 문서')
 		.setVersion('1.0')
-		.addCookieAuth('accessToken', { type: 'http' })
+		.addCookieAuth('accessToken')
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);

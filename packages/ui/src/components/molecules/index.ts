@@ -1,3 +1,4 @@
+export { default as AnswerActiveBar } from './AnswerActiveBar';
 export { default as DashboardCard } from './DashboardCard';
 export { default as Header } from './Header';
 export { default as InputPassword } from './InputPassword';
@@ -8,4 +9,5 @@ export { default as InterviewSubmitButton } from './InterviewSubmitButton';
 export { default as MessageRecording } from './MessageRecording';
 export { default as SelectSubjectCard } from './SelectSubjectCard';
 export { default as SubjectBadge } from './SubjectBadge';
+export { default as SideNavbar } from './SideNavbar';
 export { default as Toggle } from './Toggle';

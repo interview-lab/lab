@@ -56,6 +56,8 @@ export const vars = createGlobalTheme(':root', {
 		sizeSm: '14px',
 		// Button1 (16px Bold), Subtitle (16px SemiBold)
 		sizeBase: '16px',
+		// SendButton (18px SemiBold)
+		sizeLg: '18px',
 		// Title3 (20px SemiBold)
 		sizeXl: '20px',
 		// Title1 (36px ExtraBold), Title2 (36px Bold)
