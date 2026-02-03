@@ -9,6 +9,7 @@ export const badgeStyle = style({
 	color: vars.color.blue,
 	backgroundColor: vars.color.blueAlpha10,
 	border: `1px solid ${vars.color.blueAlpha30}`,
+	width: 'fit-content',
 
 	selectors: {
 		'&[data-type="os"]': {

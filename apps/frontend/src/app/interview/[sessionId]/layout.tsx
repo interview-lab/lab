@@ -80,7 +80,6 @@ export default function InterviewLayout({
 
 	return (
 		<div className={pageStyle}>
-			{' '}
 			<aside className={sideBarStyle}>
 				<div className={sideBarContentStyle}>
 					<div className={sideBarHeadingStyle}>
@@ -135,7 +134,6 @@ export default function InterviewLayout({
 					<Atom.Icon icon="IconX" width={20} />
 				</Atom.TextButton>
 			</aside>
-			{sessionId}
 			{children}
 		</div>
 	);

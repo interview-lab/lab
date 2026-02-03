@@ -5,6 +5,8 @@ export const messageContainerStyle = style({
 	boxShadow: '0 8px 16px rgba(0 0 0 /0.08)',
 	borderRadius: 16,
 	padding: 20,
+	maxWidth: '80%',
+	wordBreak: 'keep-all',
 
 	selectors: {
 		'&[data-type="sent"]': {

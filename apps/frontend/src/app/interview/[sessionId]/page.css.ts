@@ -7,6 +7,8 @@ export const pageStyle = style({
 	flexDirection: 'column',
 	alignItems: 'center',
 	padding: vars.spacing['8'],
+	maxWidth: '1200px',
+	marginInline: 'auto',
 });
 
 export const buttonContainerStyle = style({
@@ -25,6 +27,19 @@ export const questionContainerStyle = style({
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
-	gap: vars.spacing['2'],
+	justifyContent: 'center',
+	gap: vars.spacing['8'],
 	flexGrow: 1,
+	alignSelf: 'stretch',
+});
+
+export const questionTextStyle = style({
+	fontSize: 24,
+	fontWeight: vars.fontWeight.bold,
+	marginBlock: vars.spacing['4'],
+});
+
+export const tipTextStyle = style({
+	fontSize: vars.fontSize.sizeBase,
+	color: vars.color.gray,
 });
