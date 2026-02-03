@@ -53,6 +53,7 @@ globalStyle(`${buttonContainer} button:first-child:disabled`, {
 
 export const muteButton = style({
 	position: 'relative',
+	backgroundColor: 'rgb(239, 239, 239)',
 
 	transition: 'border-radius 1s ease',
 
@@ -60,13 +61,25 @@ export const muteButton = style({
 		'&[data-state="recording"]::after': {
 			position: 'absolute',
 			content: '',
-			width: 18,
+			width: 16,
 			height: 18,
 			backgroundColor: vars.color.border.error,
-			borderRadius: 2,
+
 			top: '50%',
 			left: '50%',
 			transform: 'translate(-50%, -50%)',
+			zIndex: 5,
+		},
+		'&[data-state="recording"]::before': {
+			position: 'absolute',
+			content: '',
+			width: 4,
+			height: 18,
+			backgroundColor: 'rgb(239, 239, 239)',
+			top: '50%',
+			left: '50%',
+			transform: 'translate(-50%, -50%)',
+			zIndex: 10,
 		},
 
 		'&[data-state="paused"]::after': {
