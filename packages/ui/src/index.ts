@@ -5,3 +5,6 @@ import * as Typography from './components/typographies';
 import * as Hook from './hooks';
 
 export { Atom, Molecule, Typography, Hook };
+
+// Type exports
+export type { NavItem } from './components/molecules';

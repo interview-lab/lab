@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@/generated/prisma/client';
+import { Prisma, User } from '@/generated/prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
@@ -24,21 +24,14 @@ export class UsersService {
 		});
 	}
 
-	async getUsersList() {
-		return this.prisma.user.findMany({
-			omit: {
-				password: true,
-			},
-		});
+	async getUsersList(): Promise<User[]> {
+		return this.prisma.user.findMany();
 	}
 
-	async getUserById(userId: number) {
+	async getUserById(userId: number): Promise<User | null> {
 		return this.prisma.user.findUnique({
 			where: {
 				id: userId,
-			},
-			omit: {
-				password: true,
 			},
 		});
 	}
