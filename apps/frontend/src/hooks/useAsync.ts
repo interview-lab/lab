@@ -7,6 +7,10 @@ interface UseAsyncReturn<T> {
 	reset: () => void;
 }
 
+/**
+ * 비동기 작업을 관리하는 훅
+ * @returns 비동기 작업 상태와 실행 함수
+ */
 export default function useAsync<T = void>(): UseAsyncReturn<T> {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
@@ -24,8 +28,10 @@ export default function useAsync<T = void>(): UseAsyncReturn<T> {
 		} catch (e) {
 			if (e instanceof Error) {
 				setError(e.message);
+			} else {
+				setError('문제가 발생했습니다.');
 			}
-			return undefined;
+			return;
 		} finally {
 			isLoadingRef.current = false;
 			setIsLoading(false);
