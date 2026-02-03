@@ -71,9 +71,15 @@ export default function useVoiceRecord() {
 		initMediaRecorder();
 
 		return () => {
+			if (mediaRecorderRef.current?.state === 'recording') {
+				mediaRecorderRef.current.stop();
+			}
 			streamRef.current?.getAudioTracks().forEach((track) => {
 				track.stop();
 			});
+
+			mediaRecorderRef.current = null;
+			streamRef.current = null;
 		};
 	}, [initMediaRecorder]);
 
