@@ -39,6 +39,21 @@ export default function InterviewPage({
 	} = useVoiceRecord();
 	useRequestPermission('microphone', initMediaRecorder, errorRecording);
 
+	const handleSubmit = () => {
+		stopRecording();
+
+		const SpeechRecognition =
+			window.SpeechRecognition || window.webkitSpeechRecognition;
+		const SpeechRecognitionEvent =
+			window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
+
+		const recognition = new SpeechRecognition();
+
+		recognition.lang = 'ko-KR';
+
+		const blob = new Blob(chunks);
+	};
+
 	return (
 		<div className={pageStyle}>
 			<div className={questionContainerStyle}>
@@ -63,7 +78,7 @@ export default function InterviewPage({
 					onStartRecord={startRecording}
 					onPause={pauseRecording}
 					onResume={resumeRecording}
-					onSubmit={stopRecording}
+					onSubmit={handleSubmit}
 				/>
 				<p className={buttonDescriptionStyle}>{DESCRIPTIONS[recordingState]}</p>
 			</div>
