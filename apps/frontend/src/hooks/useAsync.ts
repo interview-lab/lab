@@ -1,10 +1,10 @@
 import { useCallback, useRef, useState } from 'react';
 import catchError from '@/utils/catchError';
 
-interface UseAsyncReturn<T> {
+interface UseAsyncReturn {
 	isLoading: boolean;
 	error: Error | null;
-	execute: (asyncFn: () => Promise<T>) => Promise<T | undefined>;
+	execute: <T>(asyncFn: () => Promise<T>) => Promise<T | undefined>;
 	reset: () => void;
 }
 
@@ -12,12 +12,12 @@ interface UseAsyncReturn<T> {
  * 비동기 작업을 관리하는 훅
  * @returns 비동기 작업 상태와 실행 함수
  */
-export default function useAsync<T = void>(): UseAsyncReturn<T> {
+export default function useAsync(): UseAsyncReturn {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<Error | null>(null);
 	const isLoadingRef = useRef(false);
 
-	const execute = useCallback(async (asyncFn: () => Promise<T>) => {
+	const execute = useCallback(async <T>(asyncFn: () => Promise<T>) => {
 		if (isLoadingRef.current) return;
 
 		isLoadingRef.current = true;
