@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
+import catchError from '@/utils/catchError';
 
 interface UseAsyncReturn<T> {
 	isLoading: boolean;
-	error: string;
+	error: Error | null;
 	execute: (asyncFn: () => Promise<T>) => Promise<T | undefined>;
 	reset: () => void;
 }
@@ -13,7 +14,7 @@ interface UseAsyncReturn<T> {
  */
 export default function useAsync<T = void>(): UseAsyncReturn<T> {
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState('');
+	const [error, setError] = useState<Error | null>(null);
 	const isLoadingRef = useRef(false);
 
 	const execute = useCallback(async (asyncFn: () => Promise<T>) => {
@@ -21,25 +22,23 @@ export default function useAsync<T = void>(): UseAsyncReturn<T> {
 
 		isLoadingRef.current = true;
 		setIsLoading(true);
-		setError('');
-		try {
-			const result = await asyncFn();
-			return result;
-		} catch (e) {
-			if (e instanceof Error) {
-				setError(e.message);
-			} else {
-				setError('문제가 발생했습니다.');
-			}
+		setError(null);
+
+		const [error, result] = await catchError(asyncFn());
+
+		isLoadingRef.current = false;
+		setIsLoading(false);
+
+		if (error) {
+			setError(error);
 			return;
-		} finally {
-			isLoadingRef.current = false;
-			setIsLoading(false);
 		}
+
+		return result;
 	}, []);
 
 	const reset = useCallback(() => {
-		setError('');
+		setError(null);
 	}, []);
 
 	return { isLoading, error, execute, reset };

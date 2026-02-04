@@ -1,5 +1,6 @@
 import type { Molecule } from '@interview-lab/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import catchError from '@/utils/catchError';
 
 export type RecordingState = Parameters<
 	typeof Molecule.InterviewSubmitButton
@@ -42,29 +43,28 @@ export default function useVoiceRecord() {
 	};
 
 	const initMediaRecorder = useCallback(async () => {
-		try {
-			const stream = await navigator.mediaDevices.getUserMedia({
+		const [error, stream] = await catchError(
+			navigator.mediaDevices.getUserMedia({
 				audio: true,
-			});
+			}),
+		);
 
-			streamRef.current = stream;
-
-			const recorder = new MediaRecorder(stream);
-			recorder.ondataavailable = (event) => {
-				chunksRef.current.push(event.data);
-			};
-
-			mediaRecorderRef.current = recorder;
-
-			setRecordingState('idle');
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error
-					? error
-					: new Error('마이크에 액세스하는데 문제가 발생했습니다.');
-			setError(errorMessage);
+		if (error) {
+			setError(error);
 			setRecordingState('error');
+			return;
 		}
+
+		streamRef.current = stream;
+
+		const recorder = new MediaRecorder(stream);
+		recorder.ondataavailable = (event) => {
+			chunksRef.current.push(event.data);
+		};
+
+		mediaRecorderRef.current = recorder;
+
+		setRecordingState('idle');
 	}, []);
 
 	useEffect(() => {
