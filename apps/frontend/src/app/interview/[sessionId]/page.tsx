@@ -1,8 +1,10 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
+import useAsync from '@/hooks/useAsync';
 import useRequestPermission from '@/hooks/useCapturePermission';
 import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
+import { transcript } from '@/utils/transcript';
 import {
 	buttonContainerStyle,
 	buttonDescriptionStyle,
@@ -38,20 +40,18 @@ export default function InterviewPage({
 		initMediaRecorder,
 	} = useVoiceRecord();
 	useRequestPermission('microphone', initMediaRecorder, errorRecording);
+	const { isLoading, execute } = useAsync();
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		stopRecording();
 
-		const SpeechRecognition =
-			window.SpeechRecognition || window.webkitSpeechRecognition;
-		const SpeechRecognitionEvent =
-			window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
+		const result = await execute(async () => {
+			const blob = new Blob(chunks);
 
-		const recognition = new SpeechRecognition();
+			return transcript(new Float32Array(await blob.arrayBuffer()));
+		});
 
-		recognition.lang = 'ko-KR';
-
-		const blob = new Blob(chunks);
+		console.log(result);
 	};
 
 	return (
@@ -82,6 +82,7 @@ export default function InterviewPage({
 				/>
 				<p className={buttonDescriptionStyle}>{DESCRIPTIONS[recordingState]}</p>
 			</div>
+			{isLoading && <div>처리 중...</div>}
 		</div>
 	);
 }
