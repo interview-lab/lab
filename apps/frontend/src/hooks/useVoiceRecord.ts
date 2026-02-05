@@ -1,7 +1,6 @@
 import type { Molecule } from '@interview-lab/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import catchError from '@/utils/catchError';
-
 export type RecordingState = Parameters<
 	typeof Molecule.InterviewSubmitButton
 >[0]['state'];
@@ -32,10 +31,20 @@ export default function useVoiceRecord() {
 		mediaRecorderRef.current?.resume();
 	};
 
-	const stopRecording = () => {
-		setRecordingState('processing');
-		mediaRecorderRef.current?.stop();
-	};
+	const stopRecording = useCallback(() => {
+		return new Promise<Blob>((resolve) => {
+			const recorder = mediaRecorderRef.current;
+			if (!recorder) return;
+
+			recorder.onstop = () => {
+				const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+				resolve(blob);
+			};
+
+			setRecordingState('processing');
+			recorder.stop();
+		});
+	}, []);
 
 	const errorRecording = () => {
 		setRecordingState('error');
@@ -85,8 +94,6 @@ export default function useVoiceRecord() {
 
 	return {
 		stream: streamRef.current,
-		chunks: chunksRef.current,
-		error,
 		startRecording,
 		pauseRecording,
 		resumeRecording,

@@ -30,8 +30,6 @@ export default function InterviewPage({
 	const {
 		recordingState,
 		stream,
-		chunks,
-		error,
 		startRecording,
 		pauseRecording,
 		resumeRecording,
@@ -40,15 +38,19 @@ export default function InterviewPage({
 		initMediaRecorder,
 	} = useVoiceRecord();
 	useRequestPermission('microphone', initMediaRecorder, errorRecording);
-	const { isLoading, execute } = useAsync();
+	const { isLoading, execute, error: asyncError } = useAsync();
 
 	const handleSubmit = async () => {
-		stopRecording();
-
 		const result = await execute(async () => {
-			const blob = new Blob(chunks);
+			const blob = await stopRecording();
 
-			return transcript(new Float32Array(await blob.arrayBuffer()));
+			const audioContext = new AudioContext({ sampleRate: 16000 });
+			const audioBuffer = await audioContext.decodeAudioData(
+				await blob.arrayBuffer(),
+			);
+			const audioData = audioBuffer.getChannelData(0);
+
+			return transcript(audioData);
 		});
 
 		console.log(result);
