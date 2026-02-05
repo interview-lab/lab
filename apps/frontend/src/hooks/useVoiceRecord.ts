@@ -94,12 +94,13 @@ export default function useVoiceRecord() {
 
 	return {
 		stream: streamRef.current,
+		recordingState,
+		error,
 		startRecording,
 		pauseRecording,
 		resumeRecording,
 		stopRecording,
 		errorRecording,
 		initMediaRecorder,
-		recordingState,
 	} as const;
 }
