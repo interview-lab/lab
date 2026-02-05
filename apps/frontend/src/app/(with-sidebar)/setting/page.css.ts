@@ -95,3 +95,10 @@ export const buttonStyle = style({
 		backgroundColor: vars.color.grayLight,
 	},
 });
+
+export const linkedButtonStyle = style({
+	backgroundColor: vars.color.blue,
+	color: vars.color.white,
+	border: 'none',
+	pointerEvents: 'none',
+});
