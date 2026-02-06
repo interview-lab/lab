@@ -14,6 +14,8 @@ const MESSAGE = {
 
 	ERROR_OAUTH_REQUEST_INVALID: '유효하지 않거나 만료된 요청입니다.',
 	ERROR_OAUTH_ALREADY_LINKED: '이미 다른 계정에 연결된 OAuth 계정입니다.',
+	ERROR_OAUTH_ALREADY_LINKED_TO_USER:
+		'이미 이 제공자의 계정이 연결되어 있습니다.',
 	ERROR_OAUTH_NOT_LINKED: '연결된 OAuth 계정이 없습니다.',
 	ERROR_INITIAL_METHOD_UNLINK: '최초 가입 방법은 해제할 수 없습니다.',
 

@@ -3,3 +3,8 @@ export type JWT_TOKEN_Payload = {
 	email: string;
 	type: 'access' | 'refresh';
 };
+
+export type OAuthLinkIntentPayload = {
+	mode: 'link';
+	userId: number;
+};

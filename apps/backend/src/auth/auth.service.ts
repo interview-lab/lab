@@ -12,10 +12,15 @@ import {
 	JWT_ACCESS_TOKEN_EXPIRES_IN,
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
 	JWT_SECRET,
+	OAUTH_LINK_INTENT_COOKIE,
+	OAUTH_LINK_INTENT_EXPIRES_IN,
 } from '@/auth/consts/auth.const';
 import AUTH_MESSAGE from '@/auth/consts/message.const';
 import { RegistrationWithEmailAndPasswordDto } from '@/auth/dtos/authentication.dto';
-import { JWT_TOKEN_Payload } from '@/auth/types/jwt.type';
+import type {
+	JWT_TOKEN_Payload,
+	OAuthLinkIntentPayload,
+} from '@/auth/types/jwt.type';
 import type {
 	OAuthCallbackResult,
 	OAuthProfile,
@@ -367,13 +372,24 @@ export class AuthService {
 		provider: AuthProvider,
 		providerId: string,
 	): Promise<void> {
-		// 이미 연동된 계정인지 확인
+		// 이미 다른 사용자에게 연동된 계정인지 확인
 		const existing = await this.usersService.getUserByOAuthId(
 			provider,
 			providerId,
 		);
 		if (existing) {
 			throw new BadRequestException(AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED);
+		}
+
+		// 현재 사용자가 이미 해당 제공자를 연동했는지 확인
+		const user = await this.usersService.getUserById(userId);
+		const alreadyLinked = user?.registrationTypes.some(
+			(rt) => rt.type === provider,
+		);
+		if (alreadyLinked) {
+			throw new BadRequestException(
+				AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED_TO_USER,
+			);
 		}
 
 		await this.usersService.linkOAuthAccount(userId, provider, providerId);
@@ -397,6 +413,60 @@ export class AuthService {
 			httpOnly: isRefreshToken,
 			sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
 			maxAge: maxAgeInSeconds * MILLI_SECOND,
+		});
+	}
+
+	/**
+	 * OAuth 연동 의도를 담은 쿠키를 설정합니다.
+	 *
+	 * @param response - 응답 객체
+	 * @param userId - 연동을 요청한 사용자 ID
+	 */
+	setOAuthLinkIntentCookie(response: Response, userId: number) {
+		const payload: OAuthLinkIntentPayload = { mode: 'link', userId };
+		const token = this.jwtService.sign(payload, {
+			secret: JWT_SECRET,
+			expiresIn: OAUTH_LINK_INTENT_EXPIRES_IN,
+		});
+
+		response.cookie(OAUTH_LINK_INTENT_COOKIE, token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'lax',
+			path: '/auth',
+			maxAge: OAUTH_LINK_INTENT_EXPIRES_IN * MILLI_SECOND,
+		});
+	}
+
+	/**
+	 * OAuth 연동 의도 쿠키를 검증합니다.
+	 *
+	 * @param token - 쿠키의 JWT 토큰
+	 * @returns 검증된 payload 또는 null (검증 실패 시)
+	 */
+	verifyOAuthLinkIntent(token: string): OAuthLinkIntentPayload | null {
+		try {
+			const payload = this.jwtService.verify<OAuthLinkIntentPayload>(token, {
+				secret: JWT_SECRET,
+			});
+			if (payload.mode !== 'link') return null;
+			return payload;
+		} catch {
+			return null;
+		}
+	}
+
+	/**
+	 * OAuth 연동 의도 쿠키를 삭제합니다.
+	 *
+	 * @param response - 응답 객체
+	 */
+	clearOAuthLinkIntentCookie(response: Response) {
+		response.clearCookie(OAUTH_LINK_INTENT_COOKIE, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'lax',
+			path: '/auth',
 		});
 	}
 }
