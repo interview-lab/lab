@@ -32,9 +32,12 @@ export default function useVoiceRecord() {
 	};
 
 	const stopRecording = useCallback(() => {
-		return new Promise<Blob>((resolve) => {
+		return new Promise<Blob>((resolve, reject) => {
 			const recorder = mediaRecorderRef.current;
-			if (!recorder) return;
+			if (!recorder) {
+				reject(new Error('MediaRecorder가 초기화되지 않았습니다.'));
+				return;
+			}
 
 			recorder.onstop = () => {
 				const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
