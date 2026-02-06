@@ -1,13 +1,15 @@
+import { AuthProvider } from '@/generated/prisma/enums';
+
 /**
  * OAuth 제공자 타입
  */
-export type OAuthProvider = 'google' | 'github';
+export type OAuthProvider = AuthProvider;
 
 /**
  * OAuth 프로필 정보
  */
 export interface OAuthProfile {
-	provider: OAuthProvider;
+	provider: Exclude<OAuthProvider, 'EMAIL'>;
 	providerId: string;
 	email?: string;
 	name?: string;

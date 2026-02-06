@@ -1,11 +1,13 @@
 export { default as AnswerActiveBar } from './AnswerActiveBar';
 export { default as DashboardCard } from './DashboardCard';
-export { default as Header, navLinkStyle } from './Header';
+export { default as Header } from './Header';
 export { default as InputPassword } from './InputPassword';
 export { default as InputWithValidation } from './InputWithValidation';
 export { default as InterviewAnswerResultCard } from './InterviewAnswerResultCard';
 export { default as InterviewScoreCard } from './InterviewScoreCard';
+export { default as InterviewSubmitButton } from './InterviewSubmitButton';
+export { default as MessageRecording } from './MessageRecording';
 export { default as SelectSubjectCard } from './SelectSubjectCard';
-export type { NavItem } from './SideNavbar';
+export { default as SubjectBadge } from './SubjectBadge';
 export { default as SideNavbar } from './SideNavbar';
 export { default as Toggle } from './Toggle';

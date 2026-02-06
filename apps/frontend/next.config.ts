@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
 	experimental: {
 		optimizePackageImports: ['@interview-lab/ui'],
 	},
+	webpack: (config) => {
+		config.resolve.alias = {
+			...config.resolve.alias,
+			sharp$: false,
+			'onnxruntime-node$': false,
+		};
+		return config;
+	},
 };
 
 export default withVanillaExtract(nextConfig);

@@ -143,6 +143,10 @@ function reducer(state: FormState, action: Action): FormState {
 	return state;
 }
 
+/**
+ * 회원가입 폼 상태를 관리하는 훅
+ * @returns 폼 상태와 디스패치 함수
+ */
 export default function useSignupForm() {
 	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 

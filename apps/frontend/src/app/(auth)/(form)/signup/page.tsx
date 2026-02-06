@@ -49,8 +49,6 @@ export default function SignupPage() {
 		e.preventDefault();
 
 		await execute(async () => {
-			updateTime(DEFAULT_PENDING_TIME);
-
 			const { data, error } = await client.POST('/email/send-verification', {
 				body: { email: state.email.value },
 			});

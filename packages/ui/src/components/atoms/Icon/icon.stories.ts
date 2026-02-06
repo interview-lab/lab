@@ -6,7 +6,7 @@ import Icon from '.';
 const meta = {
 	title: 'Design System/Atom/Icon',
 	component: Icon,
-	args: { color: 'black', icon: 'IconCheck' },
+	args: { color: 'black', icon: 'IconCheck', width: 24, height: 24 },
 	argTypes: {
 		icon: {
 			control: 'select',

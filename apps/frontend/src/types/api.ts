@@ -4,523 +4,567 @@
  */
 
 export interface paths {
-    "/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 전체 사용자 목록 조회 API
-         * @description 전체 사용자 목록을 조회합니다.
-         */
-        get: operations["UsersController_getUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/users/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 내 프로필 조회 API
-         * @description 로그인한 사용자의 프로필 정보를 조회합니다.
-         */
-        get: operations["UsersController_getUserProfile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/users/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 특정 사용자 조회 API
-         * @description 특정 사용자의 정보를 조회합니다.
-         */
-        get: operations["UsersController_getUserInfo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/login/email": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 이메일 로그인 API
-         * @description 이메일과 비밀번호를 사용하여 로그인합니다.
-         */
-        post: operations["AuthController_loginEmail"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/register/email": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 이메일 회원가입 API
-         * @description 이메일과 비밀번호를 사용하여 회원가입합니다.
-         */
-        post: operations["AuthController_registerEmail"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/google": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Google OAuth 로그인 API
-         * @description Google OAuth 로그인을 시작합니다.
-         */
-        get: operations["AuthController_googleLogin"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/google/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Google OAuth 콜백 API
-         * @description Google OAuth 콜백을 처리합니다.
-         */
-        get: operations["AuthController_googleCallback"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/oauth/complete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * OAuth 가입 완료 API
-         * @description OAuth 가입을 완료합니다.
-         */
-        post: operations["AuthController_completeOAuthRegistration"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/oauth/unlink/google": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * Google 계정 연동 해제 API
-         * @description Google 계정 연동을 해제합니다.
-         */
-        delete: operations["AuthController_unlinkGoogleAccount"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/email/send-verification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 인증 이메일 발송 API
-         * @description 인증 이메일을 발송합니다.
-         */
-        post: operations["EmailController_sendVerification"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+	'/users': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * 전체 사용자 목록 조회 API
+		 * @description 전체 사용자 목록을 조회합니다.
+		 */
+		get: operations['UsersController_getUsers'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/users/profile': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * 내 프로필 조회 API
+		 * @description 로그인한 사용자의 프로필 정보를 조회합니다.
+		 */
+		get: operations['UsersController_getUserProfile'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/users/{id}': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * 특정 사용자 조회 API
+		 * @description 특정 사용자의 정보를 조회합니다.
+		 */
+		get: operations['UsersController_getUserInfo'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/login/email': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/**
+		 * 이메일 로그인 API
+		 * @description 이메일과 비밀번호를 사용하여 로그인합니다.
+		 */
+		post: operations['AuthController_loginEmail'];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/register/email': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/**
+		 * 이메일 회원가입 API
+		 * @description 이메일과 비밀번호를 사용하여 회원가입합니다.
+		 */
+		post: operations['AuthController_registerEmail'];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/google': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Google OAuth 로그인 API
+		 * @description Google OAuth 로그인을 시작합니다.
+		 */
+		get: operations['AuthController_googleLogin'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/google/callback': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Google OAuth 콜백 API
+		 * @description Google OAuth 콜백을 처리합니다.
+		 */
+		get: operations['AuthController_googleCallback'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/oauth/complete': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/**
+		 * OAuth 가입 완료 API
+		 * @description OAuth 가입을 완료합니다.
+		 */
+		post: operations['AuthController_completeOAuthRegistration'];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/google/link': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Google 계정 연동 API
+		 * @description 인증된 사용자의 Google 계정 연동을 시작합니다.
+		 */
+		get: operations['AuthController_googleLink'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/oauth/unlink/{provider}': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		post?: never;
+		/**
+		 * 소셜 계정 연동 해제 API
+		 * @description 소셜 계정 연동을 해제합니다.
+		 */
+		delete: operations['AuthController_unlinkOAuthAccount'];
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/email/send-verification': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/**
+		 * 인증 이메일 발송 API
+		 * @description 인증 이메일을 발송합니다.
+		 */
+		post: operations['EmailController_sendVerification'];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** @description 사용자 프로필 조회에 사용되는 DTO */
-        ProfileDto: {
-            /**
-             * @description 이메일 주소
-             * @example user@example.com
-             */
-            email: string;
-            /**
-             * @description 사용자 이름
-             * @example 홍길동
-             */
-            username: string;
-            /**
-             * @description 프로필 이미지 URL
-             * @example https://example.com/profile.jpg
-             */
-            profileImage: Record<string, never> | null;
-            /**
-             * @description 사용자 레벨
-             * @example 1
-             */
-            level: number;
-            /**
-             * @description Google OAuth ID
-             * @example null
-             */
-            googleId: Record<string, never> | null;
-            /**
-             * @description GitHub OAuth ID
-             * @example null
-             */
-            githubId: Record<string, never> | null;
-        };
-        /** @description 이메일과 비밀번호로 로그인시 사용되는 DTO */
-        EmailAndPasswordDto: {
-            /**
-             * @description 이메일 주소
-             * @example test@example.com
-             */
-            email: string;
-            /**
-             * @description 대문자, 소문자, 숫자, 특수문자를 포함한 8자 이상의 비밀번호
-             * @example test1234!
-             */
-            password: string;
-        };
-        /** @description 이메일과 비밀번호로 회원가입시 사용되는 DTO */
-        RegistrationWithEmailAndPasswordDto: {
-            /**
-             * @description 이메일 주소
-             * @example test@example.com
-             */
-            email: string;
-            /**
-             * @description 대문자, 소문자, 숫자, 특수문자를 포함한 8자 이상의 비밀번호
-             * @example test1234!
-             */
-            password: string;
-            /**
-             * @description 이름
-             * @example test
-             */
-            username: string;
-            /**
-             * @description 이메일 인증 코드
-             * @example 123456
-             */
-            verificationCode: string;
-        };
-        /** @description OAuth 가입 완료 DTO */
-        OAuthCompleteDto: {
-            /**
-             * @description 사용자명
-             * @example username
-             */
-            username: string;
-            /**
-             * @description 이메일 주소
-             * @example test@example.com
-             */
-            email: string;
-            /**
-             * @description 이메일 인증 코드
-             * @example 123456
-             */
-            verificationCode: string;
-        };
-        /** @description 인증 이메일 발송 DTO */
-        SendVerificationDto: {
-            /**
-             * @description 이메일 주소
-             * @example test@example.com
-             */
-            email: string;
-        };
-        /** @description 인증 이메일 발송 응답 DTO */
-        VerificationResponseDto: {
-            /**
-             * @description 응답 메시지
-             * @example 인증 이메일이 발송되었습니다.
-             */
-            message: string;
-            /**
-             * @description 남은 시간 (초)
-             * @example 300
-             */
-            remainingTime: number;
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+	schemas: {
+		RegistrationTypeDto: {
+			/**
+			 * @description 등록 타입
+			 * @example EMAIL
+			 * @enum {string}
+			 */
+			type: 'EMAIL' | 'GOOGLE' | 'GITHUB';
+			/**
+			 * @description 기본 가입 수단 여부
+			 * @example true
+			 */
+			isDefault: boolean;
+		};
+		/** @description 사용자 프로필 조회에 사용되는 DTO */
+		ProfileDto: {
+			/**
+			 * @description 이메일 주소
+			 * @example user@example.com
+			 */
+			email: string;
+			/**
+			 * @description 사용자 이름
+			 * @example 홍길동
+			 */
+			username: string;
+			/**
+			 * @description 프로필 이미지 URL
+			 * @example https://example.com/profile.jpg
+			 */
+			profileImage: Record<string, never> | null;
+			/**
+			 * @description 사용자 레벨
+			 * @example 1
+			 */
+			level: number;
+			/** @description 등록된 인증 방법 목록 */
+			registrationTypes: components['schemas']['RegistrationTypeDto'][];
+		};
+		/** @description 이메일과 비밀번호로 로그인시 사용되는 DTO */
+		EmailAndPasswordDto: {
+			/**
+			 * @description 이메일 주소
+			 * @example test@example.com
+			 */
+			email: string;
+			/**
+			 * @description 대문자, 소문자, 숫자, 특수문자를 포함한 8자 이상의 비밀번호
+			 * @example test1234!
+			 */
+			password: string;
+		};
+		/** @description 이메일과 비밀번호로 회원가입시 사용되는 DTO */
+		RegistrationWithEmailAndPasswordDto: {
+			/**
+			 * @description 이메일 주소
+			 * @example test@example.com
+			 */
+			email: string;
+			/**
+			 * @description 대문자, 소문자, 숫자, 특수문자를 포함한 8자 이상의 비밀번호
+			 * @example test1234!
+			 */
+			password: string;
+			/**
+			 * @description 이름
+			 * @example test
+			 */
+			username: string;
+			/**
+			 * @description 이메일 인증 코드
+			 * @example 123456
+			 */
+			verificationCode: string;
+		};
+		/** @description OAuth 가입 완료 DTO */
+		OAuthCompleteDto: {
+			/**
+			 * @description 사용자명
+			 * @example username
+			 */
+			username: string;
+			/**
+			 * @description 이메일 주소
+			 * @example test@example.com
+			 */
+			email: string;
+			/**
+			 * @description 이메일 인증 코드
+			 * @example 123456
+			 */
+			verificationCode: string;
+		};
+		/** @description 인증 이메일 발송 DTO */
+		SendVerificationDto: {
+			/**
+			 * @description 이메일 주소
+			 * @example test@example.com
+			 */
+			email: string;
+		};
+		/** @description 인증 이메일 발송 응답 DTO */
+		VerificationResponseDto: {
+			/**
+			 * @description 응답 메시지
+			 * @example 인증 이메일이 발송되었습니다.
+			 */
+			message: string;
+			/**
+			 * @description 남은 시간 (초)
+			 * @example 300
+			 */
+			remainingTime: number;
+		};
+	};
+	responses: never;
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    UsersController_getUsers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProfileDto"][];
-                };
-            };
-        };
-    };
-    UsersController_getUserProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProfileDto"];
-                };
-            };
-        };
-    };
-    UsersController_getUserInfo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProfileDto"];
-                };
-            };
-        };
-    };
-    AuthController_loginEmail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EmailAndPasswordDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_registerEmail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegistrationWithEmailAndPasswordDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_googleLogin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_googleCallback: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_completeOAuthRegistration: {
-        parameters: {
-            query?: never;
-            header: {
-                "x-temp-token": string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OAuthCompleteDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_unlinkGoogleAccount: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EmailController_sendVerification: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SendVerificationDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VerificationResponseDto"];
-                };
-            };
-        };
-    };
+	UsersController_getUsers: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['ProfileDto'][];
+				};
+			};
+		};
+	};
+	UsersController_getUserProfile: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['ProfileDto'];
+				};
+			};
+		};
+	};
+	UsersController_getUserInfo: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path: {
+				id: number;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['ProfileDto'];
+				};
+			};
+		};
+	};
+	AuthController_loginEmail: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				'application/json': components['schemas']['EmailAndPasswordDto'];
+			};
+		};
+		responses: {
+			201: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_registerEmail: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				'application/json': components['schemas']['RegistrationWithEmailAndPasswordDto'];
+			};
+		};
+		responses: {
+			201: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_googleLogin: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_googleCallback: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_completeOAuthRegistration: {
+		parameters: {
+			query?: never;
+			header: {
+				'x-temp-token': string;
+			};
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				'application/json': components['schemas']['OAuthCompleteDto'];
+			};
+		};
+		responses: {
+			201: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_googleLink: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_unlinkOAuthAccount: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path: {
+				provider: 'GOOGLE' | 'GITHUB';
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	EmailController_sendVerification: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				'application/json': components['schemas']['SendVerificationDto'];
+			};
+		};
+		responses: {
+			201: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['VerificationResponseDto'];
+				};
+			};
+		};
+	};
 }

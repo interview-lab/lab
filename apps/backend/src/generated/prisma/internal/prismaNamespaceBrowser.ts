@@ -61,6 +61,7 @@ export const ModelName = {
 	Question: 'Question',
 	Session: 'Session',
 	User: 'User',
+	RegistrationType: 'RegistrationType',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -164,14 +165,22 @@ export const UserScalarFieldEnum = {
 	password: 'password',
 	profileImage: 'profileImage',
 	level: 'level',
-	googleId: 'googleId',
-	githubId: 'githubId',
 	createdAt: 'createdAt',
 	updatedAt: 'updatedAt',
 } as const;
 
 export type UserScalarFieldEnum =
 	(typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+
+export const RegistrationTypeScalarFieldEnum = {
+	userId: 'userId',
+	type: 'type',
+	value: 'value',
+	isDefault: 'isDefault',
+} as const;
+
+export type RegistrationTypeScalarFieldEnum =
+	(typeof RegistrationTypeScalarFieldEnum)[keyof typeof RegistrationTypeScalarFieldEnum];
 
 export const SortOrder = {
 	asc: 'asc',

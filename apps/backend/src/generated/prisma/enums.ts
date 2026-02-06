@@ -35,3 +35,11 @@ export const SessionStatus = {
 } as const;
 
 export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus];
+
+export const AuthProvider = {
+	EMAIL: 'EMAIL',
+	GOOGLE: 'GOOGLE',
+	GITHUB: 'GITHUB',
+} as const;
+
+export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider];
