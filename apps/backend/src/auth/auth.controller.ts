@@ -3,14 +3,16 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Param,
 	Post,
 	Req,
 	Res,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { Response } from 'express';
+import { ApiHeader, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import type { Request, Response } from 'express';
 import { AuthService } from '@/auth/auth.service';
+import { OAUTH_LINK_INTENT_COOKIE } from '@/auth/consts/auth.const';
 import {
 	EmailAndPasswordDto,
 	RegistrationWithEmailAndPasswordDto,
@@ -19,7 +21,9 @@ import { OAuthCompleteDto } from '@/auth/dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from '@/auth/guards/google-oauth.guard';
 import { AccessTokenGuard, TempTokenGuard } from '@/auth/guards/token.guard';
 import { EmailService } from '@/email/email.service';
+import { AuthProvider } from '@/generated/prisma/enums';
 import { UsersService } from '@/users/users.service';
+import { OAuthProfile } from './types/oauth.type';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -87,7 +91,8 @@ export class AuthController {
 		description: 'Google OAuth 콜백을 처리합니다.',
 	})
 	async googleCallback(
-		@Req() req: {
+		@Req()
+		req: Request & {
 			user: {
 				googleId: string;
 				email?: string;
@@ -97,8 +102,38 @@ export class AuthController {
 		},
 		@Res() response: Response,
 	) {
-		const profile = {
-			provider: 'google' as const,
+		const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+		// 연동 요청 쿠키 확인
+		const linkIntentToken = req.cookies?.[OAUTH_LINK_INTENT_COOKIE] as
+			| string
+			| undefined;
+
+		if (linkIntentToken) {
+			// 항상 쿠키 먼저 삭제 (replay 방지)
+			this.authService.clearOAuthLinkIntentCookie(response);
+
+			const intent = this.authService.verifyOAuthLinkIntent(linkIntentToken);
+
+			if (!intent) {
+				return response.redirect(`${frontendUrl}/setting?error=link_expired`);
+			}
+
+			try {
+				await this.authService.linkOAuthAccount(
+					intent.userId,
+					AuthProvider.GOOGLE,
+					req.user.googleId,
+				);
+				return response.redirect(`${frontendUrl}/setting?linked=google`);
+			} catch {
+				return response.redirect(`${frontendUrl}/setting?error=already_linked`);
+			}
+		}
+
+		// 기존 로그인/회원가입 플로우
+		const profile: OAuthProfile = {
+			provider: AuthProvider.GOOGLE,
 			providerId: req.user.googleId,
 			email: req.user.email,
 			name: req.user.name,
@@ -106,9 +141,6 @@ export class AuthController {
 		};
 
 		const result = await this.authService.handleOAuthCallback(profile);
-
-		// 프론트엔드로 리다이렉트
-		const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 		if (result.isExistingUser) {
 			// 기존 사용자: 토큰과 함께 리다이렉트
@@ -162,16 +194,46 @@ export class AuthController {
 	}
 
 	/**
-	 * Google 계정 연동을 해제합니다.
+	 * 소셜 계정 연동을 시작합니다.
+	 * 인증된 사용자만 사용할 수 있으며, 연동 의도를 쿠키에 저장한 후 소셜 OAuth 플로우를 시작합니다.
 	 */
-	@Delete('oauth/unlink/google')
+	@Get('oauth/link/:provider')
 	@UseGuards(AccessTokenGuard)
 	@ApiOperation({
-		summary: 'Google 계정 연동 해제 API',
-		description: 'Google 계정 연동을 해제합니다.',
+		summary: '소셜 계정 연동 API',
+		description: '인증된 사용자의 소셜 계정 연동을 시작합니다.',
 	})
-	async unlinkGoogleAccount(@Req() req: { user: { id: number } }) {
-		await this.usersService.unlinkOAuthAccount(req.user.id, 'google');
-		return { message: 'Google 계정 연동이 해제되었습니다.' };
+	@ApiParam({
+		name: 'provider',
+		enum: ['GOOGLE', 'GITHUB'],
+	})
+	LinkOAuth(
+		@Req() req: { user: { id: number } },
+		@Res() response: Response,
+		@Param('provider') provider: Exclude<AuthProvider, 'EMAIL'>,
+	) {
+		this.authService.setOAuthLinkIntentCookie(response, req.user.id);
+		return response.redirect(`/auth/${provider.toLowerCase()}`);
+	}
+
+	/**
+	 * 소셜 계정 연동을 해제합니다.
+	 */
+	@Delete('oauth/unlink/:provider')
+	@UseGuards(AccessTokenGuard)
+	@ApiOperation({
+		summary: '소셜 계정 연동 해제 API',
+		description: '소셜 계정 연동을 해제합니다.',
+	})
+	@ApiParam({
+		name: 'provider',
+		enum: ['GOOGLE', 'GITHUB'],
+	})
+	async unlinkOAuthAccount(
+		@Req() req: { user: { id: number } },
+		@Param('provider') provider: Exclude<AuthProvider, 'EMAIL'>,
+	) {
+		await this.usersService.unlinkOAuthAccount(req.user.id, provider);
+		return { message: `${provider} 계정 연동이 해제되었습니다.` };
 	}
 }

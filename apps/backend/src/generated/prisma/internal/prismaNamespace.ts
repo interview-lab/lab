@@ -422,6 +422,7 @@ export const ModelName = {
 	Question: 'Question',
 	Session: 'Session',
 	User: 'User',
+	RegistrationType: 'RegistrationType',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -450,7 +451,8 @@ export type TypeMap<
 			| 'oAuthPendingRegistration'
 			| 'question'
 			| 'session'
-			| 'user';
+			| 'user'
+			| 'registrationType';
 		txIsolationLevel: TransactionIsolationLevel;
 	};
 	model: {
@@ -986,6 +988,82 @@ export type TypeMap<
 				};
 			};
 		};
+		RegistrationType: {
+			payload: Prisma.$RegistrationTypePayload<ExtArgs>;
+			fields: Prisma.RegistrationTypeFieldRefs;
+			operations: {
+				findUnique: {
+					args: Prisma.RegistrationTypeFindUniqueArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload> | null;
+				};
+				findUniqueOrThrow: {
+					args: Prisma.RegistrationTypeFindUniqueOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>;
+				};
+				findFirst: {
+					args: Prisma.RegistrationTypeFindFirstArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload> | null;
+				};
+				findFirstOrThrow: {
+					args: Prisma.RegistrationTypeFindFirstOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>;
+				};
+				findMany: {
+					args: Prisma.RegistrationTypeFindManyArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>[];
+				};
+				create: {
+					args: Prisma.RegistrationTypeCreateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>;
+				};
+				createMany: {
+					args: Prisma.RegistrationTypeCreateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				createManyAndReturn: {
+					args: Prisma.RegistrationTypeCreateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>[];
+				};
+				delete: {
+					args: Prisma.RegistrationTypeDeleteArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>;
+				};
+				update: {
+					args: Prisma.RegistrationTypeUpdateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>;
+				};
+				deleteMany: {
+					args: Prisma.RegistrationTypeDeleteManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateMany: {
+					args: Prisma.RegistrationTypeUpdateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateManyAndReturn: {
+					args: Prisma.RegistrationTypeUpdateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>[];
+				};
+				upsert: {
+					args: Prisma.RegistrationTypeUpsertArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationTypePayload>;
+				};
+				aggregate: {
+					args: Prisma.RegistrationTypeAggregateArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AggregateRegistrationType>;
+				};
+				groupBy: {
+					args: Prisma.RegistrationTypeGroupByArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.RegistrationTypeGroupByOutputType>[];
+				};
+				count: {
+					args: Prisma.RegistrationTypeCountArgs<ExtArgs>;
+					result:
+						| runtime.Types.Utils.Optional<Prisma.RegistrationTypeCountAggregateOutputType>
+						| number;
+				};
+			};
+		};
 	};
 } & {
 	other: {
@@ -1110,14 +1188,22 @@ export const UserScalarFieldEnum = {
 	password: 'password',
 	profileImage: 'profileImage',
 	level: 'level',
-	googleId: 'googleId',
-	githubId: 'githubId',
 	createdAt: 'createdAt',
 	updatedAt: 'updatedAt',
 } as const;
 
 export type UserScalarFieldEnum =
 	(typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+
+export const RegistrationTypeScalarFieldEnum = {
+	userId: 'userId',
+	type: 'type',
+	value: 'value',
+	isDefault: 'isDefault',
+} as const;
+
+export type RegistrationTypeScalarFieldEnum =
+	(typeof RegistrationTypeScalarFieldEnum)[keyof typeof RegistrationTypeScalarFieldEnum];
 
 export const SortOrder = {
 	asc: 'asc',
@@ -1247,6 +1333,22 @@ export type ListEnumSessionStatusFieldRefInput<$PrismaModel> =
 	FieldRefInputType<$PrismaModel, 'SessionStatus[]'>;
 
 /**
+ * Reference to a field of type 'AuthProvider'
+ */
+export type EnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<
+	$PrismaModel,
+	'AuthProvider'
+>;
+
+/**
+ * Reference to a field of type 'AuthProvider[]'
+ */
+export type ListEnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<
+	$PrismaModel,
+	'AuthProvider[]'
+>;
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -1372,6 +1474,7 @@ export type GlobalOmitConfig = {
 	question?: Prisma.QuestionOmit;
 	session?: Prisma.SessionOmit;
 	user?: Prisma.UserOmit;
+	registrationType?: Prisma.RegistrationTypeOmit;
 };
 
 /* Types for Logging */

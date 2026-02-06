@@ -1,6 +1,33 @@
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Expose, Type as TransformType } from 'class-transformer';
+import {
+	IsArray,
+	IsBoolean,
+	IsEmail,
+	IsNumber,
+	IsOptional,
+	IsString,
+	ValidateNested,
+} from 'class-validator';
+
+export class RegistrationTypeDto {
+	@Expose()
+	@ApiProperty({
+		description: '등록 타입',
+		example: 'EMAIL',
+		enum: ['EMAIL', 'GOOGLE', 'GITHUB'],
+	})
+	@IsString()
+	type!: string;
+
+	@Expose()
+	@ApiProperty({
+		description: '기본 가입 수단 여부',
+		example: true,
+	})
+	@IsBoolean()
+	isDefault!: boolean;
+}
 
 @ApiSchema({
 	name: 'ProfileDto',
@@ -34,21 +61,11 @@ export class ProfileDto {
 
 	@Expose()
 	@ApiProperty({
-		description: 'Google OAuth ID',
-		nullable: true,
-		example: null,
+		description: '등록된 인증 방법 목록',
+		type: [RegistrationTypeDto],
 	})
-	@IsString()
-	@IsOptional()
-	googleId!: string | null;
-
-	@Expose()
-	@ApiProperty({
-		description: 'GitHub OAuth ID',
-		nullable: true,
-		example: null,
-	})
-	@IsString()
-	@IsOptional()
-	githubId!: string | null;
+	@IsArray()
+	@ValidateNested({ each: true })
+	@TransformType(() => RegistrationTypeDto)
+	registrationTypes!: RegistrationTypeDto[];
 }

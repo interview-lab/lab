@@ -164,7 +164,27 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/auth/oauth/unlink/google': {
+	'/auth/google/link': {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Google 계정 연동 API
+		 * @description 인증된 사용자의 Google 계정 연동을 시작합니다.
+		 */
+		get: operations['AuthController_googleLink'];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	'/auth/oauth/unlink/{provider}': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -175,10 +195,10 @@ export interface paths {
 		put?: never;
 		post?: never;
 		/**
-		 * Google 계정 연동 해제 API
-		 * @description Google 계정 연동을 해제합니다.
+		 * 소셜 계정 연동 해제 API
+		 * @description 소셜 계정 연동을 해제합니다.
 		 */
-		delete: operations['AuthController_unlinkGoogleAccount'];
+		delete: operations['AuthController_unlinkOAuthAccount'];
 		options?: never;
 		head?: never;
 		patch?: never;
@@ -208,6 +228,44 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
 	schemas: {
+		RegistrationTypeDto: {
+			/**
+			 * @description 등록 타입
+			 * @example EMAIL
+			 * @enum {string}
+			 */
+			type: 'EMAIL' | 'GOOGLE' | 'GITHUB';
+			/**
+			 * @description 기본 가입 수단 여부
+			 * @example true
+			 */
+			isDefault: boolean;
+		};
+		/** @description 사용자 프로필 조회에 사용되는 DTO */
+		ProfileDto: {
+			/**
+			 * @description 이메일 주소
+			 * @example user@example.com
+			 */
+			email: string;
+			/**
+			 * @description 사용자 이름
+			 * @example 홍길동
+			 */
+			username: string;
+			/**
+			 * @description 프로필 이미지 URL
+			 * @example https://example.com/profile.jpg
+			 */
+			profileImage: Record<string, never> | null;
+			/**
+			 * @description 사용자 레벨
+			 * @example 1
+			 */
+			level: number;
+			/** @description 등록된 인증 방법 목록 */
+			registrationTypes: components['schemas']['RegistrationTypeDto'][];
+		};
 		/** @description 이메일과 비밀번호로 로그인시 사용되는 DTO */
 		EmailAndPasswordDto: {
 			/**
@@ -305,7 +363,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					'application/json': components['schemas']['ProfileDto'][];
+				};
 			};
 		};
 	};
@@ -322,7 +382,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					'application/json': components['schemas']['ProfileDto'];
+				};
 			};
 		};
 	};
@@ -341,7 +403,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					'application/json': components['schemas']['ProfileDto'];
+				};
 			};
 		};
 	};
@@ -444,11 +508,30 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_unlinkGoogleAccount: {
+	AuthController_googleLink: {
 		parameters: {
 			query?: never;
 			header?: never;
 			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+		};
+	};
+	AuthController_unlinkOAuthAccount: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path: {
+				provider: 'GOOGLE' | 'GITHUB';
+			};
 			cookie?: never;
 		};
 		requestBody?: never;
