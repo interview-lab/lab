@@ -3,6 +3,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Param,
 	Post,
 	Req,
 	Res,
@@ -19,7 +20,9 @@ import { OAuthCompleteDto } from '@/auth/dtos/oauth-complete.dto';
 import { GoogleOAuthGuard } from '@/auth/guards/google-oauth.guard';
 import { AccessTokenGuard, TempTokenGuard } from '@/auth/guards/token.guard';
 import { EmailService } from '@/email/email.service';
+import { AuthProvider } from '@/generated/prisma/enums';
 import { UsersService } from '@/users/users.service';
+import { OAuthProfile } from './types/oauth.type';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -97,8 +100,8 @@ export class AuthController {
 		},
 		@Res() response: Response,
 	) {
-		const profile = {
-			provider: 'google' as const,
+		const profile: OAuthProfile = {
+			provider: AuthProvider.GOOGLE,
 			providerId: req.user.googleId,
 			email: req.user.email,
 			name: req.user.name,
@@ -162,16 +165,19 @@ export class AuthController {
 	}
 
 	/**
-	 * Google 계정 연동을 해제합니다.
+	 * 소셜 계정 연동을 해제합니다.
 	 */
-	@Delete('oauth/unlink/google')
+	@Delete('oauth/unlink/:provider')
 	@UseGuards(AccessTokenGuard)
 	@ApiOperation({
-		summary: 'Google 계정 연동 해제 API',
-		description: 'Google 계정 연동을 해제합니다.',
+		summary: '소셜 계정 연동 해제 API',
+		description: '소셜 계정 연동을 해제합니다.',
 	})
-	async unlinkGoogleAccount(@Req() req: { user: { id: number } }) {
-		await this.usersService.unlinkOAuthAccount(req.user.id, 'google');
-		return { message: 'Google 계정 연동이 해제되었습니다.' };
+	async unlinkOAuthAccount(
+		@Req() req: { user: { id: number } },
+		@Param('provider') provider: Exclude<AuthProvider, 'EMAIL'>,
+	) {
+		await this.usersService.unlinkOAuthAccount(req.user.id, provider);
+		return { message: `${provider} 계정 연동이 해제되었습니다.` };
 	}
 }

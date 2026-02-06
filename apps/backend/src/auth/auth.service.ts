@@ -23,6 +23,7 @@ import type {
 import { MILLI_SECOND, MINUTE } from '@/common/consts/unit';
 import EMAIL_MESSAGE from '@/email/consts/message.const';
 import { EmailService } from '@/email/email.service';
+import { AuthProvider } from '@/generated/prisma/client';
 import { UserModel } from '@/generated/prisma/models';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UsersService } from '@/users/users.service';
@@ -333,13 +334,13 @@ export class AuthService {
 			profileImage: pending.profileImage,
 		};
 
-		if (pending.provider === 'google') {
-			userData.googleId = pending.providerId;
-		} else if (pending.provider === 'github') {
-			userData.githubId = pending.providerId;
-		}
+		const registrationType =
+			pending.provider === 'google' ? AuthProvider.GOOGLE : AuthProvider.GITHUB;
 
-		const newUser = await this.usersService.createUser(userData);
+		const newUser = await this.usersService.createUser(userData, {
+			type: registrationType,
+			value: pending.providerId,
+		});
 
 		// 3. pending 레코드 삭제
 		await this.prisma.oAuthPendingRegistration.delete({
@@ -363,7 +364,7 @@ export class AuthService {
 	 */
 	async linkOAuthAccount(
 		userId: number,
-		provider: 'google' | 'github',
+		provider: AuthProvider,
 		providerId: string,
 	): Promise<void> {
 		// 이미 연동된 계정인지 확인

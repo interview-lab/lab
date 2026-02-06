@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma, User } from '@/generated/prisma/client';
+import AUTH_MESSAGE from '@/auth/consts/message.const';
+import { AuthProvider, Prisma } from '@/generated/prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
@@ -9,30 +10,43 @@ export class UsersService {
 	async createUser(
 		data: Pick<
 			Prisma.UserCreateInput,
-			| 'email'
-			| 'username'
-			| 'password'
-			| 'githubId'
-			| 'googleId'
-			| 'profileImage'
+			'email' | 'username' | 'password' | 'profileImage'
 		>,
+		registration?: { type: AuthProvider; value: string },
 	) {
-		await this.checkDuplicateUser(data);
+		await this.checkDuplicateUser(data, registration);
+
+		const regAuthProvider = registration ?? {
+			type: AuthProvider.EMAIL,
+			value: data.email as string,
+		};
 
 		return this.prisma.user.create({
-			data,
+			data: {
+				...data,
+				registrationTypes: {
+					create: {
+						type: regAuthProvider.type,
+						value: regAuthProvider.value,
+						isDefault: true,
+					},
+				},
+			},
 		});
 	}
 
-	async getUsersList(): Promise<User[]> {
-		return this.prisma.user.findMany();
+	async getUsersList() {
+		return this.prisma.user.findMany({
+			include: { registrationTypes: true },
+		});
 	}
 
-	async getUserById(userId: number): Promise<User | null> {
+	async getUserById(userId: number) {
 		return this.prisma.user.findUnique({
 			where: {
 				id: userId,
 			},
+			include: { registrationTypes: true },
 		});
 	}
 
@@ -44,21 +58,14 @@ export class UsersService {
 		});
 	}
 
-	private async checkDuplicateUser(data: Prisma.UserCreateInput) {
-		const orConditions: Prisma.UserWhereInput[] = [
-			{ email: data.email },
-			{ username: data.username },
-		];
-
-		if (data.googleId) {
-			orConditions.push({ googleId: data.googleId });
-		}
-		if (data.githubId) {
-			orConditions.push({ githubId: data.githubId });
-		}
-
+	private async checkDuplicateUser(
+		data: Pick<Prisma.UserCreateInput, 'email' | 'username'>,
+		registration?: { type: AuthProvider; value: string },
+	) {
 		const existingUser = await this.prisma.user.findFirst({
-			where: { OR: orConditions },
+			where: {
+				OR: [{ email: data.email }, { username: data.username }],
+			},
 		});
 
 		if (existingUser) {
@@ -68,11 +75,23 @@ export class UsersService {
 			if (existingUser.username === data.username) {
 				throw new BadRequestException('이미 사용 중인 닉네임입니다');
 			}
-			if (data.googleId && existingUser.googleId === data.googleId) {
-				throw new BadRequestException('이미 연결된 Google 계정입니다');
-			}
-			if (data.githubId && existingUser.githubId === data.githubId) {
-				throw new BadRequestException('이미 연결된 GitHub 계정입니다');
+		}
+
+		if (registration) {
+			const existingRegistration =
+				await this.prisma.registrationType.findUnique({
+					where: {
+						type_value: {
+							type: registration.type,
+							value: registration.value,
+						},
+					},
+				});
+
+			if (existingRegistration) {
+				const providerName =
+					registration.type === AuthProvider.GOOGLE ? 'Google' : 'GitHub';
+				throw new BadRequestException(`이미 연결된 ${providerName} 계정입니다`);
 			}
 		}
 	}
@@ -92,15 +111,15 @@ export class UsersService {
 	 * @param providerId - OAuth 제공자의 사용자 ID
 	 * @returns 사용자 정보 또는 null
 	 */
-	async getUserByOAuthId(provider: 'google' | 'github', providerId: string) {
-		if (provider === 'google') {
-			return this.prisma.user.findUnique({
-				where: { googleId: providerId },
-			});
-		}
-		return this.prisma.user.findUnique({
-			where: { githubId: providerId },
+	async getUserByOAuthId(provider: AuthProvider, providerId: string) {
+		const registration = await this.prisma.registrationType.findUnique({
+			where: {
+				type_value: { type: provider, value: providerId },
+			},
+			include: { user: true },
 		});
+
+		return registration?.user ?? null;
 	}
 
 	/**
@@ -112,17 +131,16 @@ export class UsersService {
 	 */
 	async linkOAuthAccount(
 		userId: number,
-		provider: 'google' | 'github',
+		provider: AuthProvider,
 		providerId: string,
 	): Promise<void> {
-		const data =
-			provider === 'google'
-				? { googleId: providerId }
-				: { githubId: providerId };
-
-		await this.prisma.user.update({
-			where: { id: userId },
-			data,
+		await this.prisma.registrationType.create({
+			data: {
+				userId,
+				type: provider,
+				value: providerId,
+				isDefault: false,
+			},
 		});
 	}
 
@@ -131,35 +149,38 @@ export class UsersService {
 	 *
 	 * @param userId - 사용자 ID
 	 * @param provider - OAuth 제공자 ('google' | 'github')
-	 * @throws {BadRequestException} 최소 하나의 로그인 방법이 필요한 경우
+	 * @throws {BadRequestException} 최초 가입 수단이거나 최소 하나의 로그인 방법이 필요한 경우
 	 */
 	async unlinkOAuthAccount(
 		userId: number,
-		provider: 'google' | 'github',
+		provider: Exclude<AuthProvider, 'EMAIL'>,
 	): Promise<void> {
-		const user = await this.prisma.user.findUnique({
-			where: { id: userId },
+		const registration = await this.prisma.registrationType.findUnique({
+			where: {
+				userId_type: { userId, type: provider },
+			},
 		});
 
-		if (!user) {
-			throw new BadRequestException('사용자를 찾을 수 없습니다.');
+		if (!registration) {
+			throw new BadRequestException(AUTH_MESSAGE.ERROR_OAUTH_NOT_LINKED);
 		}
 
-		// 비밀번호가 없고, 다른 OAuth도 연동 안되어 있으면 해제 불가
-		if (!user.password) {
-			const hasOtherOAuth =
-				provider === 'google' ? user.githubId : user.googleId;
-			if (!hasOtherOAuth) {
-				throw new BadRequestException('최소 하나의 로그인 방법이 필요합니다.');
-			}
+		if (registration.isDefault) {
+			throw new BadRequestException(AUTH_MESSAGE.ERROR_INITIAL_METHOD_UNLINK);
 		}
 
-		const data =
-			provider === 'google' ? { googleId: null } : { githubId: null };
+		const remainingCount = await this.prisma.registrationType.count({
+			where: { userId },
+		});
 
-		await this.prisma.user.update({
-			where: { id: userId },
-			data,
+		if (remainingCount <= 1) {
+			throw new BadRequestException('최소 하나의 로그인 방법이 필요합니다.');
+		}
+
+		await this.prisma.registrationType.delete({
+			where: {
+				userId_type: { userId, type: provider },
+			},
 		});
 	}
 }
