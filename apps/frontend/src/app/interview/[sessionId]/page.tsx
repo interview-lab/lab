@@ -4,6 +4,7 @@ import { Atom, Molecule } from '@interview-lab/ui';
 import useAsync from '@/hooks/useAsync';
 import useRequestPermission from '@/hooks/useCapturePermission';
 import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
+import type { TranscriptWorkerResponse } from '@/workers/transcriptWorker';
 import {
 	buttonContainerStyle,
 	buttonDescriptionStyle,
@@ -56,9 +57,15 @@ export default function InterviewPage({
 				);
 
 				worker.postMessage(audioData, [audioData.buffer]);
-				worker.onmessage = (event) => {
+				worker.onmessage = (event: MessageEvent<TranscriptWorkerResponse>) => {
+					if (!event.data.isSuccess) {
+						worker.terminate();
+						reject(event.data.error);
+						return;
+					}
+
 					worker.terminate();
-					resolve(event.data);
+					resolve(event.data.result);
 				};
 				worker.onerror = (error) => {
 					worker.terminate();
