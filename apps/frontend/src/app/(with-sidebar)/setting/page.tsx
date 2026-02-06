@@ -1,9 +1,7 @@
-'use client';
-
+import { cookies } from 'next/headers';
+import clsx from 'clsx';
 import { Atom } from '@interview-lab/ui';
-import { useEffect, useState } from 'react';
 import client from '@/configs/fetch';
-import type { components } from '@/types/api';
 import {
 	articleStyle,
 	buttonGroupStyle,
@@ -15,18 +13,13 @@ import {
 	sectionStyle,
 } from './page.css';
 
-type Profile = components['schemas']['ProfileDto'];
-
-export default function SettingPage() {
-	const [profile, setProfile] = useState<Profile | null>(null);
-
-	useEffect(() => {
-		client.GET('/users/profile').then(({ data }) => {
-			if (data) {
-				setProfile(data);
-			}
-		});
-	}, []);
+export default async function SettingPage() {
+	const cookieStore = await cookies();
+	const { data: profile } = await client.GET('/users/profile', {
+		headers: {
+			Cookie: cookieStore.toString(),
+		},
+	});
 
 	return (
 		<main className={mainStyle}>
@@ -53,22 +46,20 @@ export default function SettingPage() {
 					<div className={buttonGroupStyle}>
 						<Atom.TextButton
 							icon="IconGoogle"
-							className={
-								profile?.googleId
-									? `${buttonStyle} ${linkedButtonStyle}`
-									: buttonStyle
-							}
+							className={clsx(
+								buttonStyle,
+								profile?.googleId && linkedButtonStyle,
+							)}
 							disabled={!!profile?.googleId}
 						>
 							{profile?.googleId ? 'Google 계정 연동 완료' : 'Google 계정 연동'}
 						</Atom.TextButton>
 						<Atom.TextButton
 							icon="IconGithub"
-							className={
-								profile?.githubId
-									? `${buttonStyle} ${linkedButtonStyle}`
-									: buttonStyle
-							}
+							className={clsx(
+								buttonStyle,
+								profile?.githubId && linkedButtonStyle,
+							)}
 							disabled={!!profile?.githubId}
 						>
 							{profile?.githubId ? 'GitHub 계정 연동 완료' : 'GitHub 계정 연동'}
