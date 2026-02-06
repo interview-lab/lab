@@ -48,6 +48,7 @@ export default function InterviewPage({
 				await blob.arrayBuffer(),
 			);
 			const audioData = audioBuffer.getChannelData(0);
+			await audioContext.close();
 
 			return new Promise((resolve, reject) => {
 				const worker = new Worker(
