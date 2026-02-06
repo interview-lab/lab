@@ -1,6 +1,6 @@
 import type { Molecule } from '@interview-lab/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
+import catchError from '@/utils/catchError';
 export type RecordingState = Parameters<
 	typeof Molecule.InterviewSubmitButton
 >[0]['state'];
@@ -31,10 +31,24 @@ export default function useVoiceRecord() {
 		mediaRecorderRef.current?.resume();
 	};
 
-	const stopRecording = () => {
-		setRecordingState('processing');
-		mediaRecorderRef.current?.stop();
-	};
+	const stopRecording = useCallback(() => {
+		return new Promise<Blob>((resolve, reject) => {
+			const recorder = mediaRecorderRef.current;
+			if (!recorder) {
+				reject(new Error('MediaRecorder가 초기화되지 않았습니다.'));
+				return;
+			}
+
+			recorder.onstop = () => {
+				const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+				chunksRef.current = [];
+				resolve(blob);
+			};
+
+			setRecordingState('processing');
+			recorder.stop();
+		});
+	}, []);
 
 	const errorRecording = () => {
 		setRecordingState('error');
@@ -42,29 +56,28 @@ export default function useVoiceRecord() {
 	};
 
 	const initMediaRecorder = useCallback(async () => {
-		try {
-			const stream = await navigator.mediaDevices.getUserMedia({
+		const [error, stream] = await catchError(
+			navigator.mediaDevices.getUserMedia({
 				audio: true,
-			});
+			}),
+		);
 
-			streamRef.current = stream;
-
-			const recorder = new MediaRecorder(stream);
-			recorder.ondataavailable = (event) => {
-				chunksRef.current.push(event.data);
-			};
-
-			mediaRecorderRef.current = recorder;
-
-			setRecordingState('idle');
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error
-					? error
-					: new Error('마이크에 액세스하는데 문제가 발생했습니다.');
-			setError(errorMessage);
+		if (error) {
+			setError(error);
 			setRecordingState('error');
+			return;
 		}
+
+		streamRef.current = stream;
+
+		const recorder = new MediaRecorder(stream);
+		recorder.ondataavailable = (event) => {
+			chunksRef.current.push(event.data);
+		};
+
+		mediaRecorderRef.current = recorder;
+
+		setRecordingState('idle');
 	}, []);
 
 	useEffect(() => {
@@ -85,7 +98,7 @@ export default function useVoiceRecord() {
 
 	return {
 		stream: streamRef.current,
-		chunks: chunksRef.current,
+		recordingState,
 		error,
 		startRecording,
 		pauseRecording,
@@ -93,6 +106,5 @@ export default function useVoiceRecord() {
 		stopRecording,
 		errorRecording,
 		initMediaRecorder,
-		recordingState,
 	} as const;
 }

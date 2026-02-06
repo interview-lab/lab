@@ -1,8 +1,11 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
+import { useCallback, useEffect, useRef } from 'react';
+import useAsync from '@/hooks/useAsync';
 import useRequestPermission from '@/hooks/useCapturePermission';
 import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
+import type { TranscriptWorkerResponse } from '@/workers/transcriptWorker';
 import {
 	buttonContainerStyle,
 	buttonDescriptionStyle,
@@ -28,8 +31,6 @@ export default function InterviewPage({
 	const {
 		recordingState,
 		stream,
-		chunks,
-		error,
 		startRecording,
 		pauseRecording,
 		resumeRecording,
@@ -38,6 +39,58 @@ export default function InterviewPage({
 		initMediaRecorder,
 	} = useVoiceRecord();
 	useRequestPermission('microphone', initMediaRecorder, errorRecording);
+	const { isLoading, execute } = useAsync();
+	const workerRef = useRef<Worker | null>(null);
+
+	useEffect(() => {
+		workerRef.current = new Worker(
+			new URL('../../../workers/transcriptWorker.ts', import.meta.url),
+		);
+
+		return () => {
+			workerRef.current?.terminate();
+		};
+	}, []);
+
+	const handleSubmit = useCallback(async () => {
+		const result = await execute(async () => {
+			const blob = await stopRecording();
+
+			const audioContext = new AudioContext({ sampleRate: 16000 });
+			const audioBuffer = await audioContext.decodeAudioData(
+				await blob.arrayBuffer(),
+			);
+			const audioData = audioBuffer.getChannelData(0);
+			await audioContext.close();
+
+			return new Promise((resolve, reject) => {
+				if (!workerRef.current) {
+					reject(new Error('Worker not initialized'));
+					return;
+				}
+
+				workerRef.current.postMessage(audioData, [audioData.buffer]);
+
+				workerRef.current.onmessage = (
+					event: MessageEvent<TranscriptWorkerResponse>,
+				) => {
+					if (!event.data.isSuccess) {
+						workerRef.current?.terminate();
+						reject(event.data.error);
+						return;
+					}
+
+					resolve(event.data.result);
+				};
+
+				workerRef.current.onerror = (error) => {
+					reject(error);
+				};
+			});
+		});
+
+		console.log(result);
+	}, [execute, stopRecording]);
 
 	return (
 		<div className={pageStyle}>
@@ -63,7 +116,7 @@ export default function InterviewPage({
 					onStartRecord={startRecording}
 					onPause={pauseRecording}
 					onResume={resumeRecording}
-					onSubmit={stopRecording}
+					onSubmit={handleSubmit}
 				/>
 				<p className={buttonDescriptionStyle}>{DESCRIPTIONS[recordingState]}</p>
 			</div>
