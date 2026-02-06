@@ -41,6 +41,7 @@ export default function useVoiceRecord() {
 
 			recorder.onstop = () => {
 				const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+				chunksRef.current = [];
 				resolve(blob);
 			};
 
