@@ -372,27 +372,34 @@ export class AuthService {
 		provider: AuthProvider,
 		providerId: string,
 	): Promise<void> {
-		// 이미 다른 사용자에게 연동된 계정인지 확인
-		const existing = await this.usersService.getUserByOAuthId(
-			provider,
-			providerId,
-		);
-		if (existing) {
-			throw new BadRequestException(AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED);
-		}
+		await this.prisma.$transaction(async (tx) => {
+			// 이미 다른 사용자에게 연동된 계정인지 확인
+			const existing = await tx.registrationType.findUnique({
+				where: { type_value: { type: provider, value: providerId } },
+			});
+			if (existing) {
+				throw new BadRequestException(AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED);
+			}
 
-		// 현재 사용자가 이미 해당 제공자를 연동했는지 확인
-		const user = await this.usersService.getUserById(userId);
-		const alreadyLinked = user?.registrationTypes.some(
-			(rt) => rt.type === provider,
-		);
-		if (alreadyLinked) {
-			throw new BadRequestException(
-				AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED_TO_USER,
-			);
-		}
+			// 현재 사용자가 이미 해당 제공자를 연동했는지 확인
+			const alreadyLinked = await tx.registrationType.findUnique({
+				where: { userId_type: { userId, type: provider } },
+			});
+			if (alreadyLinked) {
+				throw new BadRequestException(
+					AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED_TO_USER,
+				);
+			}
 
-		await this.usersService.linkOAuthAccount(userId, provider, providerId);
+			await tx.registrationType.create({
+				data: {
+					userId,
+					type: provider,
+					value: providerId,
+					isDefault: false,
+				},
+			});
+		});
 	}
 
 	/**
