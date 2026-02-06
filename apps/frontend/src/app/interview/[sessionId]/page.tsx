@@ -4,7 +4,6 @@ import { Atom, Molecule } from '@interview-lab/ui';
 import useAsync from '@/hooks/useAsync';
 import useRequestPermission from '@/hooks/useCapturePermission';
 import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
-import { transcript } from '@/utils/transcript';
 import {
 	buttonContainerStyle,
 	buttonDescriptionStyle,
@@ -38,7 +37,7 @@ export default function InterviewPage({
 		initMediaRecorder,
 	} = useVoiceRecord();
 	useRequestPermission('microphone', initMediaRecorder, errorRecording);
-	const { isLoading, execute, error: asyncError } = useAsync();
+	const { isLoading, execute } = useAsync();
 
 	const handleSubmit = async () => {
 		const result = await execute(async () => {
@@ -50,7 +49,19 @@ export default function InterviewPage({
 			);
 			const audioData = audioBuffer.getChannelData(0);
 
-			return transcript(audioData);
+			return new Promise((resolve, reject) => {
+				const worker = new Worker(
+					new URL('../../../workers/transcriptWorker.ts', import.meta.url),
+				);
+
+				worker.postMessage(audioData, [audioData.buffer]);
+				worker.onmessage = (event) => {
+					resolve(event.data);
+				};
+				worker.onerror = (error) => {
+					reject(error);
+				};
+			});
 		});
 
 		console.log(result);
@@ -84,7 +95,6 @@ export default function InterviewPage({
 				/>
 				<p className={buttonDescriptionStyle}>{DESCRIPTIONS[recordingState]}</p>
 			</div>
-			{isLoading && <div>처리 중...</div>}
 		</div>
 	);
 }
