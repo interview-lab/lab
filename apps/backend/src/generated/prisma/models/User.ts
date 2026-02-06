@@ -43,8 +43,6 @@ export type UserMinAggregateOutputType = {
 	password: string | null;
 	profileImage: string | null;
 	level: number | null;
-	googleId: string | null;
-	githubId: string | null;
 	createdAt: Date | null;
 	updatedAt: Date | null;
 };
@@ -56,8 +54,6 @@ export type UserMaxAggregateOutputType = {
 	password: string | null;
 	profileImage: string | null;
 	level: number | null;
-	googleId: string | null;
-	githubId: string | null;
 	createdAt: Date | null;
 	updatedAt: Date | null;
 };
@@ -69,8 +65,6 @@ export type UserCountAggregateOutputType = {
 	password: number;
 	profileImage: number;
 	level: number;
-	googleId: number;
-	githubId: number;
 	createdAt: number;
 	updatedAt: number;
 	_all: number;
@@ -93,8 +87,6 @@ export type UserMinAggregateInputType = {
 	password?: true;
 	profileImage?: true;
 	level?: true;
-	googleId?: true;
-	githubId?: true;
 	createdAt?: true;
 	updatedAt?: true;
 };
@@ -106,8 +98,6 @@ export type UserMaxAggregateInputType = {
 	password?: true;
 	profileImage?: true;
 	level?: true;
-	googleId?: true;
-	githubId?: true;
 	createdAt?: true;
 	updatedAt?: true;
 };
@@ -119,8 +109,6 @@ export type UserCountAggregateInputType = {
 	password?: true;
 	profileImage?: true;
 	level?: true;
-	googleId?: true;
-	githubId?: true;
 	createdAt?: true;
 	updatedAt?: true;
 	_all?: true;
@@ -226,8 +214,6 @@ export type UserGroupByOutputType = {
 	password: string | null;
 	profileImage: string | null;
 	level: number;
-	googleId: string | null;
-	githubId: string | null;
 	createdAt: Date;
 	updatedAt: Date;
 	_count: UserCountAggregateOutputType | null;
@@ -259,10 +245,9 @@ export type UserWhereInput = {
 	password?: Prisma.StringNullableFilter<'User'> | string | null;
 	profileImage?: Prisma.StringNullableFilter<'User'> | string | null;
 	level?: Prisma.IntFilter<'User'> | number;
-	googleId?: Prisma.StringNullableFilter<'User'> | string | null;
-	githubId?: Prisma.StringNullableFilter<'User'> | string | null;
 	createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
 	updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeListRelationFilter;
 	sessions?: Prisma.SessionListRelationFilter;
 	bookmarks?: Prisma.BookmarkListRelationFilter;
 };
@@ -274,10 +259,9 @@ export type UserOrderByWithRelationInput = {
 	password?: Prisma.SortOrderInput | Prisma.SortOrder;
 	profileImage?: Prisma.SortOrderInput | Prisma.SortOrder;
 	level?: Prisma.SortOrder;
-	googleId?: Prisma.SortOrderInput | Prisma.SortOrder;
-	githubId?: Prisma.SortOrderInput | Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
+	registrationTypes?: Prisma.RegistrationTypeOrderByRelationAggregateInput;
 	sessions?: Prisma.SessionOrderByRelationAggregateInput;
 	bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput;
 };
@@ -287,8 +271,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
 		id?: number;
 		email?: string;
 		username?: string;
-		googleId?: string;
-		githubId?: string;
 		AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[];
 		OR?: Prisma.UserWhereInput[];
 		NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[];
@@ -297,10 +279,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
 		level?: Prisma.IntFilter<'User'> | number;
 		createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
 		updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
+		registrationTypes?: Prisma.RegistrationTypeListRelationFilter;
 		sessions?: Prisma.SessionListRelationFilter;
 		bookmarks?: Prisma.BookmarkListRelationFilter;
 	},
-	'id' | 'email' | 'username' | 'googleId' | 'githubId'
+	'id' | 'email' | 'username'
 >;
 
 export type UserOrderByWithAggregationInput = {
@@ -310,8 +293,6 @@ export type UserOrderByWithAggregationInput = {
 	password?: Prisma.SortOrderInput | Prisma.SortOrder;
 	profileImage?: Prisma.SortOrderInput | Prisma.SortOrder;
 	level?: Prisma.SortOrder;
-	googleId?: Prisma.SortOrderInput | Prisma.SortOrder;
-	githubId?: Prisma.SortOrderInput | Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 	_count?: Prisma.UserCountOrderByAggregateInput;
@@ -338,8 +319,6 @@ export type UserScalarWhereWithAggregatesInput = {
 		| string
 		| null;
 	level?: Prisma.IntWithAggregatesFilter<'User'> | number;
-	googleId?: Prisma.StringNullableWithAggregatesFilter<'User'> | string | null;
-	githubId?: Prisma.StringNullableWithAggregatesFilter<'User'> | string | null;
 	createdAt?: Prisma.DateTimeWithAggregatesFilter<'User'> | Date | string;
 	updatedAt?: Prisma.DateTimeWithAggregatesFilter<'User'> | Date | string;
 };
@@ -350,10 +329,9 @@ export type UserCreateInput = {
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	registrationTypes?: Prisma.RegistrationTypeCreateNestedManyWithoutUserInput;
 	sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
 	bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput;
 };
@@ -365,10 +343,9 @@ export type UserUncheckedCreateInput = {
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUncheckedCreateNestedManyWithoutUserInput;
 	sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput;
 	bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput;
 };
@@ -382,10 +359,9 @@ export type UserUpdateInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUpdateManyWithoutUserNestedInput;
 	sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput;
 	bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput;
 };
@@ -400,10 +376,9 @@ export type UserUncheckedUpdateInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUncheckedUpdateManyWithoutUserNestedInput;
 	sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput;
 	bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput;
 };
@@ -415,8 +390,6 @@ export type UserCreateManyInput = {
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 };
@@ -430,8 +403,6 @@ export type UserUpdateManyMutationInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -446,8 +417,6 @@ export type UserUncheckedUpdateManyInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -469,8 +438,6 @@ export type UserCountOrderByAggregateInput = {
 	password?: Prisma.SortOrder;
 	profileImage?: Prisma.SortOrder;
 	level?: Prisma.SortOrder;
-	googleId?: Prisma.SortOrder;
-	githubId?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 };
@@ -487,8 +454,6 @@ export type UserMaxOrderByAggregateInput = {
 	password?: Prisma.SortOrder;
 	profileImage?: Prisma.SortOrder;
 	level?: Prisma.SortOrder;
-	googleId?: Prisma.SortOrder;
-	githubId?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 };
@@ -500,8 +465,6 @@ export type UserMinOrderByAggregateInput = {
 	password?: Prisma.SortOrder;
 	profileImage?: Prisma.SortOrder;
 	level?: Prisma.SortOrder;
-	googleId?: Prisma.SortOrder;
-	githubId?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 };
@@ -565,16 +528,41 @@ export type UserUpdateOneWithoutSessionsNestedInput = {
 	>;
 };
 
+export type UserCreateNestedOneWithoutRegistrationTypesInput = {
+	create?: Prisma.XOR<
+		Prisma.UserCreateWithoutRegistrationTypesInput,
+		Prisma.UserUncheckedCreateWithoutRegistrationTypesInput
+	>;
+	connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationTypesInput;
+	connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutRegistrationTypesNestedInput = {
+	create?: Prisma.XOR<
+		Prisma.UserCreateWithoutRegistrationTypesInput,
+		Prisma.UserUncheckedCreateWithoutRegistrationTypesInput
+	>;
+	connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationTypesInput;
+	upsert?: Prisma.UserUpsertWithoutRegistrationTypesInput;
+	connect?: Prisma.UserWhereUniqueInput;
+	update?: Prisma.XOR<
+		Prisma.XOR<
+			Prisma.UserUpdateToOneWithWhereWithoutRegistrationTypesInput,
+			Prisma.UserUpdateWithoutRegistrationTypesInput
+		>,
+		Prisma.UserUncheckedUpdateWithoutRegistrationTypesInput
+	>;
+};
+
 export type UserCreateWithoutBookmarksInput = {
 	email: string;
 	username: string;
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	registrationTypes?: Prisma.RegistrationTypeCreateNestedManyWithoutUserInput;
 	sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
 };
 
@@ -585,10 +573,9 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUncheckedCreateNestedManyWithoutUserInput;
 	sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput;
 };
 
@@ -629,10 +616,9 @@ export type UserUpdateWithoutBookmarksInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUpdateManyWithoutUserNestedInput;
 	sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput;
 };
 
@@ -646,10 +632,9 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUncheckedUpdateManyWithoutUserNestedInput;
 	sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput;
 };
 
@@ -659,10 +644,9 @@ export type UserCreateWithoutSessionsInput = {
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	registrationTypes?: Prisma.RegistrationTypeCreateNestedManyWithoutUserInput;
 	bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput;
 };
 
@@ -673,10 +657,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
 	password?: string | null;
 	profileImage?: string | null;
 	level?: number;
-	googleId?: string | null;
-	githubId?: string | null;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUncheckedCreateNestedManyWithoutUserInput;
 	bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput;
 };
 
@@ -717,10 +700,9 @@ export type UserUpdateWithoutSessionsInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUpdateManyWithoutUserNestedInput;
 	bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput;
 };
 
@@ -734,10 +716,93 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
 		| string
 		| null;
 	level?: Prisma.IntFieldUpdateOperationsInput | number;
-	googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-	githubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	registrationTypes?: Prisma.RegistrationTypeUncheckedUpdateManyWithoutUserNestedInput;
+	bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput;
+};
+
+export type UserCreateWithoutRegistrationTypesInput = {
+	email: string;
+	username: string;
+	password?: string | null;
+	profileImage?: string | null;
+	level?: number;
+	createdAt?: Date | string;
+	updatedAt?: Date | string;
+	sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
+	bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput;
+};
+
+export type UserUncheckedCreateWithoutRegistrationTypesInput = {
+	id?: number;
+	email: string;
+	username: string;
+	password?: string | null;
+	profileImage?: string | null;
+	level?: number;
+	createdAt?: Date | string;
+	updatedAt?: Date | string;
+	sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput;
+	bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput;
+};
+
+export type UserCreateOrConnectWithoutRegistrationTypesInput = {
+	where: Prisma.UserWhereUniqueInput;
+	create: Prisma.XOR<
+		Prisma.UserCreateWithoutRegistrationTypesInput,
+		Prisma.UserUncheckedCreateWithoutRegistrationTypesInput
+	>;
+};
+
+export type UserUpsertWithoutRegistrationTypesInput = {
+	update: Prisma.XOR<
+		Prisma.UserUpdateWithoutRegistrationTypesInput,
+		Prisma.UserUncheckedUpdateWithoutRegistrationTypesInput
+	>;
+	create: Prisma.XOR<
+		Prisma.UserCreateWithoutRegistrationTypesInput,
+		Prisma.UserUncheckedCreateWithoutRegistrationTypesInput
+	>;
+	where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutRegistrationTypesInput = {
+	where?: Prisma.UserWhereInput;
+	data: Prisma.XOR<
+		Prisma.UserUpdateWithoutRegistrationTypesInput,
+		Prisma.UserUncheckedUpdateWithoutRegistrationTypesInput
+	>;
+};
+
+export type UserUpdateWithoutRegistrationTypesInput = {
+	email?: Prisma.StringFieldUpdateOperationsInput | string;
+	username?: Prisma.StringFieldUpdateOperationsInput | string;
+	password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	profileImage?:
+		| Prisma.NullableStringFieldUpdateOperationsInput
+		| string
+		| null;
+	level?: Prisma.IntFieldUpdateOperationsInput | number;
+	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput;
+	bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutRegistrationTypesInput = {
+	id?: Prisma.IntFieldUpdateOperationsInput | number;
+	email?: Prisma.StringFieldUpdateOperationsInput | string;
+	username?: Prisma.StringFieldUpdateOperationsInput | string;
+	password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	profileImage?:
+		| Prisma.NullableStringFieldUpdateOperationsInput
+		| string
+		| null;
+	level?: Prisma.IntFieldUpdateOperationsInput | number;
+	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+	sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput;
 	bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput;
 };
 
@@ -746,6 +811,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
  */
 
 export type UserCountOutputType = {
+	registrationTypes: number;
 	sessions: number;
 	bookmarks: number;
 };
@@ -754,6 +820,7 @@ export type UserCountOutputTypeSelect<
 	ExtArgs extends
 		runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
+	registrationTypes?: boolean | UserCountOutputTypeCountRegistrationTypesArgs;
 	sessions?: boolean | UserCountOutputTypeCountSessionsArgs;
 	bookmarks?: boolean | UserCountOutputTypeCountBookmarksArgs;
 };
@@ -769,6 +836,16 @@ export type UserCountOutputTypeDefaultArgs<
 	 * Select specific fields to fetch from the UserCountOutputType
 	 */
 	select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegistrationTypesArgs<
+	ExtArgs extends
+		runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+	where?: Prisma.RegistrationTypeWhereInput;
 };
 
 /**
@@ -802,10 +879,9 @@ export type UserSelect<
 		password?: boolean;
 		profileImage?: boolean;
 		level?: boolean;
-		googleId?: boolean;
-		githubId?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
+		registrationTypes?: boolean | Prisma.User$registrationTypesArgs<ExtArgs>;
 		sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>;
 		bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>;
 		_count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
@@ -824,8 +900,6 @@ export type UserSelectCreateManyAndReturn<
 		password?: boolean;
 		profileImage?: boolean;
 		level?: boolean;
-		googleId?: boolean;
-		githubId?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
 	},
@@ -843,8 +917,6 @@ export type UserSelectUpdateManyAndReturn<
 		password?: boolean;
 		profileImage?: boolean;
 		level?: boolean;
-		googleId?: boolean;
-		githubId?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
 	},
@@ -858,8 +930,6 @@ export type UserSelectScalar = {
 	password?: boolean;
 	profileImage?: boolean;
 	level?: boolean;
-	googleId?: boolean;
-	githubId?: boolean;
 	createdAt?: boolean;
 	updatedAt?: boolean;
 };
@@ -874,8 +944,6 @@ export type UserOmit<
 	| 'password'
 	| 'profileImage'
 	| 'level'
-	| 'googleId'
-	| 'githubId'
 	| 'createdAt'
 	| 'updatedAt',
 	ExtArgs['result']['user']
@@ -884,6 +952,7 @@ export type UserInclude<
 	ExtArgs extends
 		runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
+	registrationTypes?: boolean | Prisma.User$registrationTypesArgs<ExtArgs>;
 	sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>;
 	bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>;
 	_count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
@@ -903,6 +972,7 @@ export type $UserPayload<
 > = {
 	name: 'User';
 	objects: {
+		registrationTypes: Prisma.$RegistrationTypePayload<ExtArgs>[];
 		sessions: Prisma.$SessionPayload<ExtArgs>[];
 		bookmarks: Prisma.$BookmarkPayload<ExtArgs>[];
 	};
@@ -914,8 +984,6 @@ export type $UserPayload<
 			password: string | null;
 			profileImage: string | null;
 			level: number;
-			googleId: string | null;
-			githubId: string | null;
 			createdAt: Date;
 			updatedAt: Date;
 		},
@@ -1468,6 +1536,17 @@ export interface Prisma__UserClient<
 	GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
 	readonly [Symbol.toStringTag]: 'PrismaPromise';
+	registrationTypes<T extends Prisma.User$registrationTypesArgs<ExtArgs> = {}>(
+		args?: Prisma.Subset<T, Prisma.User$registrationTypesArgs<ExtArgs>>,
+	): Prisma.PrismaPromise<
+		| runtime.Types.Result.GetResult<
+				Prisma.$RegistrationTypePayload<ExtArgs>,
+				T,
+				'findMany',
+				GlobalOmitOptions
+		  >
+		| Null
+	>;
 	sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(
 		args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>,
 	): Prisma.PrismaPromise<
@@ -1538,8 +1617,6 @@ export interface UserFieldRefs {
 	readonly password: Prisma.FieldRef<'User', 'String'>;
 	readonly profileImage: Prisma.FieldRef<'User', 'String'>;
 	readonly level: Prisma.FieldRef<'User', 'Int'>;
-	readonly googleId: Prisma.FieldRef<'User', 'String'>;
-	readonly githubId: Prisma.FieldRef<'User', 'String'>;
 	readonly createdAt: Prisma.FieldRef<'User', 'DateTime'>;
 	readonly updatedAt: Prisma.FieldRef<'User', 'DateTime'>;
 }
@@ -1980,6 +2057,37 @@ export type UserDeleteManyArgs<
 	 * Limit how many Users to delete.
 	 */
 	limit?: number;
+};
+
+/**
+ * User.registrationTypes
+ */
+export type User$registrationTypesArgs<
+	ExtArgs extends
+		runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+	/**
+	 * Select specific fields to fetch from the RegistrationType
+	 */
+	select?: Prisma.RegistrationTypeSelect<ExtArgs> | null;
+	/**
+	 * Omit specific fields from the RegistrationType
+	 */
+	omit?: Prisma.RegistrationTypeOmit<ExtArgs> | null;
+	/**
+	 * Choose, which related nodes to fetch as well
+	 */
+	include?: Prisma.RegistrationTypeInclude<ExtArgs> | null;
+	where?: Prisma.RegistrationTypeWhereInput;
+	orderBy?:
+		| Prisma.RegistrationTypeOrderByWithRelationInput
+		| Prisma.RegistrationTypeOrderByWithRelationInput[];
+	cursor?: Prisma.RegistrationTypeWhereUniqueInput;
+	take?: number;
+	skip?: number;
+	distinct?:
+		| Prisma.RegistrationTypeScalarFieldEnum
+		| Prisma.RegistrationTypeScalarFieldEnum[];
 };
 
 /**

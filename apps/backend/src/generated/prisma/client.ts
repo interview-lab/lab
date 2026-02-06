@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 
-import * as path from 'node:path';
 import * as process from 'node:process';
+import * as path from 'node:path';
 
 import * as runtime from '@prisma/client/runtime/client';
 import * as $Enums from './enums.js';
@@ -77,3 +77,8 @@ export type Session = Prisma.SessionModel;
  *
  */
 export type User = Prisma.UserModel;
+/**
+ * Model RegistrationType
+ *
+ */
+export type RegistrationType = Prisma.RegistrationTypeModel;

@@ -51,3 +51,8 @@ export type Session = Prisma.SessionModel;
  *
  */
 export type User = Prisma.UserModel;
+/**
+ * Model RegistrationType
+ *
+ */
+export type RegistrationType = Prisma.RegistrationTypeModel;
