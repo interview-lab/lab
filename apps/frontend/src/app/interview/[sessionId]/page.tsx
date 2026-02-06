@@ -57,9 +57,11 @@ export default function InterviewPage({
 
 				worker.postMessage(audioData, [audioData.buffer]);
 				worker.onmessage = (event) => {
+					worker.terminate();
 					resolve(event.data);
 				};
 				worker.onerror = (error) => {
+					worker.terminate();
 					reject(error);
 				};
 			});
