@@ -1,6 +1,7 @@
 'use client';
 
 import { Atom, Molecule } from '@interview-lab/ui';
+import { useCallback, useEffect, useRef } from 'react';
 import useAsync from '@/hooks/useAsync';
 import useRequestPermission from '@/hooks/useCapturePermission';
 import useVoiceRecord, { type RecordingState } from '@/hooks/useVoiceRecord';
@@ -39,8 +40,19 @@ export default function InterviewPage({
 	} = useVoiceRecord();
 	useRequestPermission('microphone', initMediaRecorder, errorRecording);
 	const { isLoading, execute } = useAsync();
+	const workerRef = useRef<Worker | null>(null);
 
-	const handleSubmit = async () => {
+	useEffect(() => {
+		workerRef.current = new Worker(
+			new URL('../../../workers/transcriptWorker.ts', import.meta.url),
+		);
+
+		return () => {
+			workerRef.current?.terminate();
+		};
+	}, []);
+
+	const handleSubmit = useCallback(async () => {
 		const result = await execute(async () => {
 			const blob = await stopRecording();
 
@@ -52,30 +64,33 @@ export default function InterviewPage({
 			await audioContext.close();
 
 			return new Promise((resolve, reject) => {
-				const worker = new Worker(
-					new URL('../../../workers/transcriptWorker.ts', import.meta.url),
-				);
+				if (!workerRef.current) {
+					reject(new Error('Worker not initialized'));
+					return;
+				}
 
-				worker.postMessage(audioData, [audioData.buffer]);
-				worker.onmessage = (event: MessageEvent<TranscriptWorkerResponse>) => {
+				workerRef.current.postMessage(audioData, [audioData.buffer]);
+
+				workerRef.current.onmessage = (
+					event: MessageEvent<TranscriptWorkerResponse>,
+				) => {
 					if (!event.data.isSuccess) {
-						worker.terminate();
+						workerRef.current?.terminate();
 						reject(event.data.error);
 						return;
 					}
 
-					worker.terminate();
 					resolve(event.data.result);
 				};
-				worker.onerror = (error) => {
-					worker.terminate();
+
+				workerRef.current.onerror = (error) => {
 					reject(error);
 				};
 			});
 		});
 
 		console.log(result);
-	};
+	}, [execute, stopRecording]);
 
 	return (
 		<div className={pageStyle}>
