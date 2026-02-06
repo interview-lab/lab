@@ -90,10 +90,16 @@ export const buttonGroupStyle = style({
 
 export const buttonStyle = style({
 	border: `1px solid ${vars.color.grayLight}`,
+	width: '100%',
 
 	':hover': {
 		backgroundColor: vars.color.grayLight,
 	},
+});
+
+globalStyle('a:has(buttonStyle)', {
+	display: 'block',
+	alignSelf: 'stretch',
 });
 
 export const linkedButtonStyle = style({

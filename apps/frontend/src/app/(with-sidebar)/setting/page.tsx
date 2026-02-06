@@ -1,6 +1,7 @@
-import { cookies } from 'next/headers';
-import clsx from 'clsx';
 import { Atom } from '@interview-lab/ui';
+import clsx from 'clsx';
+import { cookies } from 'next/headers';
+import Link from 'next/link';
 import client from '@/configs/fetch';
 import {
 	articleStyle,
@@ -20,6 +21,17 @@ export default async function SettingPage() {
 			Cookie: cookieStore.toString(),
 		},
 	});
+
+	const isGoogleLinked = profile?.registrationTypes.some(
+		(registrationType) => registrationType.type === 'GOOGLE',
+	);
+	const isGithubLinked = profile?.registrationTypes.some(
+		(registrationType) => registrationType.type === 'GITHUB',
+	);
+
+	const defaultRegistrationType = profile?.registrationTypes.find(
+		(registrationType) => registrationType.isDefault,
+	)?.type;
 
 	return (
 		<main className={mainStyle}>
@@ -44,26 +56,46 @@ export default async function SettingPage() {
 				<article className={articleStyle}>
 					<h2>외부 계정 연결</h2>
 					<div className={buttonGroupStyle}>
-						<Atom.TextButton
-							icon="IconGoogle"
-							className={clsx(
-								buttonStyle,
-								profile?.googleId && linkedButtonStyle,
-							)}
-							disabled={!!profile?.googleId}
+						<Link
+							href={
+								defaultRegistrationType === 'GOOGLE'
+									? '#'
+									: isGoogleLinked
+										? `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/google`
+										: `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/google`
+							}
 						>
-							{profile?.googleId ? 'Google 계정 연동 완료' : 'Google 계정 연동'}
-						</Atom.TextButton>
-						<Atom.TextButton
-							icon="IconGithub"
-							className={clsx(
-								buttonStyle,
-								profile?.githubId && linkedButtonStyle,
-							)}
-							disabled={!!profile?.githubId}
+							<Atom.TextButton
+								icon="IconGoogle"
+								className={clsx(
+									buttonStyle,
+									isGoogleLinked && linkedButtonStyle,
+								)}
+								disabled={defaultRegistrationType === 'GOOGLE'}
+							>
+								{isGoogleLinked ? 'Google 계정 연동 완료' : 'Google 계정 연동'}
+							</Atom.TextButton>
+						</Link>
+						<Link
+							href={
+								defaultRegistrationType === 'GITHUB'
+									? '#'
+									: isGithubLinked
+										? `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/unlink/github`
+										: `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/github`
+							}
 						>
-							{profile?.githubId ? 'GitHub 계정 연동 완료' : 'GitHub 계정 연동'}
-						</Atom.TextButton>
+							<Atom.TextButton
+								icon="IconGithub"
+								className={clsx(
+									buttonStyle,
+									isGithubLinked && linkedButtonStyle,
+								)}
+								disabled={defaultRegistrationType === 'GITHUB'}
+							>
+								{isGithubLinked ? 'GitHub 계정 연동 완료' : 'GitHub 계정 연동'}
+							</Atom.TextButton>
+						</Link>
 					</div>
 					<p>
 						계정 연동을 통해 DevPrep의 기능을 최대한 활용하세요. 연동된 계정은
