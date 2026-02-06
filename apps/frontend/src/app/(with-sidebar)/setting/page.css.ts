@@ -97,7 +97,7 @@ export const buttonStyle = style({
 	},
 });
 
-globalStyle('a:has(buttonStyle)', {
+globalStyle(`a:has(${buttonStyle})`, {
 	display: 'block',
 	alignSelf: 'stretch',
 });

@@ -61,7 +61,7 @@ export default async function SettingPage() {
 								defaultRegistrationType === 'GOOGLE'
 									? '#'
 									: isGoogleLinked
-										? `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/google`
+										? `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/unlink/google`
 										: `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/google`
 							}
 						>
