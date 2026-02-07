@@ -1,4 +1,4 @@
-import catchError from '@/utils/catchError';
+import { catchError } from '@interview-lab/shared';
 import { transcript } from '@/utils/transcript';
 
 export type TranscriptWorkerResponse =

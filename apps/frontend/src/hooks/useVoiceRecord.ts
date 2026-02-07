@@ -1,6 +1,6 @@
+import { catchError } from '@interview-lab/shared';
 import type { Molecule } from '@interview-lab/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import catchError from '@/utils/catchError';
 export type RecordingState = Parameters<
 	typeof Molecule.InterviewSubmitButton
 >[0]['state'];

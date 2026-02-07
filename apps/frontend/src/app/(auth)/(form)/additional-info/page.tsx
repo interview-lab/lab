@@ -16,8 +16,6 @@ import {
 	timerStyle,
 } from './additional-info.css';
 
-const DEFAULT_PENDING_TIME = 60;
-
 export default function AdditionalInfoPage() {
 	const searchParams = useSearchParams();
 	const [state, dispatch] = useAdditionalInfoForm();
