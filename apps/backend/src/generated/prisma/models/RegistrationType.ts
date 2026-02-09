@@ -495,10 +495,6 @@ export type RegistrationTypeUncheckedUpdateManyWithoutUserNestedInput = {
 		| Prisma.RegistrationTypeScalarWhereInput[];
 };
 
-export type EnumAuthProviderFieldUpdateOperationsInput = {
-	set?: $Enums.AuthProvider;
-};
-
 export type RegistrationTypeCreateWithoutUserInput = {
 	type: $Enums.AuthProvider;
 	value: string;

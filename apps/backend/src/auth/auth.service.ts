@@ -1,8 +1,5 @@
-import {
-	BadRequestException,
-	Injectable,
-	UnauthorizedException,
-} from '@nestjs/common';
+import { catchError } from '@interview-lab/shared';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import type { Response } from 'express';
@@ -32,6 +29,7 @@ import { AuthProvider } from '@/generated/prisma/client';
 import { UserModel } from '@/generated/prisma/models';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UsersService } from '@/users/users.service';
+import { err, ok, Result } from '@/utils/result';
 
 /**
  * 인증 관련 비즈니스 로직을 처리하는 서비스
@@ -58,29 +56,35 @@ export class AuthService {
 		response: Response,
 		dto: RegistrationWithEmailAndPasswordDto,
 	) {
-		const isVerified = await this.emailService.verifyCode(
+		const [verifyError, isVerified] = await this.emailService.verifyCode(
 			dto.email,
 			dto.verificationCode,
 		);
 
-		if (!isVerified) {
-			throw new BadRequestException(EMAIL_MESSAGE.ERROR_VERIFICATION_REQUIRED);
+		if (verifyError || !isVerified) {
+			return err({ reason: EMAIL_MESSAGE.ERROR_VERIFICATION_REQUIRED });
 		}
 
 		const hash = await bcrypt.hash(dto.password, HASH_ROUNDS);
 
 		const { verificationCode: _, ...userData } = dto;
-		const newUser = await this.usersService.createUser({
+		const [error, newUser] = await this.usersService.createUser({
 			...userData,
 			password: hash,
 		});
+
+		if (error) {
+			return err(error);
+		}
 
 		const tokens = this.generateToken(newUser);
 
 		this.setTokenToCookie(response, tokens.accessToken);
 		this.setTokenToCookie(response, tokens.refreshToken, true);
 
-		this.emailService.deleteVerification(dto.email);
+		await this.emailService.deleteVerification(dto.email);
+
+		return ok(null);
 	}
 
 	/**
@@ -94,12 +98,19 @@ export class AuthService {
 		response: Response,
 		user: Pick<UserModel, 'email' | 'password'>,
 	) {
-		const existingUser = await this.authenticateWithEmailAndPassword(user);
+		const [error, existingUser] =
+			await this.authenticateWithEmailAndPassword(user);
+
+		if (error) {
+			return err({ reason: error.reason });
+		}
 
 		const tokens = this.generateToken(existingUser);
 
 		this.setTokenToCookie(response, tokens.accessToken);
 		this.setTokenToCookie(response, tokens.refreshToken, true);
+
+		return ok(null);
 	}
 
 	/**
@@ -154,9 +165,7 @@ export class AuthService {
 		const existingUser = await this.usersService.getUserByEmail(user.email);
 
 		if (!existingUser || !existingUser.password) {
-			throw new UnauthorizedException(
-				AUTH_MESSAGE.ERROR_EMAIL_PASSWORD_NOT_MATCH,
-			);
+			return err({ reason: AUTH_MESSAGE.ERROR_EMAIL_PASSWORD_NOT_MATCH });
 		}
 
 		const passwordIdentical = await bcrypt.compare(
@@ -165,12 +174,10 @@ export class AuthService {
 		);
 
 		if (!passwordIdentical) {
-			throw new UnauthorizedException(
-				AUTH_MESSAGE.ERROR_EMAIL_PASSWORD_NOT_MATCH,
-			);
+			return err({ reason: AUTH_MESSAGE.ERROR_EMAIL_PASSWORD_NOT_MATCH });
 		}
 
-		return existingUser;
+		return ok(existingUser);
 	}
 
 	/**
@@ -184,11 +191,11 @@ export class AuthService {
 		const splitToken = header.split(' ');
 
 		if (splitToken.length !== 2 || splitToken[0] !== 'Bearer') {
-			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_INVALID);
+			return err({ reason: AUTH_MESSAGE.ERROR_TOKEN_INVALID });
 		}
 
 		// biome-ignore lint/style/noNonNullAssertion: <splitToken[1]가 항상 존재함>
-		return splitToken[1]!;
+		return ok(splitToken[1]!);
 	}
 
 	/**
@@ -199,11 +206,12 @@ export class AuthService {
 	 */
 	verifyToken(token: string) {
 		try {
-			return this.jwtService.verify<JWT_TOKEN_Payload>(token, {
+			const result = this.jwtService.verify<JWT_TOKEN_Payload>(token, {
 				secret: JWT_SECRET,
 			});
-		} catch (_) {
-			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_EXPIRED);
+			return ok(result);
+		} catch {
+			return err({ reason: AUTH_MESSAGE.ERROR_TOKEN_EXPIRED });
 		}
 	}
 
@@ -215,15 +223,19 @@ export class AuthService {
 	 * @returns 재발급된 토큰
 	 */
 	rotateToken(token: string, isRefreshToken: boolean = false) {
-		const decoded = this.jwtService.verify<JWT_TOKEN_Payload>(token, {
-			secret: JWT_SECRET,
-		});
-
-		if (decoded.type !== 'refresh') {
-			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_REFRESH_ONLY);
+		try {
+			const decoded = this.jwtService.verify<JWT_TOKEN_Payload>(token, {
+				secret: JWT_SECRET,
+			});
+			if (decoded.type !== 'refresh') {
+				return err({ reason: AUTH_MESSAGE.ERROR_TOKEN_REFRESH_ONLY });
+			}
+			return ok(
+				this.signToken({ ...decoded, id: decoded.sub }, isRefreshToken),
+			);
+		} catch {
+			return err({ reason: AUTH_MESSAGE.ERROR_TOKEN_INVALID });
 		}
-
-		return this.signToken({ ...decoded, id: decoded.sub }, isRefreshToken);
 	}
 
 	/**
@@ -245,22 +257,25 @@ export class AuthService {
 	 */
 	async handleOAuthCallback(
 		profile: OAuthProfile,
-	): Promise<OAuthCallbackResult> {
+	): Promise<Result<{ reason: string }, OAuthCallbackResult>> {
 		const { provider, providerId, email, name, profileImage } = profile;
 
 		// 1. 기존 사용자 조회
-		const existingUser = await this.usersService.getUserByOAuthId(
-			provider,
-			providerId,
+		const [error, existingUser] = await catchError(
+			this.usersService.getUserByOAuthId(provider, providerId),
 		);
+
+		if (error) {
+			return err({ reason: AUTH_MESSAGE.ERROR_OAUTH_CALLBACK_FAILED });
+		}
 
 		if (existingUser) {
 			// 기존 사용자 -> 바로 JWT 발급
 			const tokens = this.generateToken(existingUser);
-			return {
+			return ok({
 				isExistingUser: true,
 				...tokens,
-			};
+			});
 		}
 
 		// 2. 신규 사용자 -> 임시 토큰 발급
@@ -268,28 +283,36 @@ export class AuthService {
 		const expiresAt = new Date(Date.now() + 30 * MINUTE); // 30분
 
 		// 기존 pending 레코드 삭제 후 새로 생성
-		await this.prisma.oAuthPendingRegistration.deleteMany({
-			where: { provider, providerId },
-		});
+		const [createError] = await catchError(
+			this.prisma.$transaction(async (tx) => {
+				await tx.oAuthPendingRegistration.deleteMany({
+					where: { provider, providerId },
+				});
 
-		await this.prisma.oAuthPendingRegistration.create({
-			data: {
-				provider,
-				providerId,
-				tempToken,
-				providerEmail: email,
-				providerName: name,
-				profileImage,
-				expiresAt,
-			},
-		});
+				await tx.oAuthPendingRegistration.create({
+					data: {
+						provider,
+						providerId,
+						tempToken,
+						providerEmail: email,
+						providerName: name,
+						profileImage,
+						expiresAt,
+					},
+				});
+			}),
+		);
 
-		return {
+		if (createError) {
+			return err({ reason: AUTH_MESSAGE.ERROR_OAUTH_CALLBACK_FAILED });
+		}
+
+		return ok({
 			isExistingUser: false,
 			tempToken,
 			providerEmail: email,
 			providerName: name,
-		};
+		});
 	}
 
 	/**
@@ -299,9 +322,17 @@ export class AuthService {
 	 * @returns OAuth pending 레코드
 	 */
 	async getPendingRegistration(tempToken: string) {
-		return await this.prisma.oAuthPendingRegistration.findFirst({
-			where: { tempToken },
-		});
+		const [error, pendingRegistration] = await catchError(
+			this.prisma.oAuthPendingRegistration.findFirst({
+				where: { tempToken },
+			}),
+		);
+
+		if (error) {
+			return err({ reason: AUTH_MESSAGE.ERROR_TEMP_TOKEN_INVALID });
+		}
+
+		return ok(pendingRegistration);
 	}
 
 	/**
@@ -319,44 +350,74 @@ export class AuthService {
 		tempToken: string,
 		username: string,
 		email: string,
-	): Promise<{ accessToken: string; refreshToken: string }> {
+	) {
 		// 1. pending 레코드 조회
-		const pending = await this.prisma.oAuthPendingRegistration.findFirst({
-			where: { tempToken },
-			orderBy: {
-				createdAt: 'desc',
-			},
-		});
+		const [error, pending] = await catchError(
+			this.prisma.oAuthPendingRegistration.findFirst({
+				where: { tempToken },
+				orderBy: {
+					createdAt: 'desc',
+				},
+			}),
+		);
 
-		if (!pending || pending.expiresAt < new Date()) {
-			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_OAUTH_REQUEST_INVALID);
+		if (error || !pending || pending.expiresAt < new Date()) {
+			return err({ reason: AUTH_MESSAGE.ERROR_OAUTH_REQUEST_INVALID });
 		}
 
-		// 2. 사용자 생성
-		const userData: Parameters<typeof this.usersService.createUser>[0] = {
-			email,
-			username,
-			profileImage: pending.profileImage,
-		};
+		// 2~4. 사용자 생성 + pending 삭제 + 이메일 인증 삭제를 트랜잭션으로 처리
+		const [txError, newUser] = await catchError(
+			this.prisma.$transaction(async (tx) => {
+				// 1. 사용자 중복 체크
+				const prevUser = await tx.user.findFirst({
+					where: {
+						OR: [{ email }, { username }],
+					},
+				});
 
-		const registrationType =
-			pending.provider === 'google' ? AuthProvider.GOOGLE : AuthProvider.GITHUB;
+				if (prevUser) {
+					throw new BadRequestException(AUTH_MESSAGE.ERROR_USER_ALREADY_EXISTS);
+				}
 
-		const newUser = await this.usersService.createUser(userData, {
-			type: registrationType,
-			value: pending.providerId,
-		});
+				// 2. 사용자 생성
+				const user = await tx.user.create({
+					data: {
+						email,
+						username,
+						profileImage: pending.profileImage,
+						registrationTypes: {
+							create: {
+								type: pending.provider,
+								value: pending.providerId,
+								isDefault: true,
+							},
+						},
+					},
+				});
 
-		// 3. pending 레코드 삭제
-		await this.prisma.oAuthPendingRegistration.delete({
-			where: { id: pending.id },
-		});
+				// 3. pending 레코드 삭제
+				await tx.oAuthPendingRegistration.delete({
+					where: { id: pending.id },
+				});
 
-		// 4. 이메일 인증 삭제
-		await this.emailService.deleteVerification(email);
+				// 4. 이메일 인증 삭제
+				await tx.emailVerification.deleteMany({
+					where: { email, verified: false },
+				});
+
+				return user;
+			}),
+		);
+
+		if (txError) {
+			if (txError instanceof BadRequestException) {
+				return err({ reason: txError.message });
+			}
+			return err({ reason: AUTH_MESSAGE.ERROR_OAUTH_REQUEST_INVALID });
+		}
 
 		// 5. JWT 발급
-		return this.generateToken(newUser);
+		return ok(this.generateToken(newUser));
 	}
 
 	/**
@@ -385,6 +446,7 @@ export class AuthService {
 			const alreadyLinked = await tx.registrationType.findUnique({
 				where: { userId_type: { userId, type: provider } },
 			});
+
 			if (alreadyLinked) {
 				throw new BadRequestException(
 					AUTH_MESSAGE.ERROR_OAUTH_ALREADY_LINKED_TO_USER,
@@ -451,15 +513,17 @@ export class AuthService {
 	 * @param token - 쿠키의 JWT 토큰
 	 * @returns 검증된 payload 또는 null (검증 실패 시)
 	 */
-	verifyOAuthLinkIntent(token: string): OAuthLinkIntentPayload | null {
+	verifyOAuthLinkIntent(token: string) {
 		try {
 			const payload = this.jwtService.verify<OAuthLinkIntentPayload>(token, {
 				secret: JWT_SECRET,
 			});
-			if (payload.mode !== 'link') return null;
-			return payload;
+			if (payload.mode !== 'link')
+				return err({ reason: AUTH_MESSAGE.ERROR_INVALID_OAUTH_LINK_INTENT });
+
+			return ok(payload);
 		} catch {
-			return null;
+			return err({ reason: AUTH_MESSAGE.ERROR_INVALID_OAUTH_LINK_INTENT });
 		}
 	}
 

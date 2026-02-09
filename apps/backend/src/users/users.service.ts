@@ -1,7 +1,9 @@
+import { catchError } from '@interview-lab/shared';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import AUTH_MESSAGE from '@/auth/consts/message.const';
 import { AuthProvider, Prisma } from '@/generated/prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
+import { err, ok } from '@/utils/result';
 
 @Injectable()
 export class UsersService {
@@ -14,25 +16,40 @@ export class UsersService {
 		>,
 		registration?: { type: AuthProvider; value: string },
 	) {
-		await this.checkDuplicateUser(data, registration);
+		const [checkDuplicateUserError] = await this.checkDuplicateUser(
+			data,
+			registration,
+		);
+
+		if (checkDuplicateUserError) {
+			return err(checkDuplicateUserError);
+		}
 
 		const regAuthProvider = registration ?? {
 			type: AuthProvider.EMAIL,
 			value: data.email as string,
 		};
 
-		return this.prisma.user.create({
-			data: {
-				...data,
-				registrationTypes: {
-					create: {
-						type: regAuthProvider.type,
-						value: regAuthProvider.value,
-						isDefault: true,
+		const [error, newUser] = await catchError(
+			this.prisma.user.create({
+				data: {
+					...data,
+					registrationTypes: {
+						create: {
+							type: regAuthProvider.type,
+							value: regAuthProvider.value,
+							isDefault: true,
+						},
 					},
 				},
-			},
-		});
+			}),
+		);
+
+		if (error) {
+			return err({ reason: '사용자 생성에 실패했습니다' });
+		}
+
+		return ok(newUser);
 	}
 
 	async getUsersList() {
@@ -70,10 +87,10 @@ export class UsersService {
 
 		if (existingUser) {
 			if (existingUser.email === data.email) {
-				throw new BadRequestException('이미 사용 중인 이메일입니다');
+				return err({ reason: '이미 사용 중인 이메일입니다' });
 			}
 			if (existingUser.username === data.username) {
-				throw new BadRequestException('이미 사용 중인 닉네임입니다');
+				return err({ reason: '이미 사용 중인 닉네임입니다' });
 			}
 		}
 
@@ -91,9 +108,11 @@ export class UsersService {
 			if (existingRegistration) {
 				const providerName =
 					registration.type === AuthProvider.GOOGLE ? 'Google' : 'GitHub';
-				throw new BadRequestException(`이미 연결된 ${providerName} 계정입니다`);
+				return err({ reason: `이미 연결된 ${providerName} 계정입니다` });
 			}
 		}
+
+		return ok(null);
 	}
 
 	async getUserByEmail(email: string) {

@@ -24,12 +24,27 @@ export class TokenGuard implements CanActivate {
 			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_NOT_FOUND);
 		}
 
-		const token = this.authService.extractTokenFromHeader(rawToken);
-		const { sub, type } = this.authService.verifyToken(token);
+		const [extractTokenError, token] =
+			this.authService.extractTokenFromHeader(rawToken);
 
-		const user = await this.usersService.getUserById(sub);
+		if (extractTokenError) {
+			throw new UnauthorizedException(extractTokenError.reason);
+		}
+
+		const [error, payload] = this.authService.verifyToken(token);
+
+		if (error) {
+			throw new UnauthorizedException(error.reason);
+		}
+
+		const user = await this.usersService.getUserById(payload.sub);
+
+		if (!user) {
+			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_INVALID);
+		}
+
 		request.user = user;
-		request.type = type;
+		request.type = payload.type;
 		request.token = token;
 
 		return true;
@@ -45,20 +60,25 @@ export class AccessTokenGuard extends TokenGuard {
 		const accessToken = request.cookies?.accessToken;
 		const refreshToken = request.cookies?.refreshToken;
 
-		// accessToken이 없으면 에러
-		if (!accessToken) {
-			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_NOT_FOUND);
-		}
-
 		try {
 			// accessToken 검증 시도
-			const payload = this.authService.verifyToken(accessToken);
+			const [verifyTokenError, payload] =
+				this.authService.verifyToken(accessToken);
+
+			if (verifyTokenError) {
+				throw new UnauthorizedException(verifyTokenError.reason);
+			}
 
 			if (payload.type !== 'access') {
 				throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_INVALID);
 			}
 
 			request.user = await this.usersService.getUserById(payload.sub);
+
+			if (!request.user) {
+				throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_INVALID);
+			}
+
 			return true;
 		} catch {
 			// accessToken 만료 시 refreshToken으로 갱신 시도
@@ -68,7 +88,12 @@ export class AccessTokenGuard extends TokenGuard {
 
 			try {
 				// refreshToken 검증
-				const refreshPayload = this.authService.verifyToken(refreshToken);
+				const [verifyTokenError, refreshPayload] =
+					this.authService.verifyToken(refreshToken);
+
+				if (verifyTokenError) {
+					throw new UnauthorizedException(verifyTokenError.reason);
+				}
 
 				if (refreshPayload.type !== 'refresh') {
 					throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_INVALID);
@@ -114,7 +139,12 @@ export class TempTokenGuard implements CanActivate {
 			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_NOT_FOUND);
 		}
 
-		const pending = await this.authService.getPendingRegistration(tempToken);
+		const [error, pending] =
+			await this.authService.getPendingRegistration(tempToken);
+
+		if (error) {
+			throw new UnauthorizedException(error.reason);
+		}
 
 		if (!pending || Date.now() > pending.expiresAt.getTime()) {
 			throw new UnauthorizedException(AUTH_MESSAGE.ERROR_TOKEN_EXPIRED);
