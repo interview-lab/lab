@@ -103,7 +103,7 @@ export class AuthController {
 		@Req()
 		req: Request & {
 			user: {
-				googleId: string;
+				providerId: string;
 				email?: string;
 				name?: string;
 				profileImage?: string;
@@ -133,7 +133,7 @@ export class AuthController {
 				await this.authService.linkOAuthAccount(
 					intent.userId,
 					AuthProvider.GOOGLE,
-					req.user.googleId,
+					req.user.providerId,
 				);
 				return response.redirect(`${frontendUrl}/setting?linked=google`);
 			} catch {
@@ -144,7 +144,7 @@ export class AuthController {
 		// 기존 로그인/회원가입 플로우
 		const profile: OAuthProfile = {
 			provider: AuthProvider.GOOGLE,
-			providerId: req.user.googleId,
+			providerId: req.user.providerId,
 			email: req.user.email,
 			name: req.user.name,
 			profileImage: req.user.profileImage,
