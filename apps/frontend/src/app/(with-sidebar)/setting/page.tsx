@@ -1,8 +1,11 @@
+import { catchError } from '@interview-lab/shared';
 import { Atom } from '@interview-lab/ui';
 import clsx from 'clsx';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import client from '@/configs/fetch';
+import type { paths } from '@/types/api';
 import {
 	articleStyle,
 	buttonGroupStyle,
@@ -13,6 +16,57 @@ import {
 	profileRowStyle,
 	sectionStyle,
 } from './page.css';
+
+type Provider =
+	paths['/auth/oauth/link/{provider}']['get']['parameters']['path']['provider'];
+
+const toggleOAuthLink = async (provider: Provider) => {
+	'use server';
+
+	const cookieStore = await cookies();
+
+	const { data: profile } = await client.GET('/users/profile', {
+		headers: {
+			Cookie: cookieStore.toString(),
+		},
+	});
+
+	const defaultRegistrationType = profile?.registrationTypes.find(
+		(registrationType) => registrationType.isDefault,
+	)?.type;
+
+	if (defaultRegistrationType === provider) {
+		return;
+	}
+
+	const isLinked = profile?.registrationTypes.some(
+		(registrationType) => registrationType.type === provider,
+	);
+
+	if (isLinked) {
+		const [error] = await catchError(
+			client.DELETE('/auth/oauth/unlink/{provider}', {
+				params: {
+					path: { provider },
+				},
+				headers: {
+					Cookie: cookieStore.toString(),
+				},
+			}),
+		);
+
+		if (error) {
+			console.error(`Failed to unlink ${provider} account:`);
+			return;
+		}
+
+		revalidatePath('/setting');
+	} else {
+		redirect(
+			`${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/${provider}`,
+		);
+	}
+};
 
 export default async function SettingPage() {
 	const cookieStore = await cookies();
@@ -56,15 +110,7 @@ export default async function SettingPage() {
 				<article className={articleStyle}>
 					<h2>외부 계정 연결</h2>
 					<div className={buttonGroupStyle}>
-						<Link
-							href={
-								defaultRegistrationType === 'GOOGLE'
-									? '#'
-									: isGoogleLinked
-										? `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/unlink/google`
-										: `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/google`
-							}
-						>
+						<form action={toggleOAuthLink.bind(null, 'GOOGLE')}>
 							<Atom.TextButton
 								icon="IconGoogle"
 								className={clsx(
@@ -75,16 +121,8 @@ export default async function SettingPage() {
 							>
 								{isGoogleLinked ? 'Google 계정 연동 완료' : 'Google 계정 연동'}
 							</Atom.TextButton>
-						</Link>
-						<Link
-							href={
-								defaultRegistrationType === 'GITHUB'
-									? '#'
-									: isGithubLinked
-										? `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/unlink/github`
-										: `${process.env.NEXT_PUBLIC_API_SERVER}/auth/oauth/link/github`
-							}
-						>
+						</form>
+						<form action={toggleOAuthLink.bind(null, 'GITHUB')}>
 							<Atom.TextButton
 								icon="IconGithub"
 								className={clsx(
@@ -95,7 +133,7 @@ export default async function SettingPage() {
 							>
 								{isGithubLinked ? 'GitHub 계정 연동 완료' : 'GitHub 계정 연동'}
 							</Atom.TextButton>
-						</Link>
+						</form>
 					</div>
 					<p>
 						계정 연동을 통해 DevPrep의 기능을 최대한 활용하세요. 연동된 계정은

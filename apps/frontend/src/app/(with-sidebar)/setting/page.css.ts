@@ -97,14 +97,13 @@ export const buttonStyle = style({
 	},
 });
 
-globalStyle(`a:has(${buttonStyle})`, {
-	display: 'block',
-	alignSelf: 'stretch',
-});
-
 export const linkedButtonStyle = style({
 	backgroundColor: vars.color.blue,
 	color: vars.color.white,
 	border: 'none',
-	pointerEvents: 'none',
+
+	':hover': {
+		backgroundColor: vars.color.blue,
+		opacity: 0.9,
+	},
 });
