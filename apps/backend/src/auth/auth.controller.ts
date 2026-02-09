@@ -152,7 +152,7 @@ export class AuthController {
 
 		const [error, result] = await this.authService.handleOAuthCallback(profile);
 
-		if (error || !result) {
+		if (error) {
 			throw new BadRequestException(error.reason);
 		}
 
