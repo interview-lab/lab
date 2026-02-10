@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -48,7 +49,11 @@ export class AuthController {
 		@Body() dto: EmailAndPasswordDto,
 		@Res({ passthrough: true }) response: Response,
 	) {
-		await this.authService.loginWithEmail(response, dto);
+		const [error] = await this.authService.loginWithEmail(response, dto);
+
+		if (error) {
+			throw new BadRequestException(error.reason);
+		}
 	}
 
 	/**
@@ -63,7 +68,11 @@ export class AuthController {
 		@Body() dto: RegistrationWithEmailAndPasswordDto,
 		@Res({ passthrough: true }) response: Response,
 	) {
-		await this.authService.registerWithEmail(response, dto);
+		const [error] = await this.authService.registerWithEmail(response, dto);
+
+		if (error) {
+			throw new BadRequestException(error.reason);
+		}
 	}
 
 	// ===== Google OAuth =====
@@ -94,7 +103,7 @@ export class AuthController {
 		@Req()
 		req: Request & {
 			user: {
-				googleId: string;
+				providerId: string;
 				email?: string;
 				name?: string;
 				profileImage?: string;
@@ -113,9 +122,10 @@ export class AuthController {
 			// 항상 쿠키 먼저 삭제 (replay 방지)
 			this.authService.clearOAuthLinkIntentCookie(response);
 
-			const intent = this.authService.verifyOAuthLinkIntent(linkIntentToken);
+			const [error, intent] =
+				this.authService.verifyOAuthLinkIntent(linkIntentToken);
 
-			if (!intent) {
+			if (error || !intent) {
 				return response.redirect(`${frontendUrl}/setting?error=link_expired`);
 			}
 
@@ -123,7 +133,7 @@ export class AuthController {
 				await this.authService.linkOAuthAccount(
 					intent.userId,
 					AuthProvider.GOOGLE,
-					req.user.googleId,
+					req.user.providerId,
 				);
 				return response.redirect(`${frontendUrl}/setting?linked=google`);
 			} catch {
@@ -134,13 +144,17 @@ export class AuthController {
 		// 기존 로그인/회원가입 플로우
 		const profile: OAuthProfile = {
 			provider: AuthProvider.GOOGLE,
-			providerId: req.user.googleId,
+			providerId: req.user.providerId,
 			email: req.user.email,
 			name: req.user.name,
 			profileImage: req.user.profileImage,
 		};
 
-		const result = await this.authService.handleOAuthCallback(profile);
+		const [error, result] = await this.authService.handleOAuthCallback(profile);
+
+		if (error) {
+			throw new BadRequestException(error.reason);
+		}
 
 		if (result.isExistingUser) {
 			// 기존 사용자: 토큰과 함께 리다이렉트
@@ -179,14 +193,25 @@ export class AuthController {
 		@Res({ passthrough: true }) response: Response,
 	) {
 		// 이메일 인증 확인
-		await this.emailService.verifyCode(dto.email, dto.verificationCode);
+		const [verifyError] = await this.emailService.verifyCode(
+			dto.email,
+			dto.verificationCode,
+		);
+
+		if (verifyError) {
+			throw new BadRequestException(verifyError.reason);
+		}
 
 		// 가입 완료
-		const tokens = await this.authService.completeOAuthRegistration(
+		const [error, tokens] = await this.authService.completeOAuthRegistration(
 			request.tempToken,
 			dto.username,
 			dto.email,
 		);
+
+		if (error || !tokens) {
+			throw new BadRequestException(error.reason);
+		}
 
 		this.authService.setTokenToCookie(response, tokens.accessToken);
 		this.authService.setTokenToCookie(response, tokens.refreshToken, true);

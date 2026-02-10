@@ -5,12 +5,7 @@ function isErrorType<E extends new (message?: string) => Error>(
 	return errorTypes.some((errorType) => error instanceof errorType);
 }
 
-export default async function catchError<
-	E extends new (
-		message?: string,
-	) => Error,
-	R,
->(
+export async function catchError<E extends new (message?: string) => Error, R>(
 	promise: Promise<R>,
 	errorsToCatch?: E[],
 ): Promise<[InstanceType<E> | Error, null] | [null, R]> {

@@ -5,6 +5,7 @@ import * as nodemailer from 'nodemailer';
 import { MINUTE } from '@/common/consts/unit';
 import { MAX_VERIFICATION_ATTEMPTS } from '@/email/consts/email';
 import { PrismaService } from '@/prisma/prisma.service';
+import { err, ok } from '@/utils/result';
 
 /**
  * 이메일 발송 및 인증 관련 서비스
@@ -125,20 +126,20 @@ export class EmailService {
 	 * @throws {BadRequestException} 인증 시도 횟수 초과 시
 	 * @throws {BadRequestException} 인증번호 불일치 시
 	 */
-	async verifyCode(email: string, code: string): Promise<boolean> {
+	async verifyCode(email: string, code: string) {
 		const verification = await this.getVerificationInfo(email);
 
 		if (!verification) {
-			throw new BadRequestException('유효하지 않거나 만료된 인증 요청입니다.');
+			return err({ reason: '유효하지 않거나 만료된 인증 요청입니다.' });
 		}
 
 		// 만료 시간 검증
 		if (verification.expiresAt.getTime() < Date.now()) {
-			throw new BadRequestException('인증번호가 만료되었습니다.');
+			return err({ reason: '인증번호가 만료되었습니다.' });
 		}
 
 		if (verification.attempts >= MAX_VERIFICATION_ATTEMPTS) {
-			throw new BadRequestException('인증 시도 횟수를 초과했습니다.');
+			return err({ reason: '인증 시도 횟수를 초과했습니다.' });
 		}
 
 		if (verification.code !== code) {
@@ -147,7 +148,7 @@ export class EmailService {
 				where: { id: verification.id },
 				data: { attempts: verification.attempts + 1 },
 			});
-			throw new BadRequestException('인증번호가 일치하지 않습니다.');
+			return err({ reason: '인증번호가 일치하지 않습니다.' });
 		}
 
 		// 인증 완료 처리
@@ -156,7 +157,7 @@ export class EmailService {
 			data: { verified: true },
 		});
 
-		return true;
+		return ok(true);
 	}
 
 	/**

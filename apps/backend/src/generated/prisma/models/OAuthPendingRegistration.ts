@@ -36,7 +36,7 @@ export type OAuthPendingRegistrationSumAggregateOutputType = {
 
 export type OAuthPendingRegistrationMinAggregateOutputType = {
 	id: number | null;
-	provider: string | null;
+	provider: $Enums.AuthProvider | null;
 	providerId: string | null;
 	tempToken: string | null;
 	providerEmail: string | null;
@@ -48,7 +48,7 @@ export type OAuthPendingRegistrationMinAggregateOutputType = {
 
 export type OAuthPendingRegistrationMaxAggregateOutputType = {
 	id: number | null;
-	provider: string | null;
+	provider: $Enums.AuthProvider | null;
 	providerId: string | null;
 	tempToken: string | null;
 	providerEmail: string | null;
@@ -217,7 +217,7 @@ export type OAuthPendingRegistrationGroupByArgs<
 
 export type OAuthPendingRegistrationGroupByOutputType = {
 	id: number;
-	provider: string;
+	provider: $Enums.AuthProvider;
 	providerId: string;
 	tempToken: string;
 	providerEmail: string | null;
@@ -265,7 +265,9 @@ export type OAuthPendingRegistrationWhereInput = {
 		| Prisma.OAuthPendingRegistrationWhereInput
 		| Prisma.OAuthPendingRegistrationWhereInput[];
 	id?: Prisma.IntFilter<'OAuthPendingRegistration'> | number;
-	provider?: Prisma.StringFilter<'OAuthPendingRegistration'> | string;
+	provider?:
+		| Prisma.EnumAuthProviderFilter<'OAuthPendingRegistration'>
+		| $Enums.AuthProvider;
 	providerId?: Prisma.StringFilter<'OAuthPendingRegistration'> | string;
 	tempToken?: Prisma.StringFilter<'OAuthPendingRegistration'> | string;
 	providerEmail?:
@@ -308,7 +310,9 @@ export type OAuthPendingRegistrationWhereUniqueInput = Prisma.AtLeast<
 		NOT?:
 			| Prisma.OAuthPendingRegistrationWhereInput
 			| Prisma.OAuthPendingRegistrationWhereInput[];
-		provider?: Prisma.StringFilter<'OAuthPendingRegistration'> | string;
+		provider?:
+			| Prisma.EnumAuthProviderFilter<'OAuthPendingRegistration'>
+			| $Enums.AuthProvider;
 		providerId?: Prisma.StringFilter<'OAuthPendingRegistration'> | string;
 		providerEmail?:
 			| Prisma.StringNullableFilter<'OAuthPendingRegistration'>
@@ -361,8 +365,8 @@ export type OAuthPendingRegistrationScalarWhereWithAggregatesInput = {
 		| Prisma.OAuthPendingRegistrationScalarWhereWithAggregatesInput[];
 	id?: Prisma.IntWithAggregatesFilter<'OAuthPendingRegistration'> | number;
 	provider?:
-		| Prisma.StringWithAggregatesFilter<'OAuthPendingRegistration'>
-		| string;
+		| Prisma.EnumAuthProviderWithAggregatesFilter<'OAuthPendingRegistration'>
+		| $Enums.AuthProvider;
 	providerId?:
 		| Prisma.StringWithAggregatesFilter<'OAuthPendingRegistration'>
 		| string;
@@ -392,7 +396,7 @@ export type OAuthPendingRegistrationScalarWhereWithAggregatesInput = {
 };
 
 export type OAuthPendingRegistrationCreateInput = {
-	provider: string;
+	provider: $Enums.AuthProvider;
 	providerId: string;
 	tempToken: string;
 	providerEmail?: string | null;
@@ -404,7 +408,7 @@ export type OAuthPendingRegistrationCreateInput = {
 
 export type OAuthPendingRegistrationUncheckedCreateInput = {
 	id?: number;
-	provider: string;
+	provider: $Enums.AuthProvider;
 	providerId: string;
 	tempToken: string;
 	providerEmail?: string | null;
@@ -415,7 +419,9 @@ export type OAuthPendingRegistrationUncheckedCreateInput = {
 };
 
 export type OAuthPendingRegistrationUpdateInput = {
-	provider?: Prisma.StringFieldUpdateOperationsInput | string;
+	provider?:
+		| Prisma.EnumAuthProviderFieldUpdateOperationsInput
+		| $Enums.AuthProvider;
 	providerId?: Prisma.StringFieldUpdateOperationsInput | string;
 	tempToken?: Prisma.StringFieldUpdateOperationsInput | string;
 	providerEmail?:
@@ -436,7 +442,9 @@ export type OAuthPendingRegistrationUpdateInput = {
 
 export type OAuthPendingRegistrationUncheckedUpdateInput = {
 	id?: Prisma.IntFieldUpdateOperationsInput | number;
-	provider?: Prisma.StringFieldUpdateOperationsInput | string;
+	provider?:
+		| Prisma.EnumAuthProviderFieldUpdateOperationsInput
+		| $Enums.AuthProvider;
 	providerId?: Prisma.StringFieldUpdateOperationsInput | string;
 	tempToken?: Prisma.StringFieldUpdateOperationsInput | string;
 	providerEmail?:
@@ -457,7 +465,7 @@ export type OAuthPendingRegistrationUncheckedUpdateInput = {
 
 export type OAuthPendingRegistrationCreateManyInput = {
 	id?: number;
-	provider: string;
+	provider: $Enums.AuthProvider;
 	providerId: string;
 	tempToken: string;
 	providerEmail?: string | null;
@@ -468,7 +476,9 @@ export type OAuthPendingRegistrationCreateManyInput = {
 };
 
 export type OAuthPendingRegistrationUpdateManyMutationInput = {
-	provider?: Prisma.StringFieldUpdateOperationsInput | string;
+	provider?:
+		| Prisma.EnumAuthProviderFieldUpdateOperationsInput
+		| $Enums.AuthProvider;
 	providerId?: Prisma.StringFieldUpdateOperationsInput | string;
 	tempToken?: Prisma.StringFieldUpdateOperationsInput | string;
 	providerEmail?:
@@ -489,7 +499,9 @@ export type OAuthPendingRegistrationUpdateManyMutationInput = {
 
 export type OAuthPendingRegistrationUncheckedUpdateManyInput = {
 	id?: Prisma.IntFieldUpdateOperationsInput | number;
-	provider?: Prisma.StringFieldUpdateOperationsInput | string;
+	provider?:
+		| Prisma.EnumAuthProviderFieldUpdateOperationsInput
+		| $Enums.AuthProvider;
 	providerId?: Prisma.StringFieldUpdateOperationsInput | string;
 	tempToken?: Prisma.StringFieldUpdateOperationsInput | string;
 	providerEmail?:
@@ -509,7 +521,7 @@ export type OAuthPendingRegistrationUncheckedUpdateManyInput = {
 };
 
 export type OAuthPendingRegistrationProviderProviderIdCompoundUniqueInput = {
-	provider: string;
+	provider: $Enums.AuthProvider;
 	providerId: string;
 };
 
@@ -555,6 +567,10 @@ export type OAuthPendingRegistrationMinOrderByAggregateInput = {
 
 export type OAuthPendingRegistrationSumOrderByAggregateInput = {
 	id?: Prisma.SortOrder;
+};
+
+export type EnumAuthProviderFieldUpdateOperationsInput = {
+	set?: $Enums.AuthProvider;
 };
 
 export type OAuthPendingRegistrationSelect<
@@ -648,7 +664,7 @@ export type $OAuthPendingRegistrationPayload<
 	scalars: runtime.Types.Extensions.GetPayloadResult<
 		{
 			id: number;
-			provider: string;
+			provider: $Enums.AuthProvider;
 			providerId: string;
 			tempToken: string;
 			providerEmail: string | null;
@@ -1293,7 +1309,10 @@ export interface Prisma__OAuthPendingRegistrationClient<
  */
 export interface OAuthPendingRegistrationFieldRefs {
 	readonly id: Prisma.FieldRef<'OAuthPendingRegistration', 'Int'>;
-	readonly provider: Prisma.FieldRef<'OAuthPendingRegistration', 'String'>;
+	readonly provider: Prisma.FieldRef<
+		'OAuthPendingRegistration',
+		'AuthProvider'
+	>;
 	readonly providerId: Prisma.FieldRef<'OAuthPendingRegistration', 'String'>;
 	readonly tempToken: Prisma.FieldRef<'OAuthPendingRegistration', 'String'>;
 	readonly providerEmail: Prisma.FieldRef<'OAuthPendingRegistration', 'String'>;

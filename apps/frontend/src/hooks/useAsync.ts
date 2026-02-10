@@ -1,5 +1,5 @@
+import { catchError } from '@interview-lab/shared';
 import { useCallback, useRef, useState } from 'react';
-import catchError from '@/utils/catchError';
 
 interface UseAsyncReturn {
 	isLoading: boolean;

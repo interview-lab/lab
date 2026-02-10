@@ -164,7 +164,7 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
-	'/auth/google/link': {
+	'/auth/oauth/link/{provider}': {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -172,10 +172,10 @@ export interface paths {
 			cookie?: never;
 		};
 		/**
-		 * Google 계정 연동 API
-		 * @description 인증된 사용자의 Google 계정 연동을 시작합니다.
+		 * 소셜 계정 연동 API
+		 * @description 인증된 사용자의 소셜 계정 연동을 시작합니다.
 		 */
-		get: operations['AuthController_googleLink'];
+		get: operations['AuthController_LinkOAuth'];
 		put?: never;
 		post?: never;
 		delete?: never;
@@ -508,11 +508,13 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_googleLink: {
+	AuthController_LinkOAuth: {
 		parameters: {
 			query?: never;
 			header?: never;
-			path?: never;
+			path: {
+				provider: 'GOOGLE' | 'GITHUB';
+			};
 			cookie?: never;
 		};
 		requestBody?: never;

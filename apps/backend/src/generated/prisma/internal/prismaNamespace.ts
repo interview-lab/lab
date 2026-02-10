@@ -1287,6 +1287,22 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
+ * Reference to a field of type 'AuthProvider'
+ */
+export type EnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<
+	$PrismaModel,
+	'AuthProvider'
+>;
+
+/**
+ * Reference to a field of type 'AuthProvider[]'
+ */
+export type ListEnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<
+	$PrismaModel,
+	'AuthProvider[]'
+>;
+
+/**
  * Reference to a field of type 'Difficulty'
  */
 export type EnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -1331,22 +1347,6 @@ export type EnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
  */
 export type ListEnumSessionStatusFieldRefInput<$PrismaModel> =
 	FieldRefInputType<$PrismaModel, 'SessionStatus[]'>;
-
-/**
- * Reference to a field of type 'AuthProvider'
- */
-export type EnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<
-	$PrismaModel,
-	'AuthProvider'
->;
-
-/**
- * Reference to a field of type 'AuthProvider[]'
- */
-export type ListEnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<
-	$PrismaModel,
-	'AuthProvider[]'
->;
 
 /**
  * Reference to a field of type 'Float'
