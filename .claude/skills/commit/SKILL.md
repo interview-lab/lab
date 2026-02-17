@@ -1,5 +1,6 @@
 ---
-allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+name: commit
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(git log:*), Bash(git diff:*), Bash(pnpm format)
 description: Create a git commit
 ---
 
@@ -13,7 +14,10 @@ description: Create a git commit
 ## Your task
 
 변경사항을 기반으로 Conventional Commits 규격을 준수하는 단일 커밋을 생성하세요.
+기본적으로 **stage된 파일들만** 커밋하되, stage된 파일이 없을 경우 `git add .`을 실행한후 커밋합니다.
 커밋하기 전에 `pnpm format`을 실행하세요.
+
+$ARGUMENTS가 존재하고 $ARGUMENTS가 위의 규칙과 충돌할 경우 $ARGUMENTS를 우선순위로 사용하세요.
 
 ### ⚠️ 중요: 커밋 메시지 금지 사항
 
