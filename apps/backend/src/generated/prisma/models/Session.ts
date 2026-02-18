@@ -28,11 +28,15 @@ export type AggregateSession = {
 
 export type SessionAvgAggregateOutputType = {
 	userId: number | null;
+	numOfCompletedQuestions: number | null;
+	totalQuestions: number | null;
 	totalScore: number | null;
 };
 
 export type SessionSumAggregateOutputType = {
 	userId: number | null;
+	numOfCompletedQuestions: number | null;
+	totalQuestions: number | null;
 	totalScore: number | null;
 };
 
@@ -40,6 +44,9 @@ export type SessionMinAggregateOutputType = {
 	id: string | null;
 	userId: number | null;
 	category: $Enums.Category | null;
+	numOfCompletedQuestions: number | null;
+	totalQuestions: number | null;
+	difficulty: $Enums.Difficulty | null;
 	totalScore: number | null;
 	status: $Enums.SessionStatus | null;
 	aiFeedback: string | null;
@@ -51,6 +58,9 @@ export type SessionMaxAggregateOutputType = {
 	id: string | null;
 	userId: number | null;
 	category: $Enums.Category | null;
+	numOfCompletedQuestions: number | null;
+	totalQuestions: number | null;
+	difficulty: $Enums.Difficulty | null;
 	totalScore: number | null;
 	status: $Enums.SessionStatus | null;
 	aiFeedback: string | null;
@@ -62,6 +72,9 @@ export type SessionCountAggregateOutputType = {
 	id: number;
 	userId: number;
 	category: number;
+	numOfCompletedQuestions: number;
+	totalQuestions: number;
+	difficulty: number;
 	totalScore: number;
 	status: number;
 	aiFeedback: number;
@@ -72,11 +85,15 @@ export type SessionCountAggregateOutputType = {
 
 export type SessionAvgAggregateInputType = {
 	userId?: true;
+	numOfCompletedQuestions?: true;
+	totalQuestions?: true;
 	totalScore?: true;
 };
 
 export type SessionSumAggregateInputType = {
 	userId?: true;
+	numOfCompletedQuestions?: true;
+	totalQuestions?: true;
 	totalScore?: true;
 };
 
@@ -84,6 +101,9 @@ export type SessionMinAggregateInputType = {
 	id?: true;
 	userId?: true;
 	category?: true;
+	numOfCompletedQuestions?: true;
+	totalQuestions?: true;
+	difficulty?: true;
 	totalScore?: true;
 	status?: true;
 	aiFeedback?: true;
@@ -95,6 +115,9 @@ export type SessionMaxAggregateInputType = {
 	id?: true;
 	userId?: true;
 	category?: true;
+	numOfCompletedQuestions?: true;
+	totalQuestions?: true;
+	difficulty?: true;
 	totalScore?: true;
 	status?: true;
 	aiFeedback?: true;
@@ -106,6 +129,9 @@ export type SessionCountAggregateInputType = {
 	id?: true;
 	userId?: true;
 	category?: true;
+	numOfCompletedQuestions?: true;
+	totalQuestions?: true;
+	difficulty?: true;
 	totalScore?: true;
 	status?: true;
 	aiFeedback?: true;
@@ -211,6 +237,9 @@ export type SessionGroupByOutputType = {
 	id: string;
 	userId: number | null;
 	category: $Enums.Category | null;
+	numOfCompletedQuestions: number;
+	totalQuestions: number;
+	difficulty: $Enums.Difficulty | null;
 	totalScore: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback: string | null;
@@ -246,6 +275,12 @@ export type SessionWhereInput = {
 		| Prisma.EnumCategoryNullableFilter<'Session'>
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntFilter<'Session'> | number;
+	totalQuestions?: Prisma.IntFilter<'Session'> | number;
+	difficulty?:
+		| Prisma.EnumDifficultyNullableFilter<'Session'>
+		| $Enums.Difficulty
+		| null;
 	totalScore?: Prisma.IntNullableFilter<'Session'> | number | null;
 	status?: Prisma.EnumSessionStatusFilter<'Session'> | $Enums.SessionStatus;
 	aiFeedback?: Prisma.StringNullableFilter<'Session'> | string | null;
@@ -262,6 +297,9 @@ export type SessionOrderByWithRelationInput = {
 	id?: Prisma.SortOrder;
 	userId?: Prisma.SortOrderInput | Prisma.SortOrder;
 	category?: Prisma.SortOrderInput | Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
+	difficulty?: Prisma.SortOrderInput | Prisma.SortOrder;
 	totalScore?: Prisma.SortOrderInput | Prisma.SortOrder;
 	status?: Prisma.SortOrder;
 	aiFeedback?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -282,6 +320,12 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<
 			| Prisma.EnumCategoryNullableFilter<'Session'>
 			| $Enums.Category
 			| null;
+		numOfCompletedQuestions?: Prisma.IntFilter<'Session'> | number;
+		totalQuestions?: Prisma.IntFilter<'Session'> | number;
+		difficulty?:
+			| Prisma.EnumDifficultyNullableFilter<'Session'>
+			| $Enums.Difficulty
+			| null;
 		totalScore?: Prisma.IntNullableFilter<'Session'> | number | null;
 		status?: Prisma.EnumSessionStatusFilter<'Session'> | $Enums.SessionStatus;
 		aiFeedback?: Prisma.StringNullableFilter<'Session'> | string | null;
@@ -300,6 +344,9 @@ export type SessionOrderByWithAggregationInput = {
 	id?: Prisma.SortOrder;
 	userId?: Prisma.SortOrderInput | Prisma.SortOrder;
 	category?: Prisma.SortOrderInput | Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
+	difficulty?: Prisma.SortOrderInput | Prisma.SortOrder;
 	totalScore?: Prisma.SortOrderInput | Prisma.SortOrder;
 	status?: Prisma.SortOrder;
 	aiFeedback?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -326,6 +373,12 @@ export type SessionScalarWhereWithAggregatesInput = {
 		| Prisma.EnumCategoryNullableWithAggregatesFilter<'Session'>
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntWithAggregatesFilter<'Session'> | number;
+	totalQuestions?: Prisma.IntWithAggregatesFilter<'Session'> | number;
+	difficulty?:
+		| Prisma.EnumDifficultyNullableWithAggregatesFilter<'Session'>
+		| $Enums.Difficulty
+		| null;
 	totalScore?:
 		| Prisma.IntNullableWithAggregatesFilter<'Session'>
 		| number
@@ -348,6 +401,9 @@ export type SessionScalarWhereWithAggregatesInput = {
 export type SessionCreateInput = {
 	id?: string;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -361,6 +417,9 @@ export type SessionUncheckedCreateInput = {
 	id?: string;
 	userId?: number | null;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -374,6 +433,12 @@ export type SessionUpdateInput = {
 	category?:
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
+		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
 		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
@@ -397,6 +462,12 @@ export type SessionUncheckedUpdateInput = {
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
+		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
 		| Prisma.EnumSessionStatusFieldUpdateOperationsInput
@@ -415,6 +486,9 @@ export type SessionCreateManyInput = {
 	id?: string;
 	userId?: number | null;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -427,6 +501,12 @@ export type SessionUpdateManyMutationInput = {
 	category?:
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
+		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
 		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
@@ -447,6 +527,12 @@ export type SessionUncheckedUpdateManyInput = {
 	category?:
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
+		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
 		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
@@ -470,6 +556,9 @@ export type SessionCountOrderByAggregateInput = {
 	id?: Prisma.SortOrder;
 	userId?: Prisma.SortOrder;
 	category?: Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
+	difficulty?: Prisma.SortOrder;
 	totalScore?: Prisma.SortOrder;
 	status?: Prisma.SortOrder;
 	aiFeedback?: Prisma.SortOrder;
@@ -479,6 +568,8 @@ export type SessionCountOrderByAggregateInput = {
 
 export type SessionAvgOrderByAggregateInput = {
 	userId?: Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
 	totalScore?: Prisma.SortOrder;
 };
 
@@ -486,6 +577,9 @@ export type SessionMaxOrderByAggregateInput = {
 	id?: Prisma.SortOrder;
 	userId?: Prisma.SortOrder;
 	category?: Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
+	difficulty?: Prisma.SortOrder;
 	totalScore?: Prisma.SortOrder;
 	status?: Prisma.SortOrder;
 	aiFeedback?: Prisma.SortOrder;
@@ -497,6 +591,9 @@ export type SessionMinOrderByAggregateInput = {
 	id?: Prisma.SortOrder;
 	userId?: Prisma.SortOrder;
 	category?: Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
+	difficulty?: Prisma.SortOrder;
 	totalScore?: Prisma.SortOrder;
 	status?: Prisma.SortOrder;
 	aiFeedback?: Prisma.SortOrder;
@@ -506,6 +603,8 @@ export type SessionMinOrderByAggregateInput = {
 
 export type SessionSumOrderByAggregateInput = {
 	userId?: Prisma.SortOrder;
+	numOfCompletedQuestions?: Prisma.SortOrder;
+	totalQuestions?: Prisma.SortOrder;
 	totalScore?: Prisma.SortOrder;
 };
 
@@ -549,6 +648,10 @@ export type SessionUpdateOneWithoutQuestionsNestedInput = {
 
 export type NullableEnumCategoryFieldUpdateOperationsInput = {
 	set?: $Enums.Category | null;
+};
+
+export type NullableEnumDifficultyFieldUpdateOperationsInput = {
+	set?: $Enums.Difficulty | null;
 };
 
 export type EnumSessionStatusFieldUpdateOperationsInput = {
@@ -656,6 +759,9 @@ export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
 export type SessionCreateWithoutQuestionsInput = {
 	id?: string;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -668,6 +774,9 @@ export type SessionUncheckedCreateWithoutQuestionsInput = {
 	id?: string;
 	userId?: number | null;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -709,6 +818,12 @@ export type SessionUpdateWithoutQuestionsInput = {
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
+		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
 		| Prisma.EnumSessionStatusFieldUpdateOperationsInput
@@ -730,6 +845,12 @@ export type SessionUncheckedUpdateWithoutQuestionsInput = {
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
+		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
 		| Prisma.EnumSessionStatusFieldUpdateOperationsInput
@@ -746,6 +867,9 @@ export type SessionUncheckedUpdateWithoutQuestionsInput = {
 export type SessionCreateWithoutUserInput = {
 	id?: string;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -757,6 +881,9 @@ export type SessionCreateWithoutUserInput = {
 export type SessionUncheckedCreateWithoutUserInput = {
 	id?: string;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -816,6 +943,12 @@ export type SessionScalarWhereInput = {
 		| Prisma.EnumCategoryNullableFilter<'Session'>
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntFilter<'Session'> | number;
+	totalQuestions?: Prisma.IntFilter<'Session'> | number;
+	difficulty?:
+		| Prisma.EnumDifficultyNullableFilter<'Session'>
+		| $Enums.Difficulty
+		| null;
 	totalScore?: Prisma.IntNullableFilter<'Session'> | number | null;
 	status?: Prisma.EnumSessionStatusFilter<'Session'> | $Enums.SessionStatus;
 	aiFeedback?: Prisma.StringNullableFilter<'Session'> | string | null;
@@ -826,6 +959,9 @@ export type SessionScalarWhereInput = {
 export type SessionCreateManyUserInput = {
 	id?: string;
 	category?: $Enums.Category | null;
+	numOfCompletedQuestions?: number;
+	totalQuestions?: number;
+	difficulty?: $Enums.Difficulty | null;
 	totalScore?: number | null;
 	status: $Enums.SessionStatus;
 	aiFeedback?: string | null;
@@ -838,6 +974,12 @@ export type SessionUpdateWithoutUserInput = {
 	category?:
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
+		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
 		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
@@ -859,6 +1001,12 @@ export type SessionUncheckedUpdateWithoutUserInput = {
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
 		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
+		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
 		| Prisma.EnumSessionStatusFieldUpdateOperationsInput
@@ -878,6 +1026,12 @@ export type SessionUncheckedUpdateManyWithoutUserInput = {
 	category?:
 		| Prisma.NullableEnumCategoryFieldUpdateOperationsInput
 		| $Enums.Category
+		| null;
+	numOfCompletedQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	totalQuestions?: Prisma.IntFieldUpdateOperationsInput | number;
+	difficulty?:
+		| Prisma.NullableEnumDifficultyFieldUpdateOperationsInput
+		| $Enums.Difficulty
 		| null;
 	totalScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 	status?:
@@ -938,6 +1092,9 @@ export type SessionSelect<
 		id?: boolean;
 		userId?: boolean;
 		category?: boolean;
+		numOfCompletedQuestions?: boolean;
+		totalQuestions?: boolean;
+		difficulty?: boolean;
 		totalScore?: boolean;
 		status?: boolean;
 		aiFeedback?: boolean;
@@ -958,6 +1115,9 @@ export type SessionSelectCreateManyAndReturn<
 		id?: boolean;
 		userId?: boolean;
 		category?: boolean;
+		numOfCompletedQuestions?: boolean;
+		totalQuestions?: boolean;
+		difficulty?: boolean;
 		totalScore?: boolean;
 		status?: boolean;
 		aiFeedback?: boolean;
@@ -976,6 +1136,9 @@ export type SessionSelectUpdateManyAndReturn<
 		id?: boolean;
 		userId?: boolean;
 		category?: boolean;
+		numOfCompletedQuestions?: boolean;
+		totalQuestions?: boolean;
+		difficulty?: boolean;
 		totalScore?: boolean;
 		status?: boolean;
 		aiFeedback?: boolean;
@@ -990,6 +1153,9 @@ export type SessionSelectScalar = {
 	id?: boolean;
 	userId?: boolean;
 	category?: boolean;
+	numOfCompletedQuestions?: boolean;
+	totalQuestions?: boolean;
+	difficulty?: boolean;
 	totalScore?: boolean;
 	status?: boolean;
 	aiFeedback?: boolean;
@@ -1004,6 +1170,9 @@ export type SessionOmit<
 	| 'id'
 	| 'userId'
 	| 'category'
+	| 'numOfCompletedQuestions'
+	| 'totalQuestions'
+	| 'difficulty'
 	| 'totalScore'
 	| 'status'
 	| 'aiFeedback'
@@ -1046,6 +1215,9 @@ export type $SessionPayload<
 			id: string;
 			userId: number | null;
 			category: $Enums.Category | null;
+			numOfCompletedQuestions: number;
+			totalQuestions: number;
+			difficulty: $Enums.Difficulty | null;
 			totalScore: number | null;
 			status: $Enums.SessionStatus;
 			aiFeedback: string | null;
@@ -1670,6 +1842,9 @@ export interface SessionFieldRefs {
 	readonly id: Prisma.FieldRef<'Session', 'String'>;
 	readonly userId: Prisma.FieldRef<'Session', 'Int'>;
 	readonly category: Prisma.FieldRef<'Session', 'Category'>;
+	readonly numOfCompletedQuestions: Prisma.FieldRef<'Session', 'Int'>;
+	readonly totalQuestions: Prisma.FieldRef<'Session', 'Int'>;
+	readonly difficulty: Prisma.FieldRef<'Session', 'Difficulty'>;
 	readonly totalScore: Prisma.FieldRef<'Session', 'Int'>;
 	readonly status: Prisma.FieldRef<'Session', 'SessionStatus'>;
 	readonly aiFeedback: Prisma.FieldRef<'Session', 'String'>;

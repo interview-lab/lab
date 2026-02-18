@@ -3,8 +3,11 @@ model Session {
   userId Int?
   user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  category  Category?
-  questions Question[]
+  category                Category?
+  questions               Question[]
+  numOfCompletedQuestions Int         @default(0)
+  totalQuestions          Int         @default(5)
+  difficulty              Difficulty?
 
   totalScore Int?
   status     SessionStatus

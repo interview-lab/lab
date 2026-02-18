@@ -281,6 +281,25 @@ export type EnumCategoryNullableFilter<$PrismaModel = never> = {
 		| null;
 };
 
+export type EnumDifficultyNullableFilter<$PrismaModel = never> = {
+	equals?:
+		| $Enums.Difficulty
+		| Prisma.EnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	in?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	notIn?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	not?:
+		| Prisma.NestedEnumDifficultyNullableFilter<$PrismaModel>
+		| $Enums.Difficulty
+		| null;
+};
+
 export type EnumSessionStatusFilter<$PrismaModel = never> = {
 	equals?:
 		| $Enums.SessionStatus
@@ -339,6 +358,28 @@ export type EnumCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
 	_count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
 	_min?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>;
 	_max?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>;
+};
+
+export type EnumDifficultyNullableWithAggregatesFilter<$PrismaModel = never> = {
+	equals?:
+		| $Enums.Difficulty
+		| Prisma.EnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	in?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	notIn?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	not?:
+		| Prisma.NestedEnumDifficultyNullableWithAggregatesFilter<$PrismaModel>
+		| $Enums.Difficulty
+		| null;
+	_count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+	_min?: Prisma.NestedEnumDifficultyNullableFilter<$PrismaModel>;
+	_max?: Prisma.NestedEnumDifficultyNullableFilter<$PrismaModel>;
 };
 
 export type EnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -667,6 +708,25 @@ export type NestedEnumCategoryNullableFilter<$PrismaModel = never> = {
 		| null;
 };
 
+export type NestedEnumDifficultyNullableFilter<$PrismaModel = never> = {
+	equals?:
+		| $Enums.Difficulty
+		| Prisma.EnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	in?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	notIn?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	not?:
+		| Prisma.NestedEnumDifficultyNullableFilter<$PrismaModel>
+		| $Enums.Difficulty
+		| null;
+};
+
 export type NestedEnumSessionStatusFilter<$PrismaModel = never> = {
 	equals?:
 		| $Enums.SessionStatus
@@ -727,6 +787,30 @@ export type NestedEnumCategoryNullableWithAggregatesFilter<
 	_count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
 	_min?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>;
 	_max?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>;
+};
+
+export type NestedEnumDifficultyNullableWithAggregatesFilter<
+	$PrismaModel = never,
+> = {
+	equals?:
+		| $Enums.Difficulty
+		| Prisma.EnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	in?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	notIn?:
+		| $Enums.Difficulty[]
+		| Prisma.ListEnumDifficultyFieldRefInput<$PrismaModel>
+		| null;
+	not?:
+		| Prisma.NestedEnumDifficultyNullableWithAggregatesFilter<$PrismaModel>
+		| $Enums.Difficulty
+		| null;
+	_count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+	_min?: Prisma.NestedEnumDifficultyNullableFilter<$PrismaModel>;
+	_max?: Prisma.NestedEnumDifficultyNullableFilter<$PrismaModel>;
 };
 
 export type NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel = never> =

@@ -4,6 +4,7 @@ import { AuthModule } from '@/auth/auth.module';
 import configuration from '@/config/configuration';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { UsersModule } from '@/users/users.module';
+import { InterviewModule } from './interview/interview.module';
 
 @Module({
 	imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from '@/users/users.module';
 		PrismaModule,
 		UsersModule,
 		AuthModule,
+		InterviewModule,
 	],
 	controllers: [],
 	providers: [],
