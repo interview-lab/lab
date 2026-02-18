@@ -39,6 +39,7 @@ yarn-error.log*
 
 # Claude
 .claude/*.local.*
+**/CLAUDE.md
 
 # Serena - Local memories (개인 전용 메모리)
 .serena/memories/*.local.md
